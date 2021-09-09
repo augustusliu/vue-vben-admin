@@ -2,7 +2,8 @@ import type { AppRouteRecordRaw, Menu } from '/@/router/types';
 
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
-import { useI18n } from '/@/hooks/web/useI18n';
+// import { useI18n } from '/@/hooks/web/useI18n';
+// import { useMessage } from '/@/hooks/web/useMessage';
 import { useUserStore } from './user';
 import { useAppStoreWithOut } from './app';
 import { toRaw } from 'vue';
@@ -10,22 +11,16 @@ import { transformObjToRoute, flatMultiLevelRoutes } from '/@/router/helper/rout
 import { transformRouteToMenu } from '/@/router/helper/menuHelper';
 
 import projectSetting from '/@/settings/projectSetting';
-
 import { PermissionModeEnum } from '/@/enums/appEnum';
-
 import { asyncRoutes } from '/@/router/routes';
 import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
-
 import { filter } from '/@/utils/helper/treeHelper';
-
 import { getMenuList } from '/@/api/sys/menu';
 import { getPermCode } from '/@/api/sys/user';
-
-import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
 
 interface PermissionState {
-  // Permission code list
+  // Permission code list -- 当前用户的权限列表
   permCodeList: string[] | number[];
   // Whether the route has been dynamically added
   isDynamicAddedRoute: boolean;
@@ -92,12 +87,13 @@ export const usePermissionStore = defineStore({
       this.backMenuList = [];
       this.lastBuildMenuTime = 0;
     },
+    // 获取当前用户的权限列表的ID，这里用权限编码换取
     async changePermissionCode() {
       const codeList = await getPermCode();
       this.setPermCodeList(codeList);
     },
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
-      const { t } = useI18n();
+      // const { t } = useI18n();
       // 登陆用户的缓存
       const userStore = useUserStore();
       // 系统的通用缓存
@@ -109,7 +105,7 @@ export const usePermissionStore = defineStore({
       // 获取权限模式--角色模式，后端路由模式、路由映射模式
       const { permissionMode = projectSetting.permissionMode } = appStore.getProjectConfig;
 
-      // 定义一个匿名函数
+      // 从菜单的meta信息中获取到权限信息，如果不存在代表所有人都具有权限；否则代表当前角色才能查看
       const routeFilter = (route: AppRouteRecordRaw) => {
         const { meta } = route;
         const { roles } = meta || {};
@@ -117,17 +113,14 @@ export const usePermissionStore = defineStore({
         return roleList.some((role) => roles.includes(role));
       };
 
-      // 定义一个匿名函数
-      const routeRmoveIgnoreFilter = (route: AppRouteRecordRaw) => {
+      // 是否忽略当前菜单，如果菜单的meta中包含ignoreRoute，表示该菜单不显示
+      const routeRemoveIgnoreFilter = (route: AppRouteRecordRaw) => {
         const { meta } = route;
         const { ignoreRoute } = meta || {};
         return !ignoreRoute;
       };
 
-      /**
-       * tab页签中固定首页的设置
-       * @description 根据设置的首页path，修正routes中的affix标记（固定首页）
-       * */
+      // 页面头部固定的面包屑地址的全路径拼装
       const patchHomeAffix = (routes: AppRouteRecordRaw[]) => {
         if (!routes || routes.length === 0) return;
         let homePath: string = userStore.getUserInfo.homePath || PageEnum.BASE_HOME;
@@ -155,6 +148,7 @@ export const usePermissionStore = defineStore({
         return;
       };
 
+      // 获取权限模式
       switch (permissionMode) {
         case PermissionModeEnum.ROLE:
           routes = filter(asyncRoutes, routeFilter);
@@ -167,8 +161,8 @@ export const usePermissionStore = defineStore({
           routes = filter(asyncRoutes, routeFilter);
           routes = routes.filter(routeFilter);
           const menuList = transformRouteToMenu(routes, true);
-          routes = filter(routes, routeRmoveIgnoreFilter);
-          routes = routes.filter(routeRmoveIgnoreFilter);
+          routes = filter(routes, routeRemoveIgnoreFilter);
+          routes = routes.filter(routeRemoveIgnoreFilter);
           // 排序
           menuList.sort((a, b) => {
             return (a.meta?.orderNo || 0) - (b.meta?.orderNo || 0);
@@ -181,17 +175,19 @@ export const usePermissionStore = defineStore({
 
         //  If you are sure that you do not need to do background dynamic permissions, please comment the entire judgment below
         case PermissionModeEnum.BACK:
-          const { createMessage } = useMessage();
 
-          createMessage.loading({
-            content: t('sys.app.menuLoading'),
-            duration: 1,
-          });
+          // 加载菜单 提示框
+          // const { createMessage } = useMessage();
+          // createMessage.loading({
+          //   content: t('sys.app.menuLoading'),
+          //   duration: 1,
+          // });
 
           // !Simulate to obtain permission codes from the background,
           // this function may only need to be executed once, and the actual project can be put at the right time by itself
           let routeList: AppRouteRecordRaw[] = [];
           try {
+            // 修改当前用户的权限ID
             this.changePermissionCode();
             routeList = (await getMenuList()) as AppRouteRecordRaw[];
           } catch (error) {
@@ -206,8 +202,8 @@ export const usePermissionStore = defineStore({
           this.setBackMenuList(backMenuList);
 
           // remove meta.ignoreRoute item
-          routeList = filter(routeList, routeRmoveIgnoreFilter);
-          routeList = routeList.filter(routeRmoveIgnoreFilter);
+          routeList = filter(routeList, routeRemoveIgnoreFilter);
+          routeList = routeList.filter(routeRemoveIgnoreFilter);
 
           routeList = flatMultiLevelRoutes(routeList);
           routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];

@@ -7,10 +7,11 @@ enum Api {
   // Login = '/login',
   // Logout = '/logout',
   // GetUserInfo = '/getUserInfo',
+  // GetPermCode = '/getPermCode',
   Login = '/api/auth/login',
   Logout = '/api/auth/logout',
   GetUserInfo = '/api/auth/user',
-  GetPermCode = '/getPermCode',
+  GETAuthoritiesCode = '/api/auth/authoritiesId',
 }
 
 /**
@@ -39,7 +40,7 @@ export function getUserInfo() {
  * 获取用户的ID,
  */
 export function getPermCode() {
-  return defHttp.get<string[]>({ url: Api.GetPermCode });
+  return defHttp.get<string[]>({ url: Api.GETAuthoritiesCode });
 }
 
 export function doLogout() {
