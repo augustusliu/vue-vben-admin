@@ -75,9 +75,37 @@ export const searchFormSchema: FormSchema[] = [
 // 添加新租户字段
 export const createOrUpdateFormSchema: FormSchema[] = [
   {
+    field: 'id',
+    label: '租户ID',
+    component: 'Input',
+    colProps: { span: 22 },
+    show: false,
+  },
+  {
     field: 'name',
     label: '租户名称',
     component: 'Input',
+    colProps: { span: 22 },
+    required: true,
+  },
+  {
+    field: 'tenantProfileId',
+    label: '配置模板',
+    component: 'Input',
+    colProps: { span: 22 },
+    required: true,
+  },
+  {
+    field: 'enabled',
+    label: '租户状态',
+    component: 'Select',
+    componentProps: {
+      options: [
+        { label: '启用', value: true },
+        { label: '禁用', value: false },
+      ],
+    },
+    required: true,
     colProps: { span: 22 },
   },
   {
@@ -121,23 +149,5 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     label: '邮编',
     component: 'Input',
     colProps: { span: 12 },
-  },
-  {
-    field: 'enabled',
-    label: '租户状态',
-    component: 'Select',
-    componentProps: {
-      options: [
-        { label: '启用', value: true },
-        { label: '禁用', value: false },
-      ],
-    },
-    colProps: { span: 12 },
-  },
-  {
-    field: 'tenantProfileId',
-    label: '租户画像',
-    component: 'Input',
-    colProps: { span: 22 },
   },
 ];
