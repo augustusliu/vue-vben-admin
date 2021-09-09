@@ -26,6 +26,7 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
     }
     const { component, name } = item;
     const { children } = item;
+    // 如果component 存在，则加载对应的组件
     if (component) {
       const layoutFound = LayoutMap.get(component as string);
       if (layoutFound) {
@@ -33,6 +34,7 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
       } else {
         item.component = dynamicImport(dynamicViewsModules, component as string);
       }
+      // 如果组件不存在，则根据获取对应的父组件的Layout
     } else if (name) {
       item.component = getParentLayout();
     }

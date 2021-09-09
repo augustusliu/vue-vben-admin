@@ -1,3 +1,4 @@
+// 引入分页的请求参数模型和 返回结果的模型
 import { BasicPageParams, BasicFetchResult } from '/@/api/model/baseModel';
 
 export type AccountParams = BasicPageParams & {
