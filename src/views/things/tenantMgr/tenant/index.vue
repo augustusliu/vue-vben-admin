@@ -81,11 +81,9 @@
         });
       }
 
-      function handleDelete(record: Recordable) {
-        const tid = delTenantApi(record.id);
-        if (tid !== null) {
-          reload();
-        }
+      async function handleDelete(record: Recordable) {
+        await delTenantApi(record.id);
+        handleSuccess();
       }
 
       function handleSuccess() {

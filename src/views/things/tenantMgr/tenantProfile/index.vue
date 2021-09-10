@@ -79,9 +79,9 @@
         });
       }
       // 删除操作
-      function handleDelete(record: Recordable) {
-        delTenantProfileApi(record.id);
-        reload();
+      async function handleDelete(record: Recordable) {
+        await delTenantProfileApi(record.id);
+        handleSuccess()
       }
 
       function handleSuccess() {
