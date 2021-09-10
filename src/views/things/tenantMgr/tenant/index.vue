@@ -4,6 +4,7 @@
       <template #toolbar>
         <a-button type="primary" @click="handleCreate"> 创建租户 </a-button>
       </template>
+      <!-- table最后一列,一般为操作列 -->
       <template #action="{ record }">
         <TableAction
           :actions="[
@@ -33,7 +34,7 @@
   // 创建OR编辑弹框
   import TenantAddOrUpdateDrawer from './TenantDrawer.vue';
   // 依赖接口
-  import { listTenantApi } from '/@/api/things/tenant/tenantApi';
+  import { listTenantApi, delTenantApi } from '/@/api/things/tenant/tenantApi';
   import { tenantColumn, searchFormSchema } from './tenant.data';
   import { useDrawer } from '/@/components/Drawer';
 
@@ -57,7 +58,7 @@
         },
         showTableSetting: false,
         bordered: true,
-        showIndexColumn: false,
+        showIndexColumn: true,
         actionColumn: {
           width: 80,
           title: '操作',
@@ -81,7 +82,8 @@
       }
 
       function handleDelete(record: Recordable) {
-        console.log(record);
+        delTenantApi(record.id);
+        reload();
       }
 
       function handleSuccess() {

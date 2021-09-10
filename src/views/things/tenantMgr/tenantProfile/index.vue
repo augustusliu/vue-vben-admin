@@ -33,7 +33,7 @@
   // 创建OR编辑弹框
   import TenantProfileAddOrUpdateDrawer from './TenantProfileDrawer.vue';
   // 依赖接口
-  import { listTenantApi } from '/@/api/things/tenant/tenantApi';
+  import { listTenantProfileApi, delTenantProfileApi } from '/@/api/things/tenant/tenantApi';
   import { tenantProfileColumn, searchFormSchema } from './tenantProfile.data';
   import { useDrawer } from '/@/components/Drawer';
 
@@ -48,7 +48,7 @@
       // 定义当前要展示的表格
       const [registerTable, { reload }] = useTable({
         title: '租户配置列表',
-        api: listTenantApi,
+        api: listTenantProfileApi,
         columns: tenantProfileColumn,
         useSearchForm: true,
         formConfig: {
@@ -57,7 +57,7 @@
         },
         showTableSetting: true,
         bordered: true,
-        showIndexColumn: false,
+        showIndexColumn: true,
         actionColumn: {
           width: 80,
           title: '操作',
@@ -78,9 +78,10 @@
           isUpdate: true,
         });
       }
-
+      // 删除操作
       function handleDelete(record: Recordable) {
-        console.log(record);
+        delTenantProfileApi(record.id);
+        reload();
       }
 
       function handleSuccess() {

@@ -3,6 +3,12 @@ import { BasicColumn, FormSchema } from '/@/components/Table';
 // 租户画像列表展示
 export const tenantProfileColumn: BasicColumn[] = [
   {
+    title: 'id',
+    dataIndex: 'id',
+    width: 50,
+    defaultHidden: true,
+  },
+  {
     title: '租户配置名称',
     dataIndex: 'name',
     width: 100,
@@ -12,16 +18,43 @@ export const tenantProfileColumn: BasicColumn[] = [
     title: '默认配置',
     dataIndex: 'isDefault',
     width: 80,
+    customRender: ({ record }) => {
+      if (!Reflect.has(record, 'isDefault')) {
+        record.isDefault = false;
+      }
+      if (record.isDefault) {
+        return '是';
+      }
+      return '否';
+    },
   },
   {
     title: '独占业务线',
     dataIndex: 'isolatedBusiness',
     width: 80,
+    customRender: ({ record }) => {
+      if (!Reflect.has(record, 'isolatedBusiness')) {
+        record.isolatedBusiness = false;
+      }
+      if (record.isolatedBusiness) {
+        return '是';
+      }
+      return '否';
+    },
   },
   {
     title: '独占规则引擎',
     dataIndex: 'isolatedRuleEngine',
     width: 80,
+    customRender: ({ record }) => {
+      if (!Reflect.has(record, 'isolatedRuleEngine')) {
+        record.isolatedRuleEngine = false;
+      }
+      if (record.isolatedRuleEngine) {
+        return '是';
+      }
+      return '否';
+    },
   },
   {
     title: '最大设备数',

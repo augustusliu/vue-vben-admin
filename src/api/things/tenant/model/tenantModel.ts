@@ -1,4 +1,4 @@
-import { BasicPageParams, BasicListResult } from '/@/api/model/baseModel';
+import { BasicPageParams, BasicFetchResult } from '/@/api/model/baseModel';
 
 // 租户搜索时的模型
 export type TenantParams = BasicPageParams & {
@@ -38,4 +38,4 @@ export interface TenantAddOrUpdateParams {
   tenantProfileId: number;
 }
 
-export type TenantListResultModel = BasicListResult<TenantListItem>;
+export type TenantListResultModel = BasicFetchResult<TenantListItem>;

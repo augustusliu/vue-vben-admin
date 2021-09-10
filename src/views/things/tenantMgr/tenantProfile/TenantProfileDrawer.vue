@@ -50,7 +50,7 @@
         try {
           const values = await validate();
           setDrawerProps({ confirmLoading: true });
-          createOrUpdateTenantProfileApi(values);
+          await createOrUpdateTenantProfileApi(values);
           closeDrawer();
           emit('success');
         } finally {
