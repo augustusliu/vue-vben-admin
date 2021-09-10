@@ -15,6 +15,8 @@ import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
+import { router } from '/@/router';
+import { PageEnum } from '/@/enums/pageEnum';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -40,7 +42,7 @@ const transform: AxiosTransform = {
     if (!isTransformResponse) {
       return res.data;
     }
-    // 校验网络请求的返回状态
+    // 校验HTTP网络请求的返回状态
     const { status, data } = res;
     if (status != 200 || !data) {
       throw new Error(t('sys.api.apiRequestFailed'));
@@ -60,6 +62,9 @@ const transform: AxiosTransform = {
     switch (code) {
       case ResultEnum.TIMEOUT:
         errorMsg = t('sys.api.timeoutMessage');
+        break;
+      case ResultEnum.EXPIRED:
+        router.push(PageEnum.BASE_LOGIN);
         break;
       default:
         if (message) {

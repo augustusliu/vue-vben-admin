@@ -2,7 +2,7 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 创建租户 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新建客户 </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -23,7 +23,7 @@
         />
       </template>
     </BasicTable>
-    <TenantAddOrUpdateDrawer @register="registerDrawer" @success="handleSuccess" />
+    <CustomerAddOrUpdateDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 
@@ -31,39 +31,38 @@
   import { defineComponent } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   // 创建OR编辑弹框
-  import TenantAddOrUpdateDrawer from './TenantDrawer.vue';
+  import CustomerAddOrUpdateDrawer from './CustomerDrawer.vue';
   // 依赖接口
-  import { listTenantApi } from '/@/api/things/tenant/tenantApi';
-  import { tenantColumn, searchFormSchema } from './tenant.data';
+  import { listCustomerApi, delCustomerApi } from '/@/api/things/customer/customerApi';
+  import { customerColumn, searchFormSchema } from './customer.data';
   import { useDrawer } from '/@/components/Drawer';
 
   // 定义当前组件
   export default defineComponent({
     // 组件名称
-    name: 'TenantManagement',
+    name: 'CustomerManagement',
     // 当前依赖的组件
-    components: { BasicTable, TableAction, TenantAddOrUpdateDrawer },
+    components: { BasicTable, TableAction, CustomerAddOrUpdateDrawer },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
       // 定义当前要展示的表格
       const [registerTable, { reload }] = useTable({
-        title: '租户列表',
-        api: listTenantApi,
-        columns: tenantColumn,
+        title: '客户列表',
+        api: listCustomerApi,
+        columns: customerColumn,
         useSearchForm: true,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
         },
-        showTableSetting: false,
+        showTableSetting: true,
         bordered: true,
-        showIndexColumn: false,
+        showIndexColumn: true,
         actionColumn: {
           width: 80,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
-          fixed: undefined,
         },
       });
 
@@ -79,9 +78,10 @@
           isUpdate: true,
         });
       }
-
+      // 删除操作
       function handleDelete(record: Recordable) {
-        console.log(record);
+        delCustomerApi(record.id);
+        reload();
       }
 
       function handleSuccess() {

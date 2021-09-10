@@ -15,13 +15,13 @@
 <script lang="ts">
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { createOrUpdateFormSchema } from './tenant.data';
+  import { createOrUpdateFormSchema } from './customer.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
-  import { createOrUpdateTenantApi } from '/@/api/things/tenant/tenantApi';
+  import { createOrUpdateCustomerApi } from '/@/api/things/customer/customerApi';
 
   export default defineComponent({
-    name: 'TenantAddOrUpdateDrawer',
+    name: 'CustomerAddOrUpdateDrawer',
     components: { BasicDrawer, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
@@ -44,13 +44,13 @@
         }
       });
 
-      const getTitle = computed(() => (!unref(isUpdate) ? '新增租户' : '编辑租户'));
+      const getTitle = computed(() => (!unref(isUpdate) ? '新增客户' : '编辑客户'));
 
       async function handleSubmit() {
         try {
           const values = await validate();
           setDrawerProps({ confirmLoading: true });
-          createOrUpdateTenantApi(values);
+          await createOrUpdateCustomerApi(values);
           closeDrawer();
           emit('success');
         } finally {

@@ -1,4 +1,5 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import { listTenantProfileAll } from '/@/api/things/tenant/tenantApi';
 // 列表显示字段
 export const tenantColumn: BasicColumn[] = [
   {
@@ -25,6 +26,15 @@ export const tenantColumn: BasicColumn[] = [
     title: '当前状态',
     dataIndex: 'enabled',
     width: 50,
+    customRender: ({ record }) => {
+      if (!Reflect.has(record, 'enabled')) {
+        record.isDefault = false;
+      }
+      if (record.isDefault) {
+        return '是';
+      }
+      return '否';
+    },
   },
   {
     title: '创建时间',
@@ -91,7 +101,12 @@ export const createOrUpdateFormSchema: FormSchema[] = [
   {
     field: 'tenantProfileId',
     label: '配置模板',
-    component: 'Input',
+    component: 'ApiSelect',
+    componentProps: {
+      api: listTenantProfileAll,
+      labelField: 'name',
+      valueField: 'id',
+    },
     colProps: { span: 22 },
     required: true,
   },

@@ -81,9 +81,9 @@
         });
       }
 
-      function handleDelete(record: Recordable) {
-        delTenantApi(record.id);
-        reload();
+      async function handleDelete(record: Recordable) {
+        await delTenantApi(record.id);
+        handleSuccess();
       }
 
       function handleSuccess() {
