@@ -27,6 +27,7 @@ enum Api {
 export const getTenantApi = (params: string) =>
   defHttp.get<TenantListItem>({ url: Api.TenantGet + params });
 
+}
 export const listTenantApi = (params: TenantParams) =>
   defHttp.post<TenantListResultModel>({ url: Api.TenantList, params });
 
@@ -47,3 +48,6 @@ export const listTenantProfileApi = (params: TenantProfileSearchParams) =>
 
 export const createOrUpdateTenantProfileApi = (params: TenantProfileAddOrUpdateParams) =>
   defHttp.post<string>({ url: Api.TenantProfileCreateOrUpdate, params });
+
+export const delTenant = (params: number) => defHttp.get<number>({ url: Api.TenantDel, params });
+
