@@ -19,7 +19,8 @@ enum Api {
   TenantDel = '/api/tenant/del/',
   TenantGet = '/api/tenant/get/',
 
-  TenantProfileList = '/api/tenant/profile/list',
+  TenantProfileListAll = '/api/tenant/profile/listAll',
+  TenantProfileListByPager = '/api/tenant/profile/list',
   TenantProfileDel = '/api/tenant/profile/del/',
   TenantProfileGet = '/api/tenant/profile/get/',
   TenantProfileCreateOrUpdate = '/api/tenant/profile/createOrUpdate',
@@ -42,8 +43,11 @@ export const getTenantProfileApi = (params: string) =>
 export const delTenantProfileApi = (params: string) =>
   defHttp.get<string>({ url: Api.TenantProfileDel + params });
 
-export const listTenantProfileApi = (params: TenantProfileSearchParams) =>
-  defHttp.post<TenantProfileListResultModel>({ url: Api.TenantProfileList, params });
+export const listTenantProfileByPagerApi = (params: TenantProfileSearchParams) =>
+  defHttp.post<TenantProfileListResultModel>({ url: Api.TenantProfileListByPager, params });
 
 export const createOrUpdateTenantProfileApi = (params: TenantProfileAddOrUpdateParams) =>
   defHttp.post<string>({ url: Api.TenantProfileCreateOrUpdate, params });
+
+export const listTenantProfileAll = () =>
+  defHttp.get<TenantProfileListResultModel>({ url: Api.TenantProfileListAll });

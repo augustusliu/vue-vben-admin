@@ -82,8 +82,10 @@
       }
 
       function handleDelete(record: Recordable) {
-        delTenantApi(record.id);
-        reload();
+        const tid = delTenantApi(record.id);
+        if (tid !== null) {
+          reload();
+        }
       }
 
       function handleSuccess() {
