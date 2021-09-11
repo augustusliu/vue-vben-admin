@@ -1,8 +1,8 @@
 <template>
   <div>
-    <BasicTable @register="registerTable">
+    <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新建租户配置 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -23,41 +23,41 @@
         />
       </template>
     </BasicTable>
-    <TenantProfileAddOrUpdateDrawer @register="registerDrawer" @success="handleSuccess" />
+    <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
-
 <script lang="ts">
-  import { defineComponent } from 'vue';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  // 创建OR编辑弹框
-  import TenantProfileAddOrUpdateDrawer from './TenantProfileDrawer.vue';
-  // 依赖接口
-  import { listTenantProfileByPagerApi, delTenantProfileApi } from '/@/api/things/tenant/tenantApi';
-  import { tenantProfileColumn, searchFormSchema } from './tenantProfile.data';
-  import { useDrawer } from '/@/components/Drawer';
+  import { defineComponent, nextTick } from 'vue';
 
-  // 定义当前组件
+  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { searchMenuByPagerApi, delMenuApi } from '/@/api/things/menu/menuApi';
+
+  import { useDrawer } from '/@/components/Drawer';
+  import MenuDrawer from './MenuDrawer.vue';
+
+  import { menuColumn, menuSearchFormSchema } from './menu.data';
+
   export default defineComponent({
-    // 组件名称
-    name: 'TenantProfileManagement',
-    // 当前依赖的组件
-    components: { BasicTable, TableAction, TenantProfileAddOrUpdateDrawer },
+    name: 'MenuManagement',
+    components: { BasicTable, MenuDrawer, TableAction },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
-      // 定义当前要展示的表格
-      const [registerTable, { reload }] = useTable({
-        title: '租户配置列表',
-        api: listTenantProfileByPagerApi,
-        columns: tenantProfileColumn,
-        useSearchForm: true,
+      const [registerTable, { reload, collapseAll }] = useTable({
+        title: '菜单列表',
+        api: searchMenuByPagerApi,
+        columns: menuColumn,
         formConfig: {
           labelWidth: 120,
-          schemas: searchFormSchema,
+          schemas: menuSearchFormSchema,
         },
+        isTreeTable: true,
+        pagination: true,
+        striped: false,
+        useSearchForm: true,
         showTableSetting: true,
         bordered: true,
-        showIndexColumn: true,
+        showIndexColumn: false,
+        canResize: false,
         actionColumn: {
           width: 80,
           title: '操作',
@@ -79,14 +79,18 @@
           isUpdate: true,
         });
       }
-      // 删除操作
+
       async function handleDelete(record: Recordable) {
-        await delTenantProfileApi(record.id);
+        await delMenuApi(record.id)
         handleSuccess()
       }
 
       function handleSuccess() {
         reload();
+      }
+
+      function onFetchSuccess() {
+        nextTick(collapseAll);
       }
 
       return {
@@ -96,6 +100,7 @@
         handleEdit,
         handleDelete,
         handleSuccess,
+        onFetchSuccess,
       };
     },
   });

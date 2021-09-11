@@ -3,7 +3,7 @@ import { getMenuListResultModel } from './model/menuModel';
 
 enum Api {
   // GetMenuList = '/getMenuList',
-  GetMenuList = '/api/menu/list',
+  GetMenuList = '/api/menu/listAll',
 }
 
 /**

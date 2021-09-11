@@ -11,13 +11,11 @@ export const tenantProfileColumn: BasicColumn[] = [
   {
     title: '租户配置名称',
     dataIndex: 'name',
-    width: 100,
     fixed: 'left',
   },
   {
     title: '默认配置',
     dataIndex: 'isDefault',
-    width: 80,
     customRender: ({ record }) => {
       if (!Reflect.has(record, 'isDefault')) {
         record.isDefault = false;
@@ -31,7 +29,6 @@ export const tenantProfileColumn: BasicColumn[] = [
   {
     title: '独占业务线',
     dataIndex: 'isolatedBusiness',
-    width: 80,
     customRender: ({ record }) => {
       if (!Reflect.has(record, 'isolatedBusiness')) {
         record.isolatedBusiness = false;
@@ -45,7 +42,6 @@ export const tenantProfileColumn: BasicColumn[] = [
   {
     title: '独占规则引擎',
     dataIndex: 'isolatedRuleEngine',
-    width: 80,
     customRender: ({ record }) => {
       if (!Reflect.has(record, 'isolatedRuleEngine')) {
         record.isolatedRuleEngine = false;
@@ -59,32 +55,26 @@ export const tenantProfileColumn: BasicColumn[] = [
   {
     title: '最大设备数',
     dataIndex: 'maxDevices',
-    width: 80,
   },
   {
     title: '最大客户数',
     dataIndex: 'maxCustomers',
-    width: 80,
   },
   {
     title: '最大用户数',
     dataIndex: 'maxUsers',
-    width: 80,
   },
   {
     title: '数据存储天数',
     dataIndex: 'maxStorageDays',
-    width: 80,
   },
   {
     title: '创建时间',
     dataIndex: 'createdTime',
-    width: 80,
   },
   {
     title: '更新时间',
     dataIndex: 'modifiedTime',
-    width: 80,
   },
 ];
 
