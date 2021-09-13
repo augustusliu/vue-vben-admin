@@ -3,5 +3,6 @@ export default {
   tenantMgr: 'Tenant Management',
   tenantProfile: 'Tenant Profile',
   menu: 'Menus Management',
-  customer: 'Customer'
+  customer: 'Customer',
+  userMgr: 'User Management',
 };
