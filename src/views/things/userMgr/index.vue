@@ -2,7 +2,7 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新建租户配置 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新建用户 </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -23,7 +23,7 @@
         />
       </template>
     </BasicTable>
-    <TenantProfileAddOrUpdateDrawer @register="registerDrawer" @success="handleSuccess" />
+    <UserAddOrUpdateDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 
@@ -31,31 +31,31 @@
   import { defineComponent } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   // 创建OR编辑弹框
-  import TenantProfileAddOrUpdateDrawer from './TenantProfileDrawer.vue';
+  import UserAddOrUpdateDrawer from './UserDrawer.vue';
   // 依赖接口
-  import { listTenantProfileByPagerApi, delTenantProfileApi } from '/@/api/things/tenant/tenantApi';
-  import { tenantProfileColumn, searchFormSchema } from './tenantProfile.data';
+  import { listUserApi, delUserApi } from '/@/api/things/userMgr/userMgrApi';
+  import { userColumn, searchFormSchema } from './user.data';
   import { useDrawer } from '/@/components/Drawer';
 
   // 定义当前组件
   export default defineComponent({
     // 组件名称
-    name: 'TenantProfileManagement',
+    name: 'CustomerManagement',
     // 当前依赖的组件
-    components: { BasicTable, TableAction, TenantProfileAddOrUpdateDrawer },
+    components: { BasicTable, TableAction, UserAddOrUpdateDrawer },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
       // 定义当前要展示的表格
       const [registerTable, { reload }] = useTable({
-        title: '租户配置列表',
-        api: listTenantProfileByPagerApi,
-        columns: tenantProfileColumn,
+        title: '用户列表',
+        api: listUserApi,
+        columns: userColumn,
         useSearchForm: true,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
         },
-        showTableSetting: true,
+        showTableSetting: false,
         bordered: true,
         showIndexColumn: true,
         actionColumn: {
@@ -80,9 +80,9 @@
         });
       }
       // 删除操作
-      async function handleDelete(record: Recordable) {
-        await delTenantProfileApi(record.id);
-        handleSuccess()
+      function handleDelete(record: Recordable) {
+        delUserApi(record.id);
+        reload();
       }
 
       function handleSuccess() {
