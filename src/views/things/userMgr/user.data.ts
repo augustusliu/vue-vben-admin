@@ -8,16 +8,28 @@ export const userColumn: BasicColumn[] = [
     defaultHidden: true,
   },
   {
-    title: '用户名称',
-    dataIndex: 'username',
+    title: '租户id',
+    dataIndex: 'tenantId',
+    width: 5,
+    defaultHidden: true,
   },
   {
     title: '客户id',
     dataIndex: 'customerId',
+    width: 5,
+    defaultHidden: true,
   },
   {
-    title: '租户id',
-    dataIndex: 'tenantId',
+    title: '用户名称',
+    dataIndex: 'username',
+  },
+  {
+    title: '所属租户',
+    dataIndex: 'tenantName',
+  },
+  {
+    title: '所属客户',
+    dataIndex: 'customerName',
   },
   {
     title: '邮箱',

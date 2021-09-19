@@ -8,12 +8,22 @@ export const customerColumn: BasicColumn[] = [
     defaultHidden: true,
   },
   {
+    title: '租户id',
+    dataIndex: 'tenantId',
+    width: 5,
+    defaultHidden: true,
+  },
+  {
     title: '客户名称',
     dataIndex: 'name',
   },
   {
     title: '客户邮箱',
     dataIndex: 'email',
+  },
+  {
+    title: '租户名称',
+    dataIndex: 'tenantName',
   },
   {
     title: '省份',
