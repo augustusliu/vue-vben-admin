@@ -5,6 +5,7 @@
     "bgColor": "#f3c61f",
     "items": [
       {
+        "id": "4321",
         "type": "thingNode",
         "label": "debug",
         "bgColor": "#f3c61f",
@@ -13,6 +14,7 @@
         }
       },
       {
+        "id": "4322",
         "type": "thingNode",
         "label": "手工输入",
         "bgColor": "#51d5fb",
@@ -28,6 +30,7 @@
     "bgColor": "#9caff7",
     "items": [
       {
+        "id": "333",
         "type": "thingNode",
         "label": "函数脚本",
         "properties": {
@@ -35,6 +38,7 @@
         }
       },
       {
+        "id": "555",
         "type": "thingNode",
         "label": "条件切换",
         "properties": {
@@ -42,6 +46,7 @@
         }
       },
       {
+        "id": "666",
         "type": "thingNode",
         "label": "改变",
         "properties": {
@@ -49,6 +54,7 @@
         }
       },
       {
+        "id": "777",
         "type": "thingNode",
         "label": "延迟",
         "properties": {
@@ -63,6 +69,7 @@
     "bgColor": "#f3b7fa",
     "items": [
       {
+        "id": "556",
         "type": "thingNode",
         "label": "HTTP IN",
         "properties": {
@@ -70,6 +77,7 @@
         }
       },
       {
+        "id": "557",
         "type": "thingNode",
         "label": "HTTP OUT",
         "properties": {
@@ -77,6 +85,7 @@
         }
       },
       {
+        "id": "5572",
         "type": "thingNode",
         "label": "MQTT IN",
         "properties": {
@@ -84,6 +93,7 @@
         }
       },
       {
+        "id": "55724",
         "type": "thingNode",
         "label": "MQTT OUT",
         "properties": {

@@ -13,7 +13,7 @@
   import { defineComponent, ref, onMounted, unref, nextTick, computed, watch } from 'vue';
   import FlowChartToolbar from './FlowChartToolbar.vue';
   import LogicFlow from '@logicflow/core';
-  import { DndPanel } from "/@/components/FlowChartPanel/src/ThingsDndPanel";
+  import ThingsDndPanel from '/@/components/FlowChartPanel';
   import ThingsNode from '/@/components/FlowChartNode';
   import { Snapshot, BpmnElement, Menu, SelectionSelect } from '@logicflow/extension';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -99,7 +99,7 @@
         if (!lfEl) {
           return;
         }
-        LogicFlow.use(DndPanel);
+        LogicFlow.use(ThingsDndPanel);
 
         // Canvas configuration
         LogicFlow.use(Snapshot);
@@ -116,7 +116,7 @@
         // 注册自定义节点
         lfInstance.value.register(ThingsNode);
         // 注册自定义节点单击事件
-        lfInstance.value.on('node:click', nodeEvent =>{
+        lfInstance.value.on('node:dbclick', nodeEvent =>{
           console.log(nodeEvent.data)
         })
         const lf = unref(lfInstance)!;

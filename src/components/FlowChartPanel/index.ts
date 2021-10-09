@@ -1,2 +1,2 @@
-import { DndPanel } from './src/ThingsDndPanel';
-export default DndPanel;
+import { ThingsDndPanel } from './src/ThingsDndPanel';
+export default ThingsDndPanel;

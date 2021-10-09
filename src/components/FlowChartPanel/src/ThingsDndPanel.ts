@@ -111,6 +111,7 @@ class ThingsDndPanel{
     el.onmousedown = () => {
       if (shapeItem.type) {
         this.lf.dnd.startDrag({
+          id: shapeItem.id,
           type: shapeItem.type,
           properties: shapeItem.properties,
           text: shapeItem.text,
