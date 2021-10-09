@@ -5,4 +5,6 @@ export default {
   menu: '菜单管理',
   customer: '客户列表',
   userMgr: '用户列表',
+  sceneLink: "场景联动",
+  rulers: '图形规则',
 };

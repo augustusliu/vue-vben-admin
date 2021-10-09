@@ -13,7 +13,9 @@
   import { defineComponent, ref, onMounted, unref, nextTick, computed, watch } from 'vue';
   import FlowChartToolbar from './FlowChartToolbar.vue';
   import LogicFlow from '@logicflow/core';
-  import { Snapshot, BpmnElement, Menu, DndPanel, SelectionSelect } from '@logicflow/extension';
+  import { DndPanel } from "/@/components/FlowChartPanel/src/ThingsDndPanel";
+  import ThingsNode from '/@/components/FlowChartNode';
+  import { Snapshot, BpmnElement, Menu, SelectionSelect } from '@logicflow/extension';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useAppStore } from '/@/store/modules/app';
   import { createFlowChartContext } from './useFlowContext';
@@ -82,14 +84,6 @@
         }
       );
 
-      // TODO
-      // watch(
-      //   () => appStore.getDarkMode,
-      //   () => {
-      //     init();
-      //   }
-      // );
-
       watch(
         () => unref(getFlowOptions),
         (options) => {
@@ -119,8 +113,14 @@
           ...unref(getFlowOptions),
           container: lfEl,
         });
+        // 注册自定义节点
+        lfInstance.value.register(ThingsNode);
+        // 注册自定义节点单击事件
+        lfInstance.value.on('node:click', nodeEvent =>{
+          console.log(nodeEvent.data)
+        })
         const lf = unref(lfInstance)!;
-        lf?.setDefaultEdgeType('line');
+        lf?.setDefaultEdgeType('bezier');
         onRender();
         lf?.setPatternItems(props.patternItems || configDefaultDndPanel(lf));
       }

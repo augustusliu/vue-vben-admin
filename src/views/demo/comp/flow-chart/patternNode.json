@@ -1,0 +1,95 @@
+[
+  {
+    "group": "common",
+    "groupName": "通用组件",
+    "bgColor": "#f3c61f",
+    "items": [
+      {
+        "type": "thingNode",
+        "label": "debug",
+        "bgColor": "#f3c61f",
+        "properties": {
+
+        }
+      },
+      {
+        "type": "thingNode",
+        "label": "手工输入",
+        "bgColor": "#51d5fb",
+        "properties": {
+
+        }
+      }
+    ]
+  },
+  {
+    "group": "func",
+    "groupName": "功能组件",
+    "bgColor": "#9caff7",
+    "items": [
+      {
+        "type": "thingNode",
+        "label": "函数脚本",
+        "properties": {
+
+        }
+      },
+      {
+        "type": "thingNode",
+        "label": "条件切换",
+        "properties": {
+
+        }
+      },
+      {
+        "type": "thingNode",
+        "label": "改变",
+        "properties": {
+
+        }
+      },
+      {
+        "type": "thingNode",
+        "label": "延迟",
+        "properties": {
+
+        }
+      }
+    ]
+  },
+  {
+    "group": "network",
+    "groupName": "网络组件",
+    "bgColor": "#f3b7fa",
+    "items": [
+      {
+        "type": "thingNode",
+        "label": "HTTP IN",
+        "properties": {
+
+        }
+      },
+      {
+        "type": "thingNode",
+        "label": "HTTP OUT",
+        "properties": {
+
+        }
+      },
+      {
+        "type": "thingNode",
+        "label": "MQTT IN",
+        "properties": {
+
+        }
+      },
+      {
+        "type": "thingNode",
+        "label": "MQTT OUT",
+        "properties": {
+
+        }
+      }
+    ]
+  }
+]

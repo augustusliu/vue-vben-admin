@@ -5,4 +5,6 @@ export default {
   menu: 'Menus Management',
   customer: 'Customer',
   userMgr: 'User Management',
+  sceneLink: "Scene Link",
+  rulers: 'Flow Ruler',
 };

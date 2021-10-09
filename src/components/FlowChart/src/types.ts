@@ -5,6 +5,7 @@ export interface NodeItem extends NodeConfig {
   icon: string;
 }
 
+// 工具栏对象
 export interface ToolbarConfig {
   type?: string | ToolbarTypeEnum;
   tooltip?: string | boolean;

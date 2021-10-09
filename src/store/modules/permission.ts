@@ -190,6 +190,9 @@ export const usePermissionStore = defineStore({
             // 修改当前用户的权限ID
             this.changePermissionCode();
             routeList = (await getMenuList()) as AppRouteRecordRaw[];
+            if (routeList === null || routeList.length <= 0) {
+              routeList = [];
+            }
           } catch (error) {
             console.error(error);
           }
