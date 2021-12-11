@@ -3,10 +3,10 @@
 </template>
 
 <script lang="ts">
-  import { FlowChart } from '/@/components/FlowChart';
+  import thingsRuler from './ThingsRuler.vue';
   import panelNodes from './patternNode.json';
   export default {
-    components: { FlowChart },
+    components: { thingsRuler },
     setup() {
       return { panelNodes };
     },

@@ -34,7 +34,6 @@
 
   import { useDrawer } from '/@/components/Drawer';
   import MenuDrawer from './MenuDrawer.vue';
-
   import { menuColumn, menuSearchFormSchema } from './menu.data';
 
   export default defineComponent({
