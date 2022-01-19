@@ -25,10 +25,15 @@
   import { configDefaultDndPanel } from './config';
   import '@logicflow/core/dist/style/index.css';
   import '@logicflow/extension/lib/style/index.css';
+  import JsScriptDrawer from './draws/JsScriptDrawer.vue';
+  import KafkaOutDrawer from './draws/KafkaOutDrawer.vue';
+  import KafkaInDrawer from './draws/KafkaInDrawer.vue';
+  import RestInDrawer from './draws/RestInDrawer.vue';
+  import {useDrawer} from "/@/components/Drawer";
 
   export default defineComponent({
     name: 'FlowChart',
-    components: { BasicModal, FlowChartToolbar, JsonPreview },
+    components: { BasicModal, FlowChartToolbar, JsonPreview, JsScriptDrawer, KafkaOutDrawer, KafkaInDrawer, RestInDrawer},
     props: {
       flowOptions: {
         type: Object as PropType<Definition>,
@@ -49,6 +54,13 @@
       },
     },
     setup(props) {
+
+      // 注册组件
+      const [jsScriptRegister, { openDrawer: openJsScriptDrawer }] = useDrawer();
+      const [kafkaOutRegister, { openDrawer: openKafkaOutDrawer }] = useDrawer();
+      const [kafkaInRegister, { openDrawer: openKafkaInDrawer }] = useDrawer();
+      const [restInRegister, { openDrawer: openRestInDrawer }] = useDrawer();
+
       const lfElRef = ref(null);
       const graphData = ref({});
 
@@ -152,6 +164,14 @@
         lfElRef,
         handlePreview,
         graphData,
+        jsScriptRegister,
+        kafkaOutRegister,
+        kafkaInRegister,
+        restInRegister,
+        openJsScriptDrawer,
+        openKafkaOutDrawer,
+        openKafkaInDrawer,
+        openRestInDrawer,
       };
     },
   });

@@ -35,7 +35,8 @@ class ThingsDndPanel{
     if (this.panelEl) {
       domContainer.removeChild(this.panelEl);
     }
-    if (!this.groupList || this.groupList.length === 0) return;
+    // @ts-ignore
+    if (!this.groupList || this.groupList.length === 0 || this.groupList == 'undefined' ) return;
     this.panelEl = document.createElement('div');
     this.panelEl.className = 'lf-dndpanel-things';
 

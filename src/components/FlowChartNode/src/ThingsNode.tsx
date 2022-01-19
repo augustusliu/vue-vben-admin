@@ -50,7 +50,7 @@ class ThingsNodeNode extends HtmlNode {
 }
 
 const ThingsNode = {
-  type: 'thingNode',
+  type: 'thingsNode',
   view: ThingsNodeNode,
   model: ThingsNodeModel
 }

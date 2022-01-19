@@ -1,5 +1,5 @@
 <template>
-  <BasicDrawer v-bind="$attrs" @register="register" title="Drawer Title" width="50%">
+  <BasicDrawer v-bind="$attrs" @register="register" title="Kafka消费端" width="50%">
     <div>
       <BasicForm @register="registerForm" />
     </div>

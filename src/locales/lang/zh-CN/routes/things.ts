@@ -7,4 +7,6 @@ export default {
   userMgr: '用户列表',
   sceneLink: "场景联动",
   rulers: '规则引擎',
+  asset: '资产管理',
+  device: '设备管理',
 };
