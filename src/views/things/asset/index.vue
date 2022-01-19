@@ -8,17 +8,19 @@
         <TableAction
           :actions="[
             {
-              icon: 'ant-design:eye-outlined',
-              color: 'warning',
-              onClick: handleEdit.bind(null, record),
+              icon: 'clarity:info-standard-line',
+              tooltip: '查看用户详情',
+              onClick: handleView.bind(null, record),
             },
             {
               icon: 'clarity:note-edit-line',
-              onClick: handleDetail.bind(null, record),
+              tooltip: '编辑用户资料',
+              onClick: handleEdit.bind(null, record),
             },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
+              tooltip: '删除此账号',
               popConfirm: {
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
@@ -28,52 +30,77 @@
         />
       </template>
     </BasicTable>
-    <CustomerAddOrUpdateDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { BasicTable, TableAction } from '/@/components/Table';
-  import { useDrawer } from '/@/components/Drawer';
+  import {BasicTable, TableAction, useTable} from '/@/components/Table';
+  // import { useDrawer } from '/@/components/Drawer';
+  import { listAssetApi } from '/@/api/things/asset/assetApi';
+  import { assetColumn, searchFormSchema } from "/@/views/things/asset/asset.data";
+  import { useGo } from '/@/hooks/web/usePage';
 
   // 定义当前组件
   export default defineComponent({
     // 组件名称
-    name: 'CustomerManagement',
+    name: 'AssetComponent',
     // 当前依赖的组件
     components: { BasicTable, TableAction },
+
     setup() {
-      const [registerDrawer, { openDrawer }] = useDrawer();
+      // const [registerDrawer, { openDrawer }] = useDrawer();
+      const go = useGo();
       // 定义当前要展示的表格
+      const [registerTable, { reload }] = useTable({
+        title: '资产列表',
+        api: listAssetApi,
+        columns: assetColumn,
+        useSearchForm: true,
+        formConfig: {
+          labelWidth: 120,
+          schemas: searchFormSchema,
+        },
+        showTableSetting: true,
+        bordered: true,
+        showIndexColumn: true,
+        actionColumn: {
+          width: 120,
+          title: '操作',
+          dataIndex: 'action',
+          slots: { customRender: 'action' },
+          fixed: 'right',
+        },
+      });
+
 
       function handleCreate() {
-        openDrawer(true, {
-          isUpdate: false,
-        });
+        // openDrawer(true, {
+        //   isUpdate: false,
+        // });
       }
 
       function handleEdit(record: Recordable) {
-        openDrawer(true, {
-          record,
-          isUpdate: true,
-        });
+        // openDrawer(true, {
+        //   record,
+        //   isUpdate: true,
+        // });
       }
       // 删除操作
       function handleDelete(record: Recordable) {
 
       }
       // 查看详情
-      function handleDetail(record: Recordable){
-
+      function handleView(record: Recordable){
+        go('/asset_detail/' + record.id);
       }
       function handleSuccess() {
       }
 
       return {
-        registerDrawer,
+        registerTable,
         handleCreate,
-        handleDetail,
+        handleView,
         handleEdit,
         handleDelete,
         handleSuccess,

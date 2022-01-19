@@ -8,5 +8,6 @@ export default {
   sceneLink: "Scene Link",
   rulers: 'Flow Ruler',
   asset: 'Asset',
+  assetDetail: 'Asset Detail',
   device: 'Device',
 };
