@@ -1,8 +1,6 @@
 <template>
-
   <PageWrapper v-if="isLoaded">
     <Description @register="registerAssetInfo" class="mt-4" />
-
     <div :class="`${prefixCls}-bottom`">
       <Tabs>
         <template v-for="item in tabListScheme" :key="item.key">

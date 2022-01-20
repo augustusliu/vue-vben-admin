@@ -24,6 +24,14 @@ export interface AssetListItem {
   createdTime: string;
 }
 
+export interface AssetAddParam {
+  id: number;
+  name: string;
+  code: string;
+  label: string;
+  description: string;
+}
+
 
 
 export type AssetListResultModel = BasicFetchResult<AssetListItem>;

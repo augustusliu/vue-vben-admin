@@ -95,6 +95,10 @@ export const assetInfoScheme: DescItem[] = [
       return moment(Number(val)).format('YYYY-MM-DD HH:mm:ss');
     },
   },
+  {
+    field: 'description',
+    label: '资产描述',
+  },
 ]
 
 // 搜索域的字段
@@ -118,3 +122,42 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
 ];
+
+export const createOrUpdateFormSchema: FormSchema[] = [
+  {
+    field: 'id',
+    label: '资产id',
+    component: 'Input',
+    colProps: { span: 20 },
+    show: false,
+  },
+  {
+    field: 'name',
+    label: '资产名称',
+    component: 'Input',
+    colProps: { span: 20 },
+    required: true,
+    helpComponentProps: {
+      text: '必填，长度不超过100个字符'
+    },
+  },
+  {
+    field: 'code',
+    label: '资产编号',
+    component: 'Input',
+    required: true,
+    colProps: { span: 20 },
+  },
+  {
+    field: 'label',
+    label: '资产标签',
+    component: 'AutoComplete',
+    colProps: { span: 20 },
+  },
+  {
+    field: 'description',
+    label: '资产描述',
+    component: 'InputTextArea',
+    colProps: { span: 20 },
+  },
+]

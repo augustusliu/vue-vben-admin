@@ -17,7 +17,7 @@ export const tabListScheme = [
   },
   {
     key: '4',
-    name: '警告',
+    name: '报警',
     component: 'EntityAlarm',
   },
 ];

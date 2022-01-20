@@ -30,6 +30,7 @@
         />
       </template>
     </BasicTable>
+    <AssetDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 
@@ -40,16 +41,19 @@
   import { listAssetApi } from '/@/api/things/asset/assetApi';
   import { assetColumn, searchFormSchema } from "/@/views/things/asset/asset.data";
   import { useGo } from '/@/hooks/web/usePage';
+  import { useDrawer } from '/@/components/Drawer';
+
+  import AssetDrawer from "./AssetDrawer.vue";
 
   // 定义当前组件
   export default defineComponent({
     // 组件名称
     name: 'AssetComponent',
     // 当前依赖的组件
-    components: { BasicTable, TableAction },
+    components: { BasicTable, TableAction, AssetDrawer },
 
     setup() {
-      // const [registerDrawer, { openDrawer }] = useDrawer();
+      const [registerDrawer, { openDrawer }] = useDrawer();
       const go = useGo();
       // 定义当前要展示的表格
       const [registerTable, { reload }] = useTable({
@@ -74,16 +78,16 @@
       });
 
       function handleCreate() {
-        // openDrawer(true, {
-        //   isUpdate: false,
-        // });
+        openDrawer(true, {
+          isUpdate: false,
+        });
       }
 
       function handleEdit(record: Recordable) {
-        // openDrawer(true, {
-        //   record,
-        //   isUpdate: true,
-        // });
+        openDrawer(true, {
+          record,
+          isUpdate: true,
+        });
       }
       // 删除操作
       function handleDelete(record: Recordable) {
@@ -94,9 +98,11 @@
         go('/asset_detail/' + record.id );
       }
       function handleSuccess() {
+        reload()
       }
 
       return {
+        registerDrawer,
         registerTable,
         handleCreate,
         handleView,
