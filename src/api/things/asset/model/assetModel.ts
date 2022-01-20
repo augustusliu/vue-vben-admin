@@ -24,4 +24,6 @@ export interface AssetListItem {
   createdTime: string;
 }
 
+
+
 export type AssetListResultModel = BasicFetchResult<AssetListItem>;

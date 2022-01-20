@@ -9,18 +9,18 @@
           :actions="[
             {
               icon: 'clarity:info-standard-line',
-              tooltip: '查看用户详情',
+              tooltip: '查看资产详情',
               onClick: handleView.bind(null, record),
             },
             {
               icon: 'clarity:note-edit-line',
-              tooltip: '编辑用户资料',
+              tooltip: '编辑资产信息',
               onClick: handleEdit.bind(null, record),
             },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
-              tooltip: '删除此账号',
+              tooltip: '删除此资产',
               popConfirm: {
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
@@ -73,7 +73,6 @@
         },
       });
 
-
       function handleCreate() {
         // openDrawer(true, {
         //   isUpdate: false,
@@ -92,7 +91,7 @@
       }
       // 查看详情
       function handleView(record: Recordable){
-        go('/asset_detail/' + record.id);
+        go('/asset_detail/' + record.id );
       }
       function handleSuccess() {
       }
