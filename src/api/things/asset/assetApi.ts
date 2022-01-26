@@ -17,10 +17,8 @@ enum AssetApi {
   AssetListByPager = '/api/asset/list',
   // 资产详情信息
   AssetGet = '/api/asset/get/',
-
   // 资产下分页属性列表
   AssetAttributeList = '/api/asset/attr/listWithPager',
-
   // 为资产添加一个属性信息
   AssetAddOneAttribute = '/api/asset/attr/one/',
   // 添加编辑资产
