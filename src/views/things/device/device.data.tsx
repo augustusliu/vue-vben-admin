@@ -1,5 +1,7 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import { DescItem } from '/@/components/Description';
 import moment from "moment";
+import {Tag} from "ant-design-vue";
 
 export const deviceTableColumn: BasicColumn[] = [
   {
@@ -29,11 +31,18 @@ export const deviceTableColumn: BasicColumn[] = [
   {
     title: '标签',
     dataIndex: 'label',
+    customRender: ({ record }) => {
+      return <Tag color="#87d068"> {record.label} </Tag>;
+    },
   },
   {
-    title: '所属用户',
-    dataIndex: 'userId',
+    title: '描述',
+    dataIndex: 'description',
   },
+  // {
+  //   title: '所属用户',
+  //   dataIndex: 'userId',
+  // },
   {
     title: '创建时间',
     dataIndex: 'createdTime',
@@ -176,5 +185,58 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     label: '设备描述',
     component: 'InputTextArea',
     colProps: { span: 20 },
+  },
+]
+
+// 设备详情页描述信息
+export const deviceDetailInfoScheme: DescItem[] = [
+  {
+    field: 'id',
+    label: '设备ID',
+  },
+  {
+    field: 'name',
+    label: '设备名称',
+  },
+  {
+    field: 'code',
+    label: '设备编号',
+  },
+  {
+    field: 'userId',
+    label: '创建人',
+  },
+  {
+    field: 'transportType',
+    label: '传输协议',
+  },
+  {
+    field: 'isGateway',
+    label: '网关设备',
+    render: ( val ) => {
+      return val ? '设备网关' : '非网关设备';
+    },
+  },
+  {
+    field: 'label',
+    label: '资产标签',
+  },
+  {
+    field: 'modifiedTime',
+    label: '修改时间',
+    render: ( val ) => {
+      return moment(Number(val)).format('YYYY-MM-DD HH:mm:ss');
+    },
+  },
+  {
+    field: 'createdTime',
+    label: '创建时间',
+    render: ( val ) => {
+      return moment(Number(val)).format('YYYY-MM-DD HH:mm:ss');
+    },
+  },
+  {
+    field: 'description',
+    label: '资产描述',
   },
 ]

@@ -10,4 +10,5 @@ export default {
   asset: 'Asset',
   assetDetail: 'Asset Detail',
   device: 'Device',
+  deviceDetail: 'Device Detail',
 };

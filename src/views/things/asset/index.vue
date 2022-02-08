@@ -37,12 +37,10 @@
 <script lang="ts">
   import { defineComponent } from 'vue';
   import {BasicTable, TableAction, useTable} from '/@/components/Table';
-  // import { useDrawer } from '/@/components/Drawer';
   import { listAssetApi } from '/@/api/things/asset/assetApi';
   import { assetColumn, searchFormSchema } from "/@/views/things/asset/asset.data";
   import { useGo } from '/@/hooks/web/usePage';
   import { useDrawer } from '/@/components/Drawer';
-
   import AssetDrawer from "./AssetDrawer.vue";
 
   // 定义当前组件

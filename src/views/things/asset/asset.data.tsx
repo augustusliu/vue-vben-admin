@@ -1,5 +1,6 @@
-import {BasicColumn, FormSchema} from '/@/components/Table';
+import { BasicColumn, FormSchema} from '/@/components/Table';
 import { DescItem } from '/@/components/Description';
+import { Tag } from 'ant-design-vue';
 import moment from 'moment'
 
 export const assetColumn: BasicColumn[] = [
@@ -20,19 +21,22 @@ export const assetColumn: BasicColumn[] = [
   {
     title: '资产标签',
     dataIndex: 'label',
+    customRender: ({ record }) => {
+      return <Tag color="#2db7f5"> {record.label} </Tag>;
+    },
   },
+  // {
+  //   title: '创建人',
+  //   dataIndex: 'userId',
+  // },
   {
-    title: '创建人',
-    dataIndex: 'userId',
+    title: '描述',
+    dataIndex: 'description',
   },
-  {
-    title: '所属租户',
-    dataIndex: 'tenantName',
-  },
-  {
-    title: '所属客户',
-    dataIndex: 'customerName',
-  },
+  // {
+  //   title: '所属客户',
+  //   dataIndex: 'customerName',
+  // },
   {
     title: '修改时间',
     dataIndex: 'modifiedTime',

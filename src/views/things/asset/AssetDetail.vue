@@ -6,7 +6,7 @@
         <template v-for="item in tabListScheme" :key="item.key">
           <TabPane :tab="item.name">
 <!--            动态组件切换-->
-            <component :is="item.component" :entityId="assetId" />
+            <component :is="item.component" :entityId="assetId" :entityType="entityType"/>
           </TabPane>
         </template>
       </Tabs>
@@ -22,16 +22,16 @@
   import { useGo } from '/@/hooks/web/usePage';
   import { Tag, Tabs } from 'ant-design-vue';
   import { Description, useDescription } from '/@/components/Description/index';
-  import {ScrollContainer} from "/@/components/Container";
+  import { ScrollContainer } from "/@/components/Container";
 
   import { getAssetApi } from '/@/api/things/asset/assetApi';
   import { assetInfoScheme } from './asset.data'
 
-  import { tabListScheme } from './tabs/tab.data'
-  import EntityAttributes from './tabs/EntityAttributes.vue'
-  import EntityTelemetry from './tabs/EntityTelemetry.vue'
-  import EntityEvent from './tabs/EntityEvent.vue'
-  import EntityAlarm from './tabs/EntityAlarm.vue'
+  import { tabListScheme } from '../common/entityTabs/tab.data'
+  import EntityAttributes from '../common/entityTabs/EntityAttributes.vue'
+  import EntityTelemetry from '../common/entityTabs/EntityTelemetry.vue'
+  import EntityEvent from '../common/entityTabs/EntityEvent.vue'
+  import EntityAlarm from '../common/entityTabs/EntityAlarm.vue'
 
   // tab信息参考/page/account/setting配置
   export default defineComponent({
@@ -45,8 +45,9 @@
     setup() {
       const route = useRoute();
       const go = useGo();
-      // 此处可以得到用户ID
+      // 此处可以得到设备
       const assetId = ref(route.params?.id).value;
+      const entityType = 'ASSET';
       const assetInfo: any = ref({})
       // 页面是否加载成功
       const isLoaded = ref(false)
@@ -81,6 +82,7 @@
       return {
         prefixCls: 'asset-tab-setting',
         assetId,
+        entityType,
         currentKey,
         goBack,
         registerAssetInfo,

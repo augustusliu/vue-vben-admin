@@ -13,6 +13,11 @@
               onClick: handleView.bind(null, record),
             },
             {
+              icon: 'ant-design:lock-outlined',
+              tooltip: '查看设备秘钥',
+              onClick: showCredentials.bind(null, record),
+            },
+            {
               icon: 'clarity:note-edit-line',
               tooltip: '编辑设备信息',
               onClick: handleEdit.bind(null, record),
@@ -20,7 +25,7 @@
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
-              tooltip: '删除此设备',
+              tooltip: '删除设备信息',
               popConfirm: {
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
@@ -31,6 +36,7 @@
       </template>
     </BasicTable>
     <DeviceDrawer @register="registerDrawer" @success="handleSuccess" />
+    <CredentialsModel @register="registerModel"/>
   </div>
 </template>
 
@@ -41,22 +47,23 @@
   import { useDrawer } from '/@/components/Drawer';
   import { deviceTableColumn, deviceSearchScheme } from "./device.data";
   import { listDeviceWithPageApi, delDeviceApi } from '/@/api/things/device/deviceApi';
-
   import DeviceDrawer from "./DeviceDrawer.vue";
-
+  import CredentialsModel from "./CredentialsModel.vue";
+  import { useModal } from "/@/components/Modal";
   // 定义当前组件
   export default defineComponent({
     // 组件名称
     name: 'DeviceComponent',
     // 当前依赖的组件
-    components: { BasicTable, TableAction, DeviceDrawer },
+    components: { BasicTable, TableAction, DeviceDrawer, CredentialsModel },
 
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
+      const [registerModel, { openModal }] = useModal();
       const go = useGo();
       // 定义当前要展示的表格
       const [registerTable, { reload }] = useTable({
-        title: '资产列表',
+        title: '设备列表',
         api: listDeviceWithPageApi,
         columns: deviceTableColumn,
         useSearchForm: true,
@@ -68,7 +75,7 @@
         bordered: true,
         showIndexColumn: true,
         actionColumn: {
-          width: 120,
+          width: 150,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -93,9 +100,14 @@
         delDeviceApi(record.id);
         reload();
       }
+
+      function showCredentials(record: Recordable){
+        openModal(true, {"deviceId":record.id});
+      }
+
       // 查看详情
       function handleView(record: Recordable){
-        go('/asset_detail/' + record.id );
+        go('/device_detail/' + record.id );
       }
       function handleSuccess() {
         reload()
@@ -108,6 +120,9 @@
         handleView,
         handleEdit,
         handleDelete,
+        registerModel,
+        openModal,
+        showCredentials,
         handleSuccess,
       };
     },
