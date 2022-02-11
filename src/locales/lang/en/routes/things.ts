@@ -12,4 +12,7 @@ export default {
   device: 'Device',
   deviceDetail: 'Device Detail',
   dictionary: 'Dictionary',
+  baseData: 'Base Data',
+  industry: 'Industry Data',
+  area: 'Area Data',
 };

@@ -4,7 +4,7 @@
                 @fetch-success="onFetchSuccess"
                 :onExpand="handleOnExpand">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增区域 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增行业 </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -25,31 +25,31 @@
         />
       </template>
     </BasicTable>
-    <AreaDrawer @register="registerDrawer" @success="handleSuccess" />
+    <IndustryDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
   import { defineComponent, nextTick } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { searchAreaByPager, delArea, listAreaByParent } from '/@/api/things/baseData/areaApi';
+  import { searchIndustryByPager, delIndustry, listIndustryByParent } from '/@/api/things/baseData/industryApi';
 
   import { useDrawer } from '/@/components/Drawer';
-  import AreaDrawer from './AreaDrawer.vue';
-  import { areaColumn, areaSearchFormSchema } from './area.data';
+  import IndustryDrawer from './IndustryDrawer.vue';
+  import { industryColumn, industrySearchFormSchema } from './industry.data';
 
   export default defineComponent({
     name: 'IndustryManagement',
-    components: { BasicTable, AreaDrawer, TableAction },
+    components: { BasicTable, IndustryDrawer, TableAction },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload, collapseAll }] = useTable({
-        title: '区域列表',
-        api: searchAreaByPager,
-        columns: areaColumn,
+        title: '行业列表',
+        api: searchIndustryByPager,
+        columns: industryColumn,
         formConfig: {
           labelWidth: 120,
-          schemas: areaSearchFormSchema,
+          schemas: industrySearchFormSchema,
         },
         isTreeTable: true,
         pagination: true,
@@ -80,7 +80,7 @@
         });
       }
       async function handleDelete(record: Recordable) {
-        await delArea(record.code)
+        await delIndustry(record.code)
         handleSuccess()
       }
 
@@ -93,7 +93,7 @@
       }
       // 级联渲染子节点
       function handleOnExpand(expanded, record: Recordable){
-        listAreaByParent(record.code).then((child) => {
+        listIndustryByParent(record.code).then((child) => {
           record.children = child;
         });
       }

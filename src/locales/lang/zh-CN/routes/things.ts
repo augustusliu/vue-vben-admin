@@ -12,4 +12,7 @@ export default {
   device: '设备管理',
   deviceDetail: '设备详情',
   dictionary: '数据字典',
+  baseData: '基础数据',
+  industry: '行业数据',
+  area: '地区数据',
 };

@@ -52,13 +52,13 @@ export const searchFormSchema: FormSchema[] = [
     field: 'name',
     label: '客户名称',
     component: 'Input',
-    colProps: { span: 11 },
+    colProps: { span: 8 },
   },
   {
     field: 'email',
     label: '客户邮箱',
     component: 'Input',
-    colProps: { span: 11 },
+    colProps: { span: 8 },
   },
   {
     field: 'province',

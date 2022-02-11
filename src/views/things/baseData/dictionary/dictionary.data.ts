@@ -49,19 +49,19 @@ export const dictionarySearchFormSchema: FormSchema[] = [
     field: 'name',
     label: '名称',
     component: 'Input',
-    colProps: { span: 11 },
+    colProps: { span: 8 },
   },
   {
     field: 'code',
     label: '编码',
     component: 'Input',
-    colProps: { span: 11 },
+    colProps: { span: 8 },
   },
   {
     field: 'dictionaryType',
     label: '字典类型',
     component: 'Input',
-    colProps: { span: 11 },
+    colProps: { span: 8 },
   },
   {
     field: 'systemDefault',
@@ -73,7 +73,7 @@ export const dictionarySearchFormSchema: FormSchema[] = [
         { label: '用户定义', value: false },
       ],
     },
-    colProps: { span: 11 },
+    colProps: { span: 8 },
   }
 ]
 
