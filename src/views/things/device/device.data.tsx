@@ -1,6 +1,7 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { DescItem } from '/@/components/Description';
 import moment from "moment";
+import { listAllDevices } from '/@/api/things/device/deviceApi';
 import {Tag} from "ant-design-vue";
 
 export const deviceTableColumn: BasicColumn[] = [
@@ -25,7 +26,7 @@ export const deviceTableColumn: BasicColumn[] = [
     title: '网关设备',
     dataIndex: 'isGateway',
     customRender: ({ record }) => {
-      return record.isGateway ? '设备网关' : '非网关设备';
+      return record.isGateway ? <Tag color="cyan">网关设备</Tag> : <Tag color="purple">普通设备</Tag>;
     },
   },
   {
@@ -39,10 +40,6 @@ export const deviceTableColumn: BasicColumn[] = [
     title: '描述',
     dataIndex: 'description',
   },
-  // {
-  //   title: '所属用户',
-  //   dataIndex: 'userId',
-  // },
   {
     title: '创建时间',
     dataIndex: 'createdTime',
@@ -87,7 +84,7 @@ export const deviceSearchScheme: FormSchema[] = [
     componentProps: {
       options: [
         { label: '网关设备', value: true },
-        { label: '非网关设备', value: false },
+        { label: '普通设备', value: false },
       ],
     },
     colProps: { span: 8 },
@@ -126,7 +123,7 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     field: 'name',
     label: '设备名称',
     component: 'Input',
-    colProps: { span: 10 },
+    colProps: { span: 11 },
     required: true,
     helpComponentProps: {
       text: '必填，长度不超过100个字符'
@@ -137,31 +134,19 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     label: '设备编号',
     component: 'Input',
     required: true,
-    colProps: { span: 10 },
+    colProps: { span: 11 },
   },
   {
     field: 'label',
     label: '设备标签',
     component: 'Input',
-    colProps: { span: 20 },
-  },
-  {
-    field: 'isGateway',
-    label: '网关设备',
-    component: 'Select',
-    defaultValue: false,
-    componentProps: {
-      options: [
-        { label: '网关设备', value: true },
-        { label: '非网关设备', value: false },
-      ],
-    },
-    colProps: { span: 20 },
+    colProps: { span: 11 },
   },
   {
     field: 'transportType',
     label: '传输协议',
     component: 'Select',
+    required: true,
     defaultValue: 'HTTP',
     componentProps: {
       options: [
@@ -177,9 +162,45 @@ export const createOrUpdateFormSchema: FormSchema[] = [
         { label: 'OPC_UA', value: 'OPC_UA' },
       ],
     },
-    colProps: { span: 20 },
+    colProps: { span: 11 },
   },
-
+  {
+    field: 'isGateway',
+    label: '网关设备',
+    component: 'Select',
+    required: true,
+    defaultValue: false,
+    componentProps: {
+      options: [
+        { label: '网关设备', value: true },
+        { label: '普通设备', value: false },
+      ],
+    },
+    colProps: { span: 11 },
+  },
+  {
+    field: 'parentId',
+    label: '父设备',
+    component: 'ApiSelect',
+    colProps: { span: 20 },
+    componentProps: {
+      api: listAllDevices,
+      params: {
+        name: '',
+        isGateway: true,
+      },
+      resultField: 'items',
+      // use name as label
+      labelField: 'name',
+      // use id as value
+      valueField: 'id',
+      immediate: false,
+      showSearch: true,
+    },
+    show: ({ values }) => {
+      return !values.isGateway;
+    },
+  },
   {
     field: 'description',
     label: '设备描述',
@@ -214,7 +235,7 @@ export const deviceDetailInfoScheme: DescItem[] = [
     field: 'isGateway',
     label: '网关设备',
     render: ( val ) => {
-      return val ? '设备网关' : '非网关设备';
+      return val ? '设备网关' : '普通设备';
     },
   },
   {

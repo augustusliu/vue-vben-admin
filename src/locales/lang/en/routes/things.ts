@@ -11,4 +11,5 @@ export default {
   assetDetail: 'Asset Detail',
   device: 'Device',
   deviceDetail: 'Device Detail',
+  dictionary: 'Dictionary',
 };

@@ -33,6 +33,12 @@ export interface DeviceAddParam {
   description: string;
 };
 
+// 资产kv列表实体
+export interface DeviceKVItem {
+  id: number;
+  name: string;
+}
+
 export interface DeviceCredentialsModel {
   id: number;
   deviceId: number;
@@ -42,3 +48,5 @@ export interface DeviceCredentialsModel {
 };
 
 export type DeviceListResultModel = BasicFetchResult<DeviceItem>;
+
+export type DeviceListAllResultModel = BasicFetchResult<DeviceKVItem>;

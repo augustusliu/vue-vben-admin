@@ -27,7 +27,6 @@
     props:["entityId", "entityType"],
     emits: ['success', 'register'],
     setup(props, { emit }) {
-      console.log(props.entityId)
       const isUpdate = ref(true);
       const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
         labelWidth: 90,

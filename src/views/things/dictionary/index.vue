@@ -1,8 +1,10 @@
 <template>
   <div>
-    <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
+    <BasicTable @register="registerTable"
+                @fetch-success="onFetchSuccess"
+                :onExpand="handleOnExpand">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增字典 </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -23,37 +25,37 @@
         />
       </template>
     </BasicTable>
-    <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
+    <DictionaryDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
   import { defineComponent, nextTick } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { searchMenuByPagerApi, delMenuApi } from '/@/api/things/menu/menuApi';
+  import { listDictionaryByPager, deleteDictionary, listDictionaryByParentId } from '/@/api/things/dictionary/dictionaryApi';
 
   import { useDrawer } from '/@/components/Drawer';
-  import MenuDrawer from './MenuDrawer.vue';
-  import { menuColumn, menuSearchFormSchema } from './menu.data';
+  import DictionaryDrawer from './DictionaryDrawer.vue';
+  import { dictionaryColumn, dictionarySearchFormSchema } from './dictionary.data';
 
   export default defineComponent({
-    name: 'MenuManagement',
-    components: { BasicTable, MenuDrawer, TableAction },
+    name: 'DictionaryManagement',
+    components: { BasicTable, DictionaryDrawer, TableAction },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload, collapseAll }] = useTable({
-        title: '菜单列表',
-        api: searchMenuByPagerApi,
-        columns: menuColumn,
+        title: '字典列表',
+        api: listDictionaryByPager,
+        columns: dictionaryColumn,
         formConfig: {
           labelWidth: 120,
-          schemas: menuSearchFormSchema,
+          schemas: dictionarySearchFormSchema,
         },
         isTreeTable: true,
         pagination: true,
         striped: false,
         useSearchForm: true,
-        showTableSetting: false,
+        showTableSetting: true,
         bordered: true,
         showIndexColumn: false,
         canResize: false,
@@ -80,7 +82,7 @@
       }
 
       async function handleDelete(record: Recordable) {
-        await delMenuApi(record.id)
+        await deleteDictionary(record.id)
         handleSuccess()
       }
 
@@ -92,6 +94,13 @@
         nextTick(collapseAll);
       }
 
+      // 级联渲染子节点
+      function handleOnExpand(expanded, record: Recordable){
+        listDictionaryByParentId(record.id).then((child) => {
+          record.children = child;
+        });
+      }
+
       return {
         registerTable,
         registerDrawer,
@@ -100,6 +109,7 @@
         handleDelete,
         handleSuccess,
         onFetchSuccess,
+        handleOnExpand,
       };
     },
   });

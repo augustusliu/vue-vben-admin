@@ -6,11 +6,13 @@ import {
   DeviceAddParam,
   DeviceCredentialsModel,
   DeviceListResultModel,
+  DeviceListAllResultModel,
 } from '/@/api/things/device/model/deviceModel';
 
 enum DeviceApi {
   DeviceTransportsApi = '/api/device/transport',
   DeviceListWithPageApi = '/api/device/listWithPage',
+  DeviceListAllApi = '/api/device/listAll',
   DeviceOneGetApi = '/api/device/get/',
   DeviceAddOrUpdateApi = '/api/device/addOrUpdate',
   DeviceCredentialsGetApi = '/api/device/credentials/get/',
@@ -20,6 +22,9 @@ enum DeviceApi {
 // 分页查询
 export const listDeviceWithPageApi = (params: DeviceParams) =>
   defHttp.post<DeviceListResultModel>({ url: DeviceApi.DeviceListWithPageApi, params });
+// 全量查询
+export const listAllDevices = (params: DeviceParams) =>
+  defHttp.post<DeviceListAllResultModel>({ url: DeviceApi.DeviceListAllApi, params });
 
 export const getDeviceApi = (deviceId: string) =>
   defHttp.get<DeviceItem>({ url: DeviceApi.DeviceOneGetApi + deviceId });

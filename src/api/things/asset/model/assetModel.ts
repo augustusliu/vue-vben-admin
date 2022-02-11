@@ -32,6 +32,4 @@ export interface AssetAddParam {
   description: string;
 }
 
-
-
 export type AssetListResultModel = BasicFetchResult<AssetListItem>;

@@ -11,4 +11,5 @@ export default {
   assetDetail: '资产详情',
   device: '设备管理',
   deviceDetail: '设备详情',
+  dictionary: '数据字典',
 };
