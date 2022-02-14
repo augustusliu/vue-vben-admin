@@ -5,6 +5,7 @@ import { listAllDevices } from '/@/api/things/device/deviceApi';
 import {Tag} from "ant-design-vue";
 import {h} from "vue";
 import {SvgIcon} from "/@/components/Icon";
+import {indexColor} from "/@/views/things/common/constant/ColorRandom";
 
 export const deviceTableColumn: BasicColumn[] = [
   {
@@ -46,7 +47,10 @@ export const deviceTableColumn: BasicColumn[] = [
       if(record.label != null && record.label.length > 0){
         let re = [];
         // @ts-ignore
-        record.label.forEach(label => re.push(<Tag color="#87d068" style={"margin-right:3px"}> { label } </Tag>));
+        record.label.forEach((label, index) => {
+          // @ts-ignore
+          re.push(<Tag color={indexColor(index)} style={"margin-right:3px"}> {label} </Tag>);
+        });
         return re;
       }
       return null;
@@ -160,13 +164,13 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     componentProps: {
       mode: 'svg',
     },
-    colProps: { span: 20 },
+    colProps: { span: 22 },
   },
   {
     field: 'label',
     label: '设备标签',
     component: 'Select',
-    colProps: { span: 20 },
+    colProps: { span: 22 },
     componentProps: {
       mode: 'tags',
       placeholder: '请输入资产标签',
@@ -192,7 +196,7 @@ export const createOrUpdateFormSchema: FormSchema[] = [
         { label: 'OPC_UA', value: 'OPC_UA' },
       ],
     },
-    colProps: { span: 11 },
+    colProps: { span: 22 },
   },
   {
     field: 'isGateway',
@@ -212,7 +216,7 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     field: 'parentId',
     label: '父设备',
     component: 'ApiSelect',
-    colProps: { span: 20 },
+    colProps: { span: 11 },
     componentProps: {
       api: listAllDevices,
       params: {
@@ -235,7 +239,7 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     field: 'description',
     label: '设备描述',
     component: 'InputTextArea',
-    colProps: { span: 20 },
+    colProps: { span: 22 },
   },
 ]
 
@@ -271,8 +275,14 @@ export const deviceDetailInfoScheme: DescItem[] = [
   {
     field: 'label',
     label: '设备标签',
-    render: ( val ) => {
-      return <Tag color="#87d068"> {val} </Tag>;;
+    render: ( label ) => {
+      if(label != null && label.length > 0){
+        let re = [];
+        // @ts-ignore
+        label.forEach(item => re.push(<Tag color="#87d068" style={"margin-right:3px"}> { item } </Tag>));
+        return re;
+      }
+      return null;
     },
   },
   {

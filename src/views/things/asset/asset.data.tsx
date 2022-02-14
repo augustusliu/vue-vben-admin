@@ -4,6 +4,7 @@ import { Tag } from 'ant-design-vue';
 import moment from 'moment'
 import {SvgIcon} from "/@/components/Icon";
 import {h} from "vue";
+import { indexColor } from '../common/constant/ColorRandom';
 
 export const assetColumn: BasicColumn[] = [
   {
@@ -35,7 +36,10 @@ export const assetColumn: BasicColumn[] = [
       if(record.label != null && record.label.length > 0){
         let re = [];
         // @ts-ignore
-        record.label.forEach(label => re.push(<Tag color="#2db7f5" style={"margin-right:3px"}> { label } </Tag>));
+        record.label.forEach((label, index) => {
+          // @ts-ignore
+          re.push(<Tag color= {indexColor(index)} style={"margin-right:3px"}> { label } </Tag>)
+        });
         return re;
       }
       return null;
@@ -64,6 +68,7 @@ export const assetColumn: BasicColumn[] = [
 ]
 
 // 用于资产详情页信息展示
+// @ts-ignore
 export const assetInfoScheme: DescItem[] = [
   {
     field: 'id',
@@ -92,8 +97,14 @@ export const assetInfoScheme: DescItem[] = [
   {
     field: 'label',
     label: '资产标签',
-    render: ( val ) => {
-      return <Tag color="#2db7f5"> {val} </Tag>;;
+    render: ( label ) => {
+      if(label != null && label.length > 0){
+        let re = [];
+        // @ts-ignore
+        label.forEach(item => re.push(<Tag color="#87d068" style={"margin-right:3px"}> { item } </Tag>));
+        return re;
+      }
+      return null;
     },
   },
   {
