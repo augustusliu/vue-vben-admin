@@ -13,7 +13,9 @@
   import { defineComponent, ref, onMounted, unref, nextTick, computed, watch } from 'vue';
   import FlowChartToolbar from './FlowChartToolbar.vue';
   import LogicFlow from '@logicflow/core';
-  import { Snapshot, BpmnElement, Menu, DndPanel, SelectionSelect } from '@logicflow/extension';
+  import ThingsDndPanel from '/@/components/FlowChartPanel';
+  import ThingsNode from '/@/components/FlowChartNode';
+  import { Snapshot, BpmnElement, Menu, SelectionSelect } from '@logicflow/extension';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useAppStore } from '/@/store/modules/app';
   import { createFlowChartContext } from './useFlowContext';
@@ -23,10 +25,15 @@
   import { configDefaultDndPanel } from './config';
   import '@logicflow/core/dist/style/index.css';
   import '@logicflow/extension/lib/style/index.css';
+  import JsScriptDrawer from './draws/JsScriptDrawer.vue';
+  import KafkaOutDrawer from './draws/KafkaOutDrawer.vue';
+  import KafkaInDrawer from './draws/KafkaInDrawer.vue';
+  import RestInDrawer from './draws/RestInDrawer.vue';
+  import {useDrawer} from "/@/components/Drawer";
 
   export default defineComponent({
     name: 'FlowChart',
-    components: { BasicModal, FlowChartToolbar, JsonPreview },
+    components: { BasicModal, FlowChartToolbar, JsonPreview, JsScriptDrawer, KafkaOutDrawer, KafkaInDrawer, RestInDrawer},
     props: {
       flowOptions: {
         type: Object as PropType<Definition>,
@@ -47,6 +54,13 @@
       },
     },
     setup(props) {
+
+      // 注册组件
+      const [jsScriptRegister, { openDrawer: openJsScriptDrawer }] = useDrawer();
+      const [kafkaOutRegister, { openDrawer: openKafkaOutDrawer }] = useDrawer();
+      const [kafkaInRegister, { openDrawer: openKafkaInDrawer }] = useDrawer();
+      const [restInRegister, { openDrawer: openRestInDrawer }] = useDrawer();
+
       const lfElRef = ref(null);
       const graphData = ref({});
 
@@ -82,14 +96,6 @@
         }
       );
 
-      // TODO
-      // watch(
-      //   () => appStore.getDarkMode,
-      //   () => {
-      //     init();
-      //   }
-      // );
-
       watch(
         () => unref(getFlowOptions),
         (options) => {
@@ -105,7 +111,7 @@
         if (!lfEl) {
           return;
         }
-        LogicFlow.use(DndPanel);
+        LogicFlow.use(ThingsDndPanel);
 
         // Canvas configuration
         LogicFlow.use(Snapshot);
@@ -119,8 +125,14 @@
           ...unref(getFlowOptions),
           container: lfEl,
         });
+        // 注册自定义节点
+        lfInstance.value.register(ThingsNode);
+        // 注册自定义节点单击事件
+        lfInstance.value.on('node:dbclick', nodeEvent =>{
+          console.log(nodeEvent.data)
+        })
         const lf = unref(lfInstance)!;
-        lf?.setDefaultEdgeType('line');
+        lf?.setDefaultEdgeType('bezier');
         onRender();
         lf?.setPatternItems(props.patternItems || configDefaultDndPanel(lf));
       }
@@ -152,6 +164,14 @@
         lfElRef,
         handlePreview,
         graphData,
+        jsScriptRegister,
+        kafkaOutRegister,
+        kafkaInRegister,
+        restInRegister,
+        openJsScriptDrawer,
+        openKafkaOutDrawer,
+        openKafkaInDrawer,
+        openRestInDrawer,
       };
     },
   });

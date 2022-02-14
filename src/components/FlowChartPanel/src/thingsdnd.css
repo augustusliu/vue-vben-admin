@@ -1,0 +1,124 @@
+.lf-dndpanel-things {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  /*border-radius: 5px;*/
+  height: 100%;
+  float: left;
+  width: 130px;
+  padding: 5px 5px;
+}
+
+.lf-dnd-things-item {
+  float:left;
+  width: 110px;
+  text-align: center;
+  font-size: 12px;
+  border:1px solid #dddddd;
+  border-radius:5px;
+  margin-bottom: 5px;
+  margin-bottom: 5px;
+  cursor: grab;
+}
+
+.lf-dnd-things-item-icon {
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  float:left;
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin: 0 auto;
+  opacity: 0.99;
+}
+.lf-dnd-things-item-text {
+  width: 85px;
+  height: 25px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 12px;
+  border-left:1px solid #dddddd;
+  float:left;
+  margin: 0 auto;
+}
+.lf-dndpanel-things {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  height: 100%;
+  float: left;
+  width: 120px;
+  padding: 5px 5px;
+}
+
+.lf-dnd-things-item {
+  float:left;
+  width: 110px;
+  text-align: center;
+  font-size: 12px;
+  border:1x solid #dddddd;
+  border-radius:4px;
+  margin-bottom: 8px;
+  cursor: grab;
+}
+
+.lf-dnd-things-item-icon {
+  width: 20%;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  float:left;
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin: 0 auto;
+  background-color:#FFFFFF;
+  opacity: 0.99;
+}
+
+.lf-dnd-things-item-text {
+  height: 25px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 8px;
+  border-left:1px solid #dddddd;
+  float:left;
+  padding: 0 0;
+  margin: 0 auto;
+}
+
+details.dntMenu {
+  float:left;
+}
+
+.dntMenu summary{
+  text-align: center;
+  outline: none;
+  width:110px;
+  height: 25px;
+  line-height: 25px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.dntMenu ul {
+}
+
+.dntMenu ul li {
+  list-style: none;
+  font-size: 12px;
+  height: 25px;
+}
+
+.dntMenu ul li span{
+  list-style: none;
+  font-size: 10px;
+  height: 25px;
+}
+
+.dntMenu ul li a {
+  display: block;
+  color: #666;
+}

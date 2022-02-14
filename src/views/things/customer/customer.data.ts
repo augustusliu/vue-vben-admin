@@ -8,39 +8,42 @@ export const customerColumn: BasicColumn[] = [
     defaultHidden: true,
   },
   {
+    title: '租户id',
+    dataIndex: 'tenantId',
+    width: 5,
+    defaultHidden: true,
+  },
+  {
     title: '客户名称',
     dataIndex: 'name',
-    width: 100,
   },
   {
     title: '客户邮箱',
     dataIndex: 'email',
-    width: 100,
+  },
+  {
+    title: '租户名称',
+    dataIndex: 'tenantName',
   },
   {
     title: '省份',
     dataIndex: 'province',
-    width: 100,
   },
   {
     title: '城市',
     dataIndex: 'city',
-    width: 100,
   },
   {
     title: '区县',
     dataIndex: 'country',
-    width: 100,
   },
   {
     title: '创建时间',
     dataIndex: 'createdTime',
-    width: 100,
   },
   {
     title: '修改时间',
     dataIndex: 'modifiedTime',
-    width: 100,
   },
 ];
 
@@ -49,13 +52,13 @@ export const searchFormSchema: FormSchema[] = [
     field: 'name',
     label: '客户名称',
     component: 'Input',
-    colProps: { span: 11 },
+    colProps: { span: 8 },
   },
   {
     field: 'email',
     label: '客户邮箱',
     component: 'Input',
-    colProps: { span: 11 },
+    colProps: { span: 8 },
   },
   {
     field: 'province',

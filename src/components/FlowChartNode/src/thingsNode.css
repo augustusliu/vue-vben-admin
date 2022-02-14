@@ -1,0 +1,27 @@
+.things-node {
+  width: 120px;
+  height: 27px;
+  text-align: center;
+  font-size: 12px;
+  border:1px solid #dddddd;
+  border-radius:5px;
+  margin-bottom: 10px;
+}
+
+.things-node-icon {
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  background-color: #ffffff;
+  float:left;
+}
+.things-node-text {
+  width: 90px;
+  height: 25px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 12px;
+  border-left:1px solid #dddddd;
+  float:left;
+}

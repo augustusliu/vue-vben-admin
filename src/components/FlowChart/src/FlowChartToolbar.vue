@@ -30,6 +30,7 @@
     props: {
       prefixCls: String,
     },
+    // vue 事件校验器
     emits: ['view-data'],
     setup(_, { emit }) {
       const toolbarItemList = ref<ToolbarConfig[]>([
@@ -43,6 +44,7 @@
           icon: 'codicon:zoom-in',
           tooltip: '放大',
         },
+        { separate: true },
         {
           type: ToolbarTypeEnum.RESET_ZOOM,
           icon: 'codicon:screen-normal',
@@ -71,6 +73,11 @@
           type: ToolbarTypeEnum.VIEW_DATA,
           icon: 'carbon:document-view',
           tooltip: '查看数据',
+        },
+        {
+          type: ToolbarTypeEnum.DATA_SAVE,
+          icon: 'ion:upload-outline',
+          tooltip: '保存',
         },
       ]);
 
@@ -114,6 +121,10 @@
             break;
           case ToolbarTypeEnum.VIEW_DATA:
             emit('view-data');
+            break;
+          case ToolbarTypeEnum.DATA_SAVE:
+            // 打印画布数据
+            console.log(lf.getGraphData());
             break;
         }
       };

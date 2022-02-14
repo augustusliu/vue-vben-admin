@@ -45,7 +45,7 @@ export function usePagination(refProps: ComputedRef<BasicTableProps>) {
     }
 
     return {
-      current: 1,
+      current: 0,
       pageSize: PAGE_SIZE,
       size: 'small',
       defaultPageSize: PAGE_SIZE,
