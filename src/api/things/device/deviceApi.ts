@@ -17,6 +17,7 @@ enum DeviceApi {
   DeviceAddOrUpdateApi = '/api/device/addOrUpdate',
   DeviceCredentialsGetApi = '/api/device/credentials/get/',
   DeviceDeletedApi = '/api/device/del/',
+  DeviceLabelsApi = '/api/device/labels',
 }
 
 // 分页查询
@@ -38,3 +39,6 @@ export const getCredentialsApi = (deviceId: string) =>
 // 获取设备所有的协议列表
 export const delDeviceApi = (deviceId: string) =>
   defHttp.get<string>({ url: DeviceApi.DeviceDeletedApi + deviceId});
+
+export const listDeviceLabels = () =>
+  defHttp.get<string>({ url: DeviceApi.DeviceLabelsApi });

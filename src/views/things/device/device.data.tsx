@@ -3,6 +3,8 @@ import { DescItem } from '/@/components/Description';
 import moment from "moment";
 import { listAllDevices } from '/@/api/things/device/deviceApi';
 import {Tag} from "ant-design-vue";
+import {h} from "vue";
+import {SvgIcon} from "/@/components/Icon";
 
 export const deviceTableColumn: BasicColumn[] = [
   {
@@ -19,6 +21,14 @@ export const deviceTableColumn: BasicColumn[] = [
     dataIndex: 'code',
   },
   {
+    title: '图标',
+    dataIndex: 'icon',
+    width: 50,
+    customRender: ({ record }) => {
+      return h(SvgIcon, { name: record.icon});
+    },
+  },
+  {
     title: '传输协议',
     dataIndex: 'transportType',
   },
@@ -33,7 +43,13 @@ export const deviceTableColumn: BasicColumn[] = [
     title: '标签',
     dataIndex: 'label',
     customRender: ({ record }) => {
-      return <Tag color="#87d068"> {record.label} </Tag>;
+      if(record.label != null && record.label.length > 0){
+        let re = [];
+        // @ts-ignore
+        record.label.forEach(label => re.push(<Tag color="#87d068" style={"margin-right:3px"}> { label } </Tag>));
+        return re;
+      }
+      return null;
     },
   },
   {
@@ -137,10 +153,24 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     colProps: { span: 11 },
   },
   {
+    field: 'icon',
+    label: '设备图标',
+    required: true,
+    component: 'IconPicker',
+    componentProps: {
+      mode: 'svg',
+    },
+    colProps: { span: 20 },
+  },
+  {
     field: 'label',
     label: '设备标签',
-    component: 'Input',
-    colProps: { span: 11 },
+    component: 'Select',
+    colProps: { span: 20 },
+    componentProps: {
+      mode: 'tags',
+      placeholder: '请输入资产标签',
+    },
   },
   {
     field: 'transportType',
@@ -240,7 +270,10 @@ export const deviceDetailInfoScheme: DescItem[] = [
   },
   {
     field: 'label',
-    label: '资产标签',
+    label: '设备标签',
+    render: ( val ) => {
+      return <Tag color="#87d068"> {val} </Tag>;;
+    },
   },
   {
     field: 'modifiedTime',

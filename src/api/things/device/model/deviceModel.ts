@@ -14,6 +14,7 @@ export interface DeviceItem {
   id: number;
   name: string;
   code: string;
+  icon: string;
   isGateway: string;
   transportType: string;
   label: string;
@@ -30,6 +31,7 @@ export interface DeviceAddParam {
   isGateway: string;
   transportType: string;
   label: string;
+  icon: string;
   description: string;
 };
 

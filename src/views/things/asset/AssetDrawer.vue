@@ -18,7 +18,7 @@
   import { createOrUpdateFormSchema } from './asset.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
-  import { addOrUpdateAsset } from '/@/api/things/asset/assetApi';
+  import { addOrUpdateAsset, listAssetLabels } from '/@/api/things/asset/assetApi';
 
   export default defineComponent({
     name: 'AssetAddOrUpdateDrawer',
@@ -26,7 +26,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
-      const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
+      const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
         labelWidth: 90,
         schemas: createOrUpdateFormSchema,
         showActionButtonGroup: false,
@@ -42,6 +42,15 @@
             ...data.record,
           });
         }
+
+        let labelsData = await listAssetLabels();
+        await updateSchema({
+          field: 'label',
+          componentProps: {
+            dropdownStyle: { maxHeight: 270, overflow: 'auto'},
+            options: preProcessData(labelsData),
+          },
+        });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增资产' : '编辑资产'));
@@ -56,6 +65,16 @@
         } finally {
           setDrawerProps({ confirmLoading: false });
         }
+      }
+
+      function preProcessData(nodes){
+        let options:Array<any> = new Array<any>();
+        nodes.forEach(item => options.push({
+          label: item,
+          key: item,
+          value: [item],
+        }));
+        return options;
       }
 
       return {

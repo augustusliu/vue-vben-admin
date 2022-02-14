@@ -2,6 +2,8 @@ import { BasicColumn, FormSchema} from '/@/components/Table';
 import { DescItem } from '/@/components/Description';
 import { Tag } from 'ant-design-vue';
 import moment from 'moment'
+import {SvgIcon} from "/@/components/Icon";
+import {h} from "vue";
 
 export const assetColumn: BasicColumn[] = [
   {
@@ -19,24 +21,30 @@ export const assetColumn: BasicColumn[] = [
     dataIndex: 'code',
   },
   {
+    title: '图标',
+    dataIndex: 'icon',
+    width: 50,
+    customRender: ({ record }) => {
+      return h(SvgIcon, { name: record.icon});
+    },
+  },
+  {
     title: '资产标签',
     dataIndex: 'label',
     customRender: ({ record }) => {
-      return <Tag color="#2db7f5"> {record.label} </Tag>;
+      if(record.label != null && record.label.length > 0){
+        let re = [];
+        // @ts-ignore
+        record.label.forEach(label => re.push(<Tag color="#2db7f5" style={"margin-right:3px"}> { label } </Tag>));
+        return re;
+      }
+      return null;
     },
   },
-  // {
-  //   title: '创建人',
-  //   dataIndex: 'userId',
-  // },
   {
     title: '描述',
     dataIndex: 'description',
   },
-  // {
-  //   title: '所属客户',
-  //   dataIndex: 'customerName',
-  // },
   {
     title: '修改时间',
     dataIndex: 'modifiedTime',
@@ -84,6 +92,9 @@ export const assetInfoScheme: DescItem[] = [
   {
     field: 'label',
     label: '资产标签',
+    render: ( val ) => {
+      return <Tag color="#2db7f5"> {val} </Tag>;;
+    },
   },
   {
     field: 'modifiedTime',
@@ -153,11 +164,26 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     colProps: { span: 20 },
   },
   {
-    field: 'label',
-    label: '资产标签',
-    component: 'AutoComplete',
+    field: 'icon',
+    label: '资产图标',
+    required: true,
+    component: 'IconPicker',
+    componentProps: {
+      mode: 'svg',
+    },
     colProps: { span: 20 },
   },
+  {
+    field: 'label',
+    label: '资产标签',
+    component: 'Select',
+    colProps: { span: 20 },
+    componentProps: {
+      mode: 'tags',
+      placeholder: '请输入资产标签',
+    },
+  },
+
   {
     field: 'description',
     label: '资产描述',

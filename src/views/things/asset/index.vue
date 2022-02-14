@@ -13,6 +13,11 @@
               onClick: handleView.bind(null, record),
             },
             {
+              icon: 'ant-design:cluster-outlined',
+              tooltip: '资产关系图',
+              onClick: handleRelation.bind(null, record),
+            },
+            {
               icon: 'clarity:note-edit-line',
               tooltip: '编辑资产信息',
               onClick: handleEdit.bind(null, record),
@@ -55,7 +60,7 @@
       const go = useGo();
       // 定义当前要展示的表格
       const [registerTable, { reload }] = useTable({
-        title: '资产列表',
+        // title: '资产列表',
         api: listAssetApi,
         columns: assetColumn,
         useSearchForm: true,
@@ -67,7 +72,7 @@
         bordered: true,
         showIndexColumn: true,
         actionColumn: {
-          width: 120,
+          width: 150,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -89,11 +94,14 @@
       }
       // 删除操作
       function handleDelete(record: Recordable) {
-
       }
       // 查看详情
       function handleView(record: Recordable){
         go('/asset_detail/' + record.id );
+      }
+
+      function handleRelation(record: Recordable){
+
       }
       function handleSuccess() {
         reload()
@@ -106,6 +114,7 @@
         handleView,
         handleEdit,
         handleDelete,
+        handleRelation,
         handleSuccess,
       };
     },
