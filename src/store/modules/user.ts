@@ -133,7 +133,7 @@ export const useUserStore = defineStore({
       }
       this.setToken(undefined);
       this.setSessionTimeout(false);
-      goLogin && router.push(PageEnum.BASE_LOGIN);
+      goLogin && (await router.push(PageEnum.BASE_LOGIN));
     },
 
     /**

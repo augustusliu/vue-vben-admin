@@ -28,7 +28,6 @@
         labelWidth: 100,
         schemas: dictionaryCreateOrUpdateFormSchema,
         showActionButtonGroup: false,
-        baseColProps: { lg: 12, md: 24 },
       });
 
       // 注册函数，并且将数据
@@ -51,7 +50,7 @@
           componentProps: {
             treeDataSimpleMode: true,
             treeData: preProcessData(treeData),
-            dropdownStyle: { maxHeight: 270, overflow: 'auto'},
+            dropdownStyle: { maxHeight: 270, overflow: 'auto' },
             // // 异步加载子节点
             // loadData: loadChildData,
           },
@@ -76,8 +75,8 @@
       //   node.dataRef.children = preProcessData(child);
       // });
 
-      function preProcessData(nodes){
-        nodes.forEach(item => {
+      function preProcessData(nodes) {
+        nodes.forEach((item) => {
           item['isLeaf'] = !item.hasChild;
         });
         return nodes;

@@ -5,62 +5,67 @@
       <Tabs>
         <template v-for="item in tabListScheme" :key="item.key">
           <TabPane :tab="item.name">
-<!--            动态组件切换-->
-            <component :is="item.component" :entityId="assetId" :entityType="entityType"/>
+            <!--            动态组件切换-->
+            <component :is="item.component" :entityId="assetId" :entityType="entityType" />
           </TabPane>
         </template>
       </Tabs>
     </div>
   </PageWrapper>
-
 </template>
 
 <script lang="ts">
-  import { defineComponent, onMounted, ref} from 'vue';
+  import { defineComponent, onMounted, ref } from 'vue';
   import { useRoute } from 'vue-router';
   import { PageWrapper } from '/@/components/Page';
   import { useGo } from '/@/hooks/web/usePage';
   import { Tag, Tabs } from 'ant-design-vue';
   import { Description, useDescription } from '/@/components/Description/index';
-  import { ScrollContainer } from "/@/components/Container";
+  import { ScrollContainer } from '/@/components/Container';
 
   import { getAssetApi } from '/@/api/things/asset/assetApi';
-  import { assetInfoScheme } from './asset.data'
+  import { assetInfoScheme } from './asset.data';
 
-  import { tabListScheme } from '../common/entityTabs/tab.data'
-  import EntityAttributes from '../common/entityTabs/EntityAttributes.vue'
-  import EntityTelemetry from '../common/entityTabs/EntityTelemetry.vue'
-  import EntityEvent from '../common/entityTabs/EntityEvent.vue'
-  import EntityAlarm from '../common/entityTabs/EntityAlarm.vue'
+  import { tabListScheme } from '../common/entityTabs/tab.data';
+  import EntityAttributes from '../common/entityTabs/EntityAttributes.vue';
+  import EntityTelemetry from '../common/entityTabs/EntityTelemetry.vue';
+  import EntityEvent from '../common/entityTabs/EntityEvent.vue';
+  import EntityAlarm from '../common/entityTabs/EntityAlarm.vue';
 
   // tab信息参考/page/account/setting配置
   export default defineComponent({
     name: 'AssetDetail',
-    components: { Description,
+    components: {
+      Description,
       PageWrapper,
       Tag,
       Tabs,
       TabPane: Tabs.TabPane,
-      ScrollContainer, EntityAttributes, EntityTelemetry, EntityEvent, EntityAlarm },
+      ScrollContainer,
+      EntityAttributes,
+      EntityTelemetry,
+      EntityEvent,
+      EntityAlarm,
+    },
     setup() {
       const route = useRoute();
       const go = useGo();
       // 此处可以得到设备
       const assetId = ref(route.params?.id).value;
       const entityType = 'ASSET';
-      const assetInfo: any = ref({})
+      const assetInfo: any = ref({});
       // 页面是否加载成功
-      const isLoaded = ref(false)
+      const isLoaded = ref(false);
       // 默认显示的当前tab
       const currentKey = ref('attrs');
 
       // 获取资产详情信息
-      async function initAssetInfo(){
+      async function initAssetInfo() {
         const res = await getAssetApi(assetId);
-        if(!res){
+        if (!res) {
           return;
         }
-        assetInfo.value = res
+        assetInfo.value = res;
         isLoaded.value = true;
       }
 

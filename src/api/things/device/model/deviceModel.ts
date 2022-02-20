@@ -7,6 +7,7 @@ export type DeviceParams = BasicPageParams & {
   code?: string;
   label?: string;
   isGateway?: boolean;
+  disabled: boolean;
   transportType?: string;
 };
 
@@ -15,6 +16,7 @@ export interface DeviceItem {
   name: string;
   code: string;
   icon: string;
+  disabled: boolean;
   isGateway: string;
   transportType: string;
   label: string;
@@ -22,7 +24,7 @@ export interface DeviceItem {
   userId: number;
   modifiedTime: string;
   createdTime: string;
-};
+}
 
 export interface DeviceAddParam {
   id: number;
@@ -30,10 +32,11 @@ export interface DeviceAddParam {
   code: string;
   isGateway: string;
   transportType: string;
+  disabled: boolean;
   label: string;
   icon: string;
   description: string;
-};
+}
 
 // 资产kv列表实体
 export interface DeviceKVItem {
@@ -47,7 +50,7 @@ export interface DeviceCredentialsModel {
   credentialsToken: string;
   credentialsValue: string;
   credentialsType: string;
-};
+}
 
 export type DeviceListResultModel = BasicFetchResult<DeviceItem>;
 

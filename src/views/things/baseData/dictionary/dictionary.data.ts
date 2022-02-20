@@ -1,7 +1,7 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
-import {h} from "vue";
-import {Tag} from "ant-design-vue";
-import moment from "moment";
+import { h } from 'vue';
+import { Tag } from 'ant-design-vue';
+import moment from 'moment';
 
 export const dictionaryColumn: BasicColumn[] = [
   {
@@ -12,24 +12,31 @@ export const dictionaryColumn: BasicColumn[] = [
   {
     title: '编码',
     dataIndex: 'code',
+    width: 120,
   },
   {
     title: '字典类型',
     dataIndex: 'dictionaryType',
+    width: 120,
   },
   {
-    title: '是否系统默认',
+    title: '系统默认',
     dataIndex: 'systemDefault',
+    width: 80,
     customRender: ({ record }) => {
       const isDefault = record.systemDefault;
-      const text = isDefault ? '系统默认' : '用户定义';
+      const text = isDefault ? '是' : '否';
       return h(Tag, () => text);
     },
   },
   {
+    title: '备注',
+    dataIndex: 'remark',
+  },
+  {
     title: '创建时间',
     dataIndex: 'createdTime',
-    width:180,
+    width: 180,
     customRender: ({ record }) => {
       return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
     },
@@ -37,12 +44,12 @@ export const dictionaryColumn: BasicColumn[] = [
   {
     title: '修改时间',
     dataIndex: 'modifiedTime',
-    width:180,
+    width: 180,
     customRender: ({ record }) => {
       return moment(Number(record.modifiedTime)).format('YYYY-MM-DD HH:mm:ss');
     },
-  }
-]
+  },
+];
 
 export const dictionarySearchFormSchema: FormSchema[] = [
   {
@@ -74,8 +81,8 @@ export const dictionarySearchFormSchema: FormSchema[] = [
       ],
     },
     colProps: { span: 8 },
-  }
-]
+  },
+];
 
 export const dictionaryCreateOrUpdateFormSchema: FormSchema[] = [
   {
@@ -89,11 +96,13 @@ export const dictionaryCreateOrUpdateFormSchema: FormSchema[] = [
     field: 'name',
     label: '名称',
     component: 'Input',
+    required: true,
     colProps: { span: 20 },
   },
   {
     field: 'code',
     label: '编码',
+    required: true,
     component: 'Input',
     colProps: { span: 20 },
   },
@@ -101,12 +110,13 @@ export const dictionaryCreateOrUpdateFormSchema: FormSchema[] = [
     field: 'dictionaryType',
     label: '字典类型',
     component: 'Input',
+    required: true,
     colProps: { span: 20 },
   },
   {
     field: 'parentId',
     label: '父节点',
-    colProps: { span: 11 },
+    colProps: { span: 20 },
     component: 'TreeSelect',
     componentProps: {
       // 用户适配前后端接口数据
@@ -117,14 +127,14 @@ export const dictionaryCreateOrUpdateFormSchema: FormSchema[] = [
       },
       getPopupContainer: () => document.body,
     },
-
   },
   {
     field: 'systemDefault',
     label: '是否系统默认',
-    colProps: { span: 11 },
+    colProps: { span: 20 },
     component: 'RadioButtonGroup',
     defaultValue: false,
+    required: true,
     componentProps: {
       options: [
         { label: '是', value: true },
@@ -132,5 +142,10 @@ export const dictionaryCreateOrUpdateFormSchema: FormSchema[] = [
       ],
     },
   },
-
-]
+  {
+    field: 'remark',
+    label: '备注',
+    component: 'InputTextArea',
+    colProps: { span: 20 },
+  },
+];

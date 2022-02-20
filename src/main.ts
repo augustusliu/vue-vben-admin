@@ -42,6 +42,7 @@ async function bootstrap() {
   setupRouter(app);
 
   // router-guard
+  // 用于处理路由守卫，包括页面跳转前的加载动画，菜单权限等等
   setupRouterGuard(router);
 
   // Register global directive

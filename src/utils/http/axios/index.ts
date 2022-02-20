@@ -15,8 +15,7 @@ import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
-import { router } from '/@/router';
-import { PageEnum } from '/@/enums/pageEnum';
+import { useUserStoreWithOut } from '/@/store/modules/user';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -58,13 +57,16 @@ const transform: AxiosTransform = {
 
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
-    let errorMsg = message;
+    let errorMsg = '';
     switch (code) {
       case ResultEnum.TIMEOUT:
         errorMsg = t('sys.api.timeoutMessage');
         break;
+      case ResultEnum.AUTHENTICATION_FAILED:
       case ResultEnum.EXPIRED:
-        router.push(PageEnum.BASE_LOGIN);
+        const userStore = useUserStoreWithOut();
+        userStore.setToken(undefined);
+        userStore.logout(true);
         break;
       default:
         if (message) {
@@ -79,7 +81,6 @@ const transform: AxiosTransform = {
     } else if (options.errorMessageMode === 'message') {
       createMessage.error(errorMsg);
     }
-
     throw new Error(errorMsg || t('sys.api.apiRequestFailed'));
   },
 
@@ -226,6 +227,8 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           errorMessageMode: 'message',
           // 接口地址
           apiUrl: globSetting.apiUrl,
+          // 接口拼接地址
+          urlPrefix: urlPrefix,
           //  是否加入时间戳
           joinTime: true,
           // 忽略重复请求

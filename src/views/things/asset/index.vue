@@ -13,7 +13,7 @@
               onClick: handleView.bind(null, record),
             },
             {
-              icon: 'ant-design:cluster-outlined',
+              icon: 'ant-design:node-index-outlined',
               tooltip: '资产关系图',
               onClick: handleRelation.bind(null, record),
             },
@@ -41,19 +41,20 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import {BasicTable, TableAction, useTable} from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { listAssetApi } from '/@/api/things/asset/assetApi';
-  import { assetColumn, searchFormSchema } from "/@/views/things/asset/asset.data";
+  import { assetColumn, searchFormSchema } from '/@/views/things/asset/asset.data';
+  import { SvgIcon, Icon } from '/@/components/Icon';
   import { useGo } from '/@/hooks/web/usePage';
   import { useDrawer } from '/@/components/Drawer';
-  import AssetDrawer from "./AssetDrawer.vue";
+  import AssetDrawer from './AssetDrawer.vue';
 
   // 定义当前组件
   export default defineComponent({
     // 组件名称
     name: 'AssetComponent',
     // 当前依赖的组件
-    components: { BasicTable, TableAction, AssetDrawer },
+    components: { BasicTable, SvgIcon, Icon, TableAction, AssetDrawer },
 
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
@@ -93,18 +94,17 @@
         });
       }
       // 删除操作
-      function handleDelete(record: Recordable) {
-      }
+      function handleDelete(record: Recordable) {}
       // 查看详情
-      function handleView(record: Recordable){
-        go('/asset_detail/' + record.id );
+      function handleView(record: Recordable) {
+        go('/asset_detail/' + record.id);
       }
 
-      function handleRelation(record: Recordable){
-
+      function handleRelation(record: Recordable) {
+        go('/entity_relation/' + record.id);
       }
       function handleSuccess() {
-        reload()
+        reload();
       }
 
       return {

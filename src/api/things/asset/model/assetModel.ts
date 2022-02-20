@@ -6,6 +6,7 @@ export type AssetParams = BasicPageParams & {
   name?: string;
   code?: string;
   label?: string;
+  disabled?: boolean;
 };
 
 // 资产列表查询返回模型
@@ -17,6 +18,7 @@ export interface AssetListItem {
   icon: string;
   description: string;
   userId: number;
+  disabled: boolean;
   customerId: number;
   customerName: string;
   tenantId: number;
@@ -32,6 +34,7 @@ export interface AssetAddParam {
   icon: string;
   label: string;
   description: string;
+  disabled: boolean;
 }
 
 export type AssetListResultModel = BasicFetchResult<AssetListItem>;

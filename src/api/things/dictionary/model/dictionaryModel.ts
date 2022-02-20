@@ -1,12 +1,13 @@
-import {BasicFetchResult, BasicPageParams} from '/@/api/model/baseModel';
+import { BasicFetchResult, BasicPageParams } from '/@/api/model/baseModel';
 
 export interface DictionaryAddOrUpdateItem {
   id: number;
   name: string;
   code: string;
+  remark: string;
   dictionaryType: string;
   systemDefault: boolean;
-  parentId:number;
+  parentId: number;
 }
 // 字典搜索项目
 export type DictionaryParams = BasicPageParams & {
@@ -20,14 +21,14 @@ export interface DictionaryItem {
   id: number;
   name: string;
   code: string;
+  remark: string;
   dictionaryType: string;
   systemDefault: boolean;
-  createdTime:number;
-  modifiedTime:number;
+  createdTime: number;
+  modifiedTime: number;
   parentId: number;
   hasChild: boolean;
   children: DictionaryItem[];
 }
-
 
 export type DictionaryListResultModel = BasicFetchResult<DictionaryItem>;

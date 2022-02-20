@@ -5,7 +5,7 @@ export default {
   menu: 'Menus Management',
   customer: 'Customer',
   userMgr: 'User Management',
-  sceneLink: "Scene Link",
+  sceneLink: 'Scene Link',
   rulers: 'Flow Ruler',
   asset: 'Asset',
   assetDetail: 'Asset Detail',
@@ -15,4 +15,5 @@ export default {
   baseData: 'Base Data',
   industry: 'Industry Data',
   area: 'Area Data',
+  relation: 'Entity Relation',
 };

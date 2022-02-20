@@ -3,7 +3,6 @@ import type { RouteLocationRaw, Router } from 'vue-router';
 import { PageEnum } from '/@/enums/pageEnum';
 import { isString } from '/@/utils/is';
 import { unref } from 'vue';
-
 import { useRouter } from 'vue-router';
 
 export type RouteLocationRawEx = Omit<RouteLocationRaw, 'path'> & { path: PageEnum };
@@ -46,7 +45,8 @@ export const useRedo = (_router?: Router) => {
   function redo(): Promise<boolean> {
     return new Promise((resolve) => {
       push({
-        path: '/redirect' + unref(currentRoute).fullPath,
+        // path: '/redirect' + unref(currentRoute).fullPath,
+        redirect: unref(currentRoute).fullPath,
         query,
         params,
       }).then(() => resolve(true));

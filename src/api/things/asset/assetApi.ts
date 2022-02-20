@@ -24,6 +24,7 @@ enum AssetApi {
   // 添加编辑资产
   AssetAddOrUpdateApi = '/api/asset/addOrUpdate',
   AssetLabelsApi = '/api/asset/labels',
+  AssetListAllApi = '/api/asset/listAll',
 }
 
 // 分页查询对应的资产列表
@@ -36,16 +37,19 @@ export const getAssetApi = (params: number) =>
 
 // 查询资产下属性列表
 export const listAttributeByAssetApi = (params: any) =>
-  defHttp.post<AttributeListResult>({ url: AssetApi.AssetAttributeList , params });
+  defHttp.post<AttributeListResult>({ url: AssetApi.AssetAttributeList, params });
 
 // 为资产添加一个属性
-export const addOneAttributeApi = (_assetId:number, params: AddOrUpdateAttributeParam) =>
+export const addOneAttributeApi = (_assetId: number, params: AddOrUpdateAttributeParam) =>
   defHttp.post<AttributeListResult>({ url: AssetApi.AssetAddOneAttribute + _assetId, params });
 
 // 添加编辑资产
 export const addOrUpdateAsset = (params: AssetAddParam) =>
-  defHttp.post<AttributeListResult>({ url: AssetApi.AssetAddOrUpdateApi , params });
+  defHttp.post<AttributeListResult>({ url: AssetApi.AssetAddOrUpdateApi, params });
 
 // 分页查询对应的资产列表
-export const listAssetLabels = () =>
-  defHttp.get<string>({ url: AssetApi.AssetLabelsApi });
+export const listAssetLabels = () => defHttp.get<string>({ url: AssetApi.AssetLabelsApi });
+
+// 查询全部资产
+export const listAssetAll = () =>
+  defHttp.get<AssetListResultModel>({ url: AssetApi.AssetListAllApi });

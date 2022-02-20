@@ -5,7 +5,7 @@ export default {
   menu: '菜单管理',
   customer: '客户列表',
   userMgr: '用户列表',
-  sceneLink: "场景联动",
+  sceneLink: '场景联动',
   rulers: '规则引擎',
   asset: '资产管理',
   assetDetail: '资产详情',
@@ -15,4 +15,5 @@ export default {
   baseData: '基础数据',
   industry: '行业数据',
   area: '地区数据',
+  relation: '实体关系',
 };
