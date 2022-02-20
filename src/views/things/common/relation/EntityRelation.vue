@@ -1,8 +1,6 @@
 <template>
-  <PageWrapper class="h-full" title="资产关系图">
-    <Loading :loading="loading" :absolute="absolute" :tip="tip" />
-    <div :class="prefixCls" ref="g6Ref"></div>
-  </PageWrapper>
+  <Loading :loading="loading" :absolute="absolute" :tip="tip" />
+  <div :class="prefixCls" class="h-full" ref="g6Ref"></div>
 </template>
 
 <script lang="ts">
@@ -21,8 +19,6 @@
   import g6Data from './dataG6.json';
   import { PageWrapper } from '/@/components/Page';
   import { Loading } from '/@/components/Loading';
-  import { SvgIcon } from '/@/components/Icon';
-  import { useDesign } from '/@/hooks/web/useDesign';
 
   export default defineComponent({
     name: 'RelationTree',
@@ -39,11 +35,13 @@
       },
     },
     setup(props) {
+      // 加载进度条状态
       const compState = reactive({
         absolute: false,
         loading: false,
         tip: '加载中...',
       });
+      // 展开进度条及关闭操作
       function openLoading(absolute: boolean, loading: boolean) {
         compState.absolute = absolute;
         compState.loading = loading;
@@ -52,8 +50,6 @@
       const g6Ref = ref(null);
       // G6实例
       const g6Instance = ref(null) as Ref<Graph | null>;
-      const symbolId = computed(() => `#icon-asset_apartment`);
-      console.log(symbolId);
       // G6参数配置
       const getG6Options = computed(() => {
         // 传递给组件的配置信息
@@ -147,10 +143,10 @@
             },
             /* configurations for four linkpoints */
             linkPoints: {
-              top: true,
-              right: true,
-              bottom: true,
-              left: true,
+              top: false,
+              right: false,
+              bottom: false,
+              left: false,
               /* linkPoints' size, 8 by default */
               //   size: 5,
               /* linkPoints' style */
@@ -161,7 +157,7 @@
             /* icon configuration */
             icon: {
               /* whether show the icon, false by default */
-              show: true,
+              show: false,
               /* icon's img address, string type */
               // img: SvgIcon['asset_apartment'],
               /* icon's size, 20 * 20 by default: */
@@ -188,7 +184,7 @@
         });
         await onRender();
       }
-
+      // G6渲染
       async function onRender() {
         await nextTick();
         openLoading(true, true);
@@ -196,13 +192,20 @@
         if (!g6r) {
           return;
         }
+
+        // 动态调整画布大小
+        g6r.changeSize((g6Ref as any).value.clientWidth, document.body.clientHeight - 80 - 30);
+        // window.onresize = () => {
+        //   g6r.changeSize((g6Ref as any).value.clientWidth, document.body.clientHeight - 80 - 72 - 38);
+        // }
         g6r.data({
           nodes: g6Data.nodes,
           edges: g6Data.edges.map(function (edge, i) {
-            edge.id = 'edge' + i;
+            (edge as any).id = 'edge' + i;
             return Object.assign({}, edge);
           }),
         });
+        g6r.render();
         g6r.on('node:dragstart', function (e) {
           g6r.layout();
           refreshDragedNodePosition(e);
@@ -211,10 +214,9 @@
           refreshDragedNodePosition(e);
         });
         g6r.on('node:dragend', function (e) {
-          e.item.get('model').fx = null;
-          e.item.get('model').fy = null;
+          (e as any).item.get('model').fx = null;
+          (e as any).item.get('model').fy = null;
         });
-        g6r.render();
         g6r.fitView();
       }
 
@@ -236,7 +238,6 @@
 <style lang="less">
   .entity-relation {
     width: 100%;
-    height: 100%;
     background-color: @component-background;
   }
 </style>
