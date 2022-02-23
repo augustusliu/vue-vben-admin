@@ -1,9 +1,9 @@
-import { BasicColumn, FormSchema} from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 import { DescItem } from '/@/components/Description';
 import { Tag } from 'ant-design-vue';
-import moment from 'moment'
-import {SvgIcon} from "/@/components/Icon";
-import {h} from "vue";
+import moment from 'moment';
+import { SvgIcon } from '/@/components/Icon';
+import { h } from 'vue';
 import { indexColor } from '../common/constant/ColorRandom';
 
 export const assetColumn: BasicColumn[] = [
@@ -26,19 +26,24 @@ export const assetColumn: BasicColumn[] = [
     dataIndex: 'icon',
     width: 50,
     customRender: ({ record }) => {
-      return h(SvgIcon, { name: record.icon});
+      return h(SvgIcon, { name: record.icon });
     },
   },
   {
     title: '资产标签',
     dataIndex: 'label',
     customRender: ({ record }) => {
-      if(record.label != null && record.label.length > 0){
+      if (record.label != null && record.label.length > 0) {
         let re = [];
         // @ts-ignore
         record.label.forEach((label, index) => {
           // @ts-ignore
-          re.push(<Tag color= {indexColor(index)} style={"margin-right:3px"}> { label } </Tag>)
+          re.push(
+            <Tag color={indexColor(index)} style={'margin-right:3px'}>
+              {' '}
+              {label}{' '}
+            </Tag>
+          );
         });
         return re;
       }
@@ -52,7 +57,7 @@ export const assetColumn: BasicColumn[] = [
   {
     title: '修改时间',
     dataIndex: 'modifiedTime',
-    width:180,
+    width: 180,
     customRender: ({ record }) => {
       return moment(Number(record.modifiedTime)).format('YYYY-MM-DD HH:mm:ss');
     },
@@ -60,12 +65,12 @@ export const assetColumn: BasicColumn[] = [
   {
     title: '创建时间',
     dataIndex: 'createdTime',
-    width:180,
+    width: 180,
     customRender: ({ record }) => {
       return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
     },
   },
-]
+];
 
 // 用于资产详情页信息展示
 // @ts-ignore
@@ -97,11 +102,18 @@ export const assetInfoScheme: DescItem[] = [
   {
     field: 'label',
     label: '资产标签',
-    render: ( label ) => {
-      if(label != null && label.length > 0){
+    render: (label: any) => {
+      if (label != null && label.length > 0) {
         let re = [];
         // @ts-ignore
-        label.forEach(item => re.push(<Tag color="#87d068" style={"margin-right:3px"}> { item } </Tag>));
+        label.forEach((item) =>
+          re.push(
+            <Tag color="#87d068" style={'margin-right:3px'}>
+              {' '}
+              {item}{' '}
+            </Tag>
+          )
+        );
         return re;
       }
       return null;
@@ -110,14 +122,14 @@ export const assetInfoScheme: DescItem[] = [
   {
     field: 'modifiedTime',
     label: '修改时间',
-    render: ( val ) => {
+    render: (val) => {
       return moment(Number(val)).format('YYYY-MM-DD HH:mm:ss');
     },
   },
   {
     field: 'createdTime',
     label: '创建时间',
-    render: ( val ) => {
+    render: (val) => {
       return moment(Number(val)).format('YYYY-MM-DD HH:mm:ss');
     },
   },
@@ -125,7 +137,7 @@ export const assetInfoScheme: DescItem[] = [
     field: 'description',
     label: '资产描述',
   },
-]
+];
 
 // 搜索域的字段
 export const searchFormSchema: FormSchema[] = [
@@ -164,7 +176,7 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     colProps: { span: 20 },
     required: true,
     helpComponentProps: {
-      text: '必填，长度不超过100个字符'
+      text: '必填，长度不超过100个字符',
     },
   },
   {
@@ -201,4 +213,4 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     component: 'InputTextArea',
     colProps: { span: 20 },
   },
-]
+];

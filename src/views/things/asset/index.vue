@@ -101,7 +101,7 @@
       }
 
       function handleRelation(record: Recordable) {
-        go('/entity_relation/' + record.id);
+        go('/relation/' + record.id);
       }
       function handleSuccess() {
         reload();

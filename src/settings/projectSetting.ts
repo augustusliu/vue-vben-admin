@@ -119,7 +119,7 @@ const setting: ProjectConfig = {
   // Multi-label
   multiTabsSetting: {
     // 固定tab不缓存数据
-    cache: false,
+    cache: true,
     // Turn on
     show: true,
     // Is it possible to drag and drop sorting tabs
@@ -127,7 +127,7 @@ const setting: ProjectConfig = {
     // Turn on quick actions
     showQuick: true,
     // Whether to show the refresh button 不显示刷新按钮
-    showRedo: false,
+    showRedo: true,
     // Whether to show the collapse button
     showFold: true,
   },
@@ -146,7 +146,7 @@ const setting: ProjectConfig = {
     openPageLoading: true,
 
     // Whether to open the top progress bar
-    openNProgress: false,
+    openNProgress: true,
   },
 
   // Whether to enable KeepAlive cache is best to close during development, otherwise the cache needs to be cleared every time

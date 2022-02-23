@@ -114,6 +114,7 @@
 
       function handleChange(activeKey: any) {
         activeKeyRef.value = activeKey;
+        console.log('fixedTabActive', activeKey);
         go(activeKey, false);
       }
 

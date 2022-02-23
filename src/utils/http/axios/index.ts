@@ -60,6 +60,7 @@ const transform: AxiosTransform = {
     let errorMsg = '';
     switch (code) {
       case ResultEnum.TIMEOUT:
+      case ResultEnum.LOGIN_FAILED:
         errorMsg = t('sys.api.timeoutMessage');
         break;
       case ResultEnum.AUTHENTICATION_FAILED:

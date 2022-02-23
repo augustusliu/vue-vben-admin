@@ -1,6 +1,8 @@
 <template>
-  <Loading :loading="loading" :absolute="absolute" :tip="tip" />
-  <div :class="prefixCls" class="h-full" ref="g6Ref"></div>
+  <!--  <Loading :loading="loading" :absolute="absolute" :tip="tip" />-->
+  <PageWrapper>
+    <div :class="prefixCls" class="h-full" ref="g6Ref"></div>
+  </PageWrapper>
 </template>
 
 <script lang="ts">
@@ -19,6 +21,7 @@
   import g6Data from './dataG6.json';
   import { PageWrapper } from '/@/components/Page';
   import { Loading } from '/@/components/Loading';
+  import { G6Register, G6Start } from './plugins/g6NodeDefinition';
 
   export default defineComponent({
     name: 'RelationTree',
@@ -58,8 +61,7 @@
         const defaultOptions: Partial<GraphOptions> = {
           width: 500,
           height: 500,
-          fitView: true,
-          fitViewPadding: [50, 50, 50, 50],
+          linkCenter: true,
           minZoom: 0.1,
           groupByTypes: false,
           modes: {
@@ -88,82 +90,15 @@
                 trigger: 'drag',
               },
             ],
-            edit: ['click-select'], // 节点点击编辑交互
           },
           layout: {
-            type: 'force',
-            // 防重
-            preventOverlap: true,
-            // 定义边长，起始节点边长较长，其余边长为30
-            linkDistance: (d) => {
-              if (d.source.id === 'node0') {
-                return 100;
-              }
-              return 30;
-            },
-            nodeStrength: (d) => {
-              if (d.isLeaf) {
-                return -50;
-              }
-              return -10;
-            },
-            edgeStrength: (d) => {
-              if (d.source.id === 'node1' || d.source.id === 'node2' || d.source.id === 'node3') {
-                return 0.7;
-              }
-              return 0.1;
-            },
-            onLayoutEnd: () => {
-              // 布局完成后 ，取消加载框
-              openLoading(false, false);
-            },
+            type: 'gForce',
+            minMovement: 0.01,
+            onLayoutEnd: () => {},
           },
           defaultNode: {
-            /* node type */
-            type: 'circle',
-            /* node size */
-            size: [60],
-            /* style for the keyShape */
-            // style: {
-            //   fill: '#9EC9FF',
-            //   stroke: '#5B8FF9',
-            //   lineWidth: 3,
-            // },
-            labelCfg: {
-              /* label's position, options: center, top, bottom, left, right */
-              position: 'bottom',
-              /* label's offset to the keyShape, 4 by default */
-              //   offset: 12,
-              /* label's style */
-              //   style: {
-              //     fontSize: 20,
-              //     fill: '#ccc',
-              //     fontWeight: 500
-              //   }
-            },
-            /* configurations for four linkpoints */
-            linkPoints: {
-              top: false,
-              right: false,
-              bottom: false,
-              left: false,
-              /* linkPoints' size, 8 by default */
-              //   size: 5,
-              /* linkPoints' style */
-              //   fill: '#ccc',
-              //   stroke: '#333',
-              //   lineWidth: 2,
-            },
-            /* icon configuration */
-            icon: {
-              /* whether show the icon, false by default */
-              show: false,
-              /* icon's img address, string type */
-              // img: SvgIcon['asset_apartment'],
-              /* icon's size, 20 * 20 by default: */
-              //   width: 40,
-              //   height: 40
-            },
+            type: 'ellipse-node', // 节点类型，采用我们自定义的椭圆节点
+            size: 20, // 节点大小
           },
           ...g6Options,
         };
@@ -177,53 +112,21 @@
         if (!g6El) {
           return;
         }
+        // openLoading(true, true);
+        // 注册G6自定义节点
+        G6Register();
         // 初始化G6
         g6Instance.value = new G6.Graph({
           ...unref(getG6Options),
           container: g6El,
         });
-        await onRender();
-      }
-      // G6渲染
-      async function onRender() {
-        await nextTick();
-        openLoading(true, true);
-        const g6r = unref(g6Instance);
-        if (!g6r) {
-          return;
-        }
 
-        // 动态调整画布大小
-        g6r.changeSize((g6Ref as any).value.clientWidth, document.body.clientHeight - 80 - 30);
-        // window.onresize = () => {
-        //   g6r.changeSize((g6Ref as any).value.clientWidth, document.body.clientHeight - 80 - 72 - 38);
-        // }
-        g6r.data({
-          nodes: g6Data.nodes,
-          edges: g6Data.edges.map(function (edge, i) {
-            (edge as any).id = 'edge' + i;
-            return Object.assign({}, edge);
-          }),
-        });
-        g6r.render();
-        g6r.on('node:dragstart', function (e) {
-          g6r.layout();
-          refreshDragedNodePosition(e);
-        });
-        g6r.on('node:drag', function (e) {
-          refreshDragedNodePosition(e);
-        });
-        g6r.on('node:dragend', function (e) {
-          (e as any).item.get('model').fx = null;
-          (e as any).item.get('model').fy = null;
-        });
-        g6r.fitView();
-      }
-
-      function refreshDragedNodePosition(e) {
-        const model = e.item.get('model');
-        model.fx = e.x;
-        model.fy = e.y;
+        let g6Width = (g6Ref as any).value.clientWidth;
+        let g6Height = document.body.clientHeight - 155;
+        g6Instance.value.changeSize(g6Width, g6Height);
+        // 启动G6
+        G6Start(unref(g6Instance), true, g6Width, g6Height, g6Data);
+        // openLoading(false, false);
       }
       onMounted(init);
       return {
@@ -238,6 +141,8 @@
 <style lang="less">
   .entity-relation {
     width: 100%;
-    background-color: @component-background;
+
+    /* <!--background-color: @component-background;--> */
+    background-color: #2b2f33;
   }
 </style>
