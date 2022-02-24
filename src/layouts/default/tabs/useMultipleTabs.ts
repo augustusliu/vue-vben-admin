@@ -10,7 +10,9 @@ import { useRouter } from 'vue-router';
 export function initAffixTabs(): string[] {
   const affixList = ref<RouteLocationNormalized[]>([]);
 
+  // 获取tab缓存
   const tabStore = useMultipleTabStore();
+  // 获取路由对象
   const router = useRouter();
   /**
    * @description: Filter all fixed routes

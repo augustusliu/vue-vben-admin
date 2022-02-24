@@ -1,8 +1,7 @@
 <template>
-  <!--  <Loading :loading="loading" :absolute="absolute" :tip="tip" />-->
-  <PageWrapper>
-    <div :class="prefixCls" class="h-full" ref="g6Ref"></div>
-  </PageWrapper>
+  <div class="h-full" :class="prefixCls">
+    <div ref="g6ElRef" class="h-full"></div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -12,20 +11,16 @@
     defineComponent,
     nextTick,
     onMounted,
-    reactive,
     Ref,
     ref,
-    toRefs,
-    unref,
+    unref, watch,
   } from 'vue';
-  import g6Data from './dataG6.json';
   import { PageWrapper } from '/@/components/Page';
-  import { Loading } from '/@/components/Loading';
-  import { G6Register, G6Start } from './plugins/g6NodeDefinition';
+  import { G6Register, G6Start ,formatApiDataNode } from './g6Config';
 
   export default defineComponent({
-    name: 'RelationTree',
-    components: { Loading, PageWrapper },
+    name: 'G6Graph',
+    components: { PageWrapper },
     // 定义G6 的配置，可以传递过来
     props: {
       g6Options: {
@@ -38,23 +33,12 @@
       },
     },
     setup(props) {
-      // 加载进度条状态
-      const compState = reactive({
-        absolute: false,
-        loading: false,
-        tip: '加载中...',
-      });
-      // 展开进度条及关闭操作
-      function openLoading(absolute: boolean, loading: boolean) {
-        compState.absolute = absolute;
-        compState.loading = loading;
-      }
       // 保存dom对象
-      const g6Ref = ref(null);
+      const g6ElRef = ref(null);
       // G6实例
       const g6Instance = ref(null) as Ref<Graph | null>;
-      // G6参数配置
-      const getG6Options = computed(() => {
+      // 将G6作为动态配置
+      const dynamicG6Options = computed(() => {
         // 传递给组件的配置信息
         const { g6Options } = props;
         // 定义默认的G6配置
@@ -105,34 +89,59 @@
         return defaultOptions as GraphOptions;
       });
 
-      // 初始化
+
+      // g6在另种情况下会动态更新界面：1、数据变化；2、样式配置变化，都采用watch完成
+      watch(
+        () => props.data,
+        () => {
+          onRender();
+        }
+      );
+      // watch(
+      //   () => unref(dynamicG6Options),
+      //   (options) => {
+      //     unref(g6Instance)?.updateLayout(options);
+      //   }
+      // );
+
+      // g6初始化
       async function init() {
-        await nextTick();
-        const g6El = unref(g6Ref);
+        await nextTick(); // 等待dom刷新完毕
+        const g6El = unref(g6ElRef);  // 获取container
         if (!g6El) {
           return;
         }
-        // openLoading(true, true);
-        // 注册G6自定义节点
-        G6Register();
-        // 初始化G6
+        G6Register(); // 注册对G6自定义的内容
+
+        // 实例化G6
         g6Instance.value = new G6.Graph({
-          ...unref(getG6Options),
+          ...unref(dynamicG6Options),
           container: g6El,
         });
 
-        let g6Width = (g6Ref as any).value.clientWidth;
+        let g6Width = (g6ElRef as any).value.clientWidth;
         let g6Height = document.body.clientHeight - 155;
         g6Instance.value.changeSize(g6Width, g6Height);
         // 启动G6
-        G6Start(unref(g6Instance), true, g6Width, g6Height, g6Data);
-        // openLoading(false, false);
+        G6Start(unref(g6Instance), true, g6Width, g6Height, props.data);
       }
+
+      // 基于数据刷新
+      async function onRender() {
+        await nextTick();
+        const g6 = unref(g6Instance);
+        if (!g6) {
+          return;
+        }
+        const formatData = formatApiDataNode(props.data);
+        g6.changeData({ nodes: formatData.nodes, edges: formatData.edges });
+        g6.render();
+      }
+
       onMounted(init);
       return {
-        prefixCls: 'entity-relation',
-        g6Ref,
-        ...toRefs(compState),
+        prefixCls: "entity-relation",
+        g6ElRef,
       };
     },
   });
@@ -141,8 +150,9 @@
 <style lang="less">
   .entity-relation {
     width: 100%;
-
-    /* <!--background-color: @component-background;--> */
-    background-color: #2b2f33;
+    background-color: @component-background;
+    div{
+      background-color: #2b2f33;
+    }
   }
 </style>

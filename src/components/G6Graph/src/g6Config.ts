@@ -1,6 +1,5 @@
 import G6 from '@antv/g6';
 import { isArray, isNumber } from '/@/utils/is';
-const { uniqueId } = G6.Util;
 
 // 默认背景色
 const defaultDarkBack = 'rgb(43, 47, 51)';
@@ -164,7 +163,7 @@ export const ellipseNodeDefinition = {
     // 为椭圆节点添加文字标签
     group.addShape('text', {
       attrs: {
-        text: `${config.id}`, // 节点的文字采用参数传递进来
+        text: `${config.name}`, // 节点的文字采用参数传递进来
         x: 0,
         y: 0,
         textAlign: 'center',
@@ -207,7 +206,6 @@ export const ellipseNodeDefinition = {
   setState: (name: any, value: any, item: any) => {
     // 获取该节点的分组信息
     const group = item.get('group');
-    console.log('group', group);
     // 如果当前节点状态为绘制完成，且当前节点的值不为空，则设置节点标签，并设置节点可见
     if (name === 'layoutEnd' && value) {
       const labelShape = group.find((e) => e.get('name') === 'text-shape');
@@ -641,6 +639,9 @@ export const clearFocusItemState = (graph) => {
 };
 
 /**
+ *
+ * 注意： g6数据格式中的id不能为number，只能为string
+ *
  * 将api返回的结果，处理成可以处理的数据结构.
  * 主要是补充节点数据需要显示的颜色，需要渲染的形状， 返回格式化后的数据。
  *
@@ -653,9 +654,14 @@ export const formatApiDataNode = (data: any) => {
     let node = {
       id: item.id,
       name: item.id,
+      code: item.code,
+      label: item.label ? item.label.split(',') : [],
+      // 设置节点展示的默认样式
       colorSet: defaultColorSets[i],
-      // 基于真实数据判断，如果存在子节点，则是椭圆，否则为圆形
-      type: g6NodeEdgeDefinition.ellipseNode,
+      type: g6NodeEdgeDefinition.ellipseNode, // 椭圆
+      style: global.node.style,
+      labelCfg: global.node.labelCfg,
+      stateStyles: global.node.stateStyles,
     };
     // @ts-ignore
     formatData.nodes.push(node);
@@ -667,15 +673,22 @@ export const formatApiDataNode = (data: any) => {
       lineType = 'loop';
     }
     let edge = {
-      source: item.source,
-      target: item.target,
+      id: item.id,
+      source: item.fromEntityId,
+      target: item.toEntityId,
+      sourceType: item.fromEntityType,
+      targetType: item.toEntityType,
+      relationType: item.relationType,
       colorSet: defaultColorSets[i],
-      id: `edge-${uniqueId()}`,
       type: lineType,
+      style: global.edge.style,
+      labelCfg: global.edge.labelCfg,
+      stateStyles: global.edge.stateStyles,
     };
     // @ts-ignore
     formatData.edges.push(edge);
   });
+  console.log('formatData', formatData);
   return formatData;
 };
 
@@ -850,11 +863,6 @@ export const G6Start = (
 ) => {
   // 1、格式化数据
   const formatData = formatApiDataNode(data);
-
-  // // 2、处理数据的边线条(不需要处理)
-  // const { edges: processedEdges } = processNodeEdges(formatData.nodes, formatData.edges, canvasWidth, canvasHeight,
-  //   true,true,true);
-
   // 3、禁止画布本地刷新
   g6Instance.get('canvas').set('localRefresh', false);
   // 4、设置画布的样式及画布中心位置
@@ -873,3 +881,5 @@ export const G6Start = (
   g6Instance.data({ nodes: formatData.nodes, edges: formatData.edges });
   g6Instance.render();
 };
+
+

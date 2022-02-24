@@ -3,7 +3,7 @@
     <Tabs
       type="editable-card"
       size="small"
-      :animated="false"
+      :animated="true"
       :hideAdd="true"
       :tabBarGutter="3"
       :activeKey="activeKeyRef"
