@@ -1,27 +1,21 @@
 {
   "nodes": [
-    { "id": "1", "name":"工业园区1", "code":"gy1", "label":"园区", "entityType":"ASSET", "size": 50 },
-    { "id": "2", "name":"工业园区2", "code":"gy2", "label":"园区", "entityType":"ASSET", "size": 30 },
-    { "id": "3", "name":"工业园区3", "code":"gy3", "label":"园区", "entityType":"ASSET", "size": 30 },
-    { "id": "4", "name":"厂房1", "code":"cf1", "label":"建筑", "entityType":"ASSET", "size": 30 },
-    { "id": "5", "name":"厂房2", "code":"cf2", "label":"建筑", "entityType":"ASSET", "size": 30, "isLeaf": true },
-    { "id": "6", "name":"厂房3", "code":"cf3", "label":"建筑", "entityType":"ASSET", "size": 30, "isLeaf": true },
-    { "id": "7", "name":"机组1", "code":"jz1", "label":"生产设施", "entityType":"ASSET", "size": 15, "isLeaf": true },
-    { "id": "8", "name":"机组2", "code":"jz2", "label":"生产设施", "entityType":"ASSET", "size": 15, "isLeaf": true },
-    { "id": "9", "name":"机组3", "code":"jz3", "label":"生产设施", "entityType":"ASSET", "size": 15, "isLeaf": true },
-    { "id": "10", "name":"电机", "code":"dj", "label":"设备", "entityType":"Device","size": 15, "isLeaf": true }
+    { "id": "11", "name":"工业园区1", "code":"gy1", "label":"园区", "entityType":"ASSET", "size": 50 },
+    { "id": "22", "name":"工业园区2", "code":"gy2", "label":"园区", "entityType":"ASSET", "size": 30 },
+    { "id": "33", "name":"工业园区3", "code":"gy3", "label":"园区", "entityType":"ASSET", "size": 30 },
+    { "id": "44", "name":"厂房1", "code":"cf1", "label":"建筑", "entityType":"ASSET", "size": 30 },
+    { "id": "55", "name":"厂房2", "code":"cf2", "label":"建筑", "entityType":"ASSET", "size": 30, "isLeaf": true },
+    { "id": "66", "name":"厂房3", "code":"cf3", "label":"建筑", "entityType":"ASSET", "size": 30, "isLeaf": true },
+    { "id": "77", "name":"机组1", "code":"jz1", "label":"生产设施", "entityType":"DEVICE", "size": 15, "isLeaf": true },
+    { "id": "88", "name":"机组2", "code":"jz2", "label":"生产设施", "entityType":"DEVICE", "size": 15, "isLeaf": true },
+    { "id": "99", "name":"机组3", "code":"jz3", "label":"生产设施", "entityType":"DEVICE", "size": 15, "isLeaf": true }
   ],
   "edges": [
-    { "id":"1", "fromEntityId": "1", "toEntityId": "4" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
-    { "id":"2", "fromEntityId": "1", "toEntityId": "7" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
-    { "id":"3", "fromEntityId": "1", "toEntityId": "7" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
-    { "id":"4", "fromEntityId": "2", "toEntityId": "3" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
-    { "id":"5", "fromEntityId": "3", "toEntityId": "5" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
-    { "id":"6", "fromEntityId": "3", "toEntityId": "6" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
-    { "id":"7", "fromEntityId": "2", "toEntityId": "10" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "Device"},
-    { "id":"8", "fromEntityId": "7", "toEntityId": "10" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "Device"},
-    { "id":"9", "fromEntityId": "2", "toEntityId": "3" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
-    { "id":"10", "fromEntityId": "1", "toEntityId": "8" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
-    { "id":"11", "fromEntityId": "3", "toEntityId": "9" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"}
+    { "id":"1", "fromEntityId": "11", "toEntityId": "44" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
+    { "id":"2", "fromEntityId": "44", "toEntityId": "77" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
+    { "id":"4", "fromEntityId": "22", "toEntityId": "55" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
+    { "id":"6", "fromEntityId": "55", "toEntityId": "99" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "ASSET"},
+    { "id":"8", "fromEntityId": "66", "toEntityId": "88" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "Device"},
+    { "id":"9", "fromEntityId": "88", "toEntityId": "66" , "relationType": "CONTAIN", "fromEntityType": "ASSET", "toEntityType": "Device"}
   ]
 }

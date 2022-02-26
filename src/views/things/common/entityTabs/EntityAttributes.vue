@@ -1,11 +1,11 @@
 <template>
   <div>
     <BasicTable @register="registerTable">
-      <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新建属性 </a-button>
+      <template #toolbar >
+        <a-button type="primary" @click="handleCreate" v-show="createBtnShow"> 新建属性 </a-button>
       </template>
       <template #action="{ record }">
-        <TableAction
+        <TableAction v-show="createBtnShow"
           :actions="[
             {
               icon: 'clarity:note-edit-line',
@@ -28,8 +28,9 @@
 </template>
 
 <script lang="ts">
-  import {defineComponent} from 'vue';
+  import {defineComponent, ref} from 'vue';
   import {BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { EntityTypeEnum } from "/@/enums/entityEnum";
 
   // 依赖接口
   import { listAttribute, delAttribute } from '/@/api/things/attribute/attrApi';
@@ -46,6 +47,8 @@
     setup(props) {
       const entityId = props.entityId;
       const entityType = props.entityType;
+      // 用户控制是否可以添加属性，只有设备才可以添加属性，资产的属性是采用的设备的属性
+      const createBtnShow = entityType === EntityTypeEnum.DEVICE;
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
         api: listAttribute,
@@ -59,6 +62,7 @@
           dataIndex: 'action',
           slots: { customRender: 'action' },
           fixed: 'right',
+          ifShow: createBtnShow,
         },
       });
 
@@ -93,6 +97,7 @@
         handleEdit,
         handleDelete,
         handleSuccess,
+        createBtnShow,
       };
     }
   });

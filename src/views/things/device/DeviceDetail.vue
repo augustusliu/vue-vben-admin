@@ -5,8 +5,8 @@
       <Tabs>
         <template v-for="item in tabListScheme" :key="item.key">
           <TabPane :tab="item.name">
-            <!--            动态组件切换-->
-            <component :is="item.component" :entityId="entityId" :entityType="entityType" />
+            <!-- 动态组件切换-->
+            <component :is="item.component" :entityId="entityId" :entityType="entityType"/>
           </TabPane>
         </template>
       </Tabs>
@@ -19,7 +19,6 @@
   import { defineComponent, onMounted, ref} from 'vue';
   import { useRoute } from 'vue-router';
   import { PageWrapper } from '/@/components/Page';
-  import { useGo } from '/@/hooks/web/usePage';
   import { Tag, Tabs } from 'ant-design-vue';
   import { Description, useDescription } from '/@/components/Description/index';
   import { ScrollContainer } from "/@/components/Container";
@@ -30,6 +29,7 @@
   import EntityTelemetry from '../common/entityTabs/EntityTelemetry.vue'
   import EntityEvent from '../common/entityTabs/EntityEvent.vue'
   import EntityAlarm from '../common/entityTabs/EntityAlarm.vue'
+  import EntityRelation from '../common/relation/index.vue';
 
   // tab信息参考/page/account/setting配置
   export default defineComponent({
@@ -39,13 +39,14 @@
       Tag,
       Tabs,
       TabPane: Tabs.TabPane,
-      ScrollContainer, EntityAttributes, EntityTelemetry, EntityEvent, EntityAlarm },
+      ScrollContainer, EntityAttributes, EntityTelemetry, EntityEvent, EntityAlarm, EntityRelation },
     setup() {
       const route = useRoute();
-      const go = useGo();
       // 此处可以得到用户ID
-      const entityId = ref(route.params?.id).value;
+      const entityId = ref(route.params?.id).value as string;
       const entityType = "DEVICE";
+      // 如果是设备，则不显示设备关系图。(设备关系图应该显示设备与资产的关系)
+      // const deviceTabList = tabListScheme.slice(1,5);
       const deviceInfo: any = ref({})
       // 页面是否加载成功
       const isLoaded = ref(false)
@@ -62,12 +63,6 @@
         isLoaded.value = true;
       }
 
-      // 页面左侧点击返回链接时的操作
-      function goBack() {
-        // 本例的效果时点击返回始终跳转到账号列表页，实际应用时可返回上一页
-        go('/device');
-      }
-
       // 显示资产详情信息
       const [registerDeviceDetailInfo] = useDescription({
         title: '设备信息',
@@ -81,7 +76,6 @@
         entityId,
         entityType,
         currentKey,
-        goBack,
         registerDeviceDetailInfo,
         isLoaded,
         tabListScheme,

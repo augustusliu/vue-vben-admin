@@ -5,7 +5,7 @@
       <Tabs>
         <template v-for="item in tabListScheme" :key="item.key">
           <TabPane :tab="item.name">
-            <!--            动态组件切换-->
+            <!-- 动态组件切换-->
             <component :is="item.component" :entityId="assetId" :entityType="entityType" />
           </TabPane>
         </template>
@@ -31,6 +31,7 @@
   import EntityTelemetry from '../common/entityTabs/EntityTelemetry.vue';
   import EntityEvent from '../common/entityTabs/EntityEvent.vue';
   import EntityAlarm from '../common/entityTabs/EntityAlarm.vue';
+  import EntityRelation from '../common/relation/index.vue';
 
   // tab信息参考/page/account/setting配置
   export default defineComponent({
@@ -46,6 +47,7 @@
       EntityTelemetry,
       EntityEvent,
       EntityAlarm,
+      EntityRelation,
     },
     setup() {
       const route = useRoute();

@@ -1,12 +1,12 @@
 import G6 from '@antv/g6';
-import { isArray, isNumber } from '/@/utils/is';
-
 // 默认背景色
 const defaultDarkBack = 'rgb(43, 47, 51)';
 // 节点无效时的颜色
 const disableColor = '#777';
 // 主题颜色
 const defaultTheme = 'dark';
+
+const defaultG6Layout = 'gForce';
 // 主题颜色集合
 const subjectColors = [
   '#5F95FF', // blue
@@ -21,12 +21,7 @@ const subjectColors = [
   '#F08BB4',
 ];
 // 椭圆节点的颜色集合
-const defaultColorSets = G6.Util.getColorSetsBySubjectColors(
-  subjectColors,
-  defaultDarkBack,
-  defaultTheme,
-  disableColor
-);
+const defaultColorSets = G6.Util.getColorSetsBySubjectColors(subjectColors, defaultDarkBack, defaultTheme, disableColor);
 
 // 定义动画配置信息
 const duration = 2000;
@@ -34,14 +29,6 @@ const animateOpacity = 0.6;
 const animateBackOpacity = 0.1;
 const virtualEdgeOpacity = 0.1;
 const realEdgeOpacity = 0.2;
-
-// // 默认节点的最大数量
-// const DEFAULTNODESIZE = 20;
-// const DEFAULTAGGREGATEDNODESIZE = 53;
-//
-// // 缓存节点的位置信息，刷新时优化性能
-// let cachePositions = {};
-// let manipulatePosition: any = undefined;
 
 // 自定义节点和边的名称
 const g6NodeEdgeDefinition = {
@@ -51,7 +38,7 @@ const g6NodeEdgeDefinition = {
   circleEdge: 'circle-line',
 };
 
-// 定义一个全局样式
+// 定义一个全局的样式
 const global = {
   node: {
     style: {
@@ -65,25 +52,36 @@ const global = {
     },
     stateStyles: {
       focus: {
-        fill: '#2B384E',
+        fill: '#2B384E',    //填充颜色
+        stroke: '#fff',     //描边的颜色
       },
     },
+    linkPoints: {
+      left: true,
+      right: true,
+      fill: '#6DD400',
+      lineWidth: 0.5,
+      stroke: '#FFFFFF',
+    }
   },
   edge: {
+    // 边样式配置
     style: {
-      stroke: '#acaeaf',
-      realEdgeStroke: '#acaeaf', //'#f00',
-      realEdgeOpacity,
-      strokeOpacity: realEdgeOpacity,
+      stroke: '#acaeaf',         // 边颜色
+      realEdgeStroke: '#acaeaf', //'#f00', --- 扩展属性，用于交互时使用
+      strokeOpacity: 0.2,        // 边的透明度
     },
+    // 边的文本配置
     labelCfg: {
+      // 边的文本显示样式
       style: {
-        fill: '#acaeaf',
+        fill: '#acaeaf',            // 文本颜色
         realEdgeStroke: '#acaeaf', //'#f00',
         realEdgeOpacity: 0.5,
-        stroke: '#191b1c',
+        stroke: '#191b1c',  // 文本描边颜色
       },
     },
+    // 边交互时的样式
     stateStyles: {
       focus: {
         stroke: '#fff', // '#3C9AE8',
@@ -92,7 +90,7 @@ const global = {
   },
 };
 
-// 采用g6，绘制椭圆节点的定义的定义,椭圆节点表示含有子节点
+// 定义G6 椭圆形节点
 export const ellipseNodeDefinition = {
   /**
    * 椭圆节点的绘制方法，并返回椭圆节点的外围边框样式
@@ -101,12 +99,16 @@ export const ellipseNodeDefinition = {
    */
   draw(config: any, group: any) {
     // 椭圆的宽，高
-    let width = 53,
-      height = 27;
-    // 配置中的节点样式、颜色的并集
+    let height = 32;
+    // 基于文字动态获取节点的长度
+    let dynamicWidth = config.name.length * 70 / 3;
+    let width = dynamicWidth < 70 ? 70 : dynamicWidth;
+
+    // 获取节点样式
     const style = config.style || global.node.style;
     const nodeColorSets = config.colorSet || defaultColorSets[0];
-    // 椭圆节点，鼠标悬浮后，添加光圈效果
+
+    // 鼠标悬浮时显示的效果，默认不显示
     group.addShape('rect', {
       attrs: {
         x: -width * 0.55,
@@ -118,10 +120,10 @@ export const ellipseNodeDefinition = {
         lineWidth: 0,
         radius: (height / 2 || 13) * 1.2,
       },
-      name: 'halo-shape',
-      visible: false,
+      name: 'hover-shape',
+      visible: false, // 默认不显示，用于鼠标点击或者其他动作的交互效果
     });
-    // 椭圆节点获得焦点后的光圈效果
+    // 椭圆节点获得焦点后的光圈效果，默认不显示
     group.addShape('rect', {
       attrs: {
         x: -width * 0.55,
@@ -134,10 +136,11 @@ export const ellipseNodeDefinition = {
         lineOpacity: 0.85,
         radius: (height / 2 || 13) * 1.2,
       },
-      name: 'stroke-shape',
-      visible: false,
+      name: 'focus-shape',
+      visible: false, // 默认不显示，用于鼠标点击或者其他动作的交互效果
     });
-    // 椭圆节点外围边框，采用虚线勾勒的样式
+
+    // 椭圆节点外围边框，采用虚线勾勒的样式， 默认节点显示的效果
     const nodeOutlineShape = group.addShape('rect', {
       attrs: {
         ...style,
@@ -145,20 +148,23 @@ export const ellipseNodeDefinition = {
         y: -height / 2,
         width,
         height,
-        fill: nodeColorSets.mainFill, // || '#3B4043',
+        fill: nodeColorSets.mainFill, // '#3B4043',
         stroke: nodeColorSets.mainStroke, // 虚线的颜色，这里采用传递进来的随机颜色
-        lineWidth: 2, //虚线的宽度
+        lineWidth: 0.5, // 虚线的宽度
         cursor: 'pointer',
         radius: height / 2 || 13,
-        lineDash: [2, 2],
+        lineDash: [2, 2], // 虚线中点的间距
       },
-      name: 'aggregated-node-keyShape',
+      name: 'default-dash-outline',
     });
 
-    // 获取椭圆节点的文字描述
-    let labelStyle = global.node.labelCfg.style;
-    if (config.labelCfg) {
-      labelStyle = Object.assign(labelStyle, config.labelCfg.style);
+    // 获取文本的配置项
+    let labelCfg = config.labelCfg || global.node.labelCfg;
+    // 保存文本的样式
+    let labelStyle = {};
+    if (labelCfg) {
+      // 接收多个参数，第一个参数是目标对象，后面的都是源对象，assign方法将多个原对象的属性和方法都合并到了目标对象上面，如果在这个过程中出现同名的属性（方法），后合并的属性（方法）会覆盖之前的同名属性（方法）
+      labelStyle = Object.assign(labelStyle, labelCfg.style);
     }
     // 为椭圆节点添加文字标签
     group.addShape('text', {
@@ -174,31 +180,42 @@ export const ellipseNodeDefinition = {
         opacity: 0.85,
         fontWeight: 200,
       },
-      name: 'count-shape',
-      className: 'count-shape',
+      name: 'text-shape',
       draggable: true,
     });
 
-    // 如果是新添加的节点，那么就绘制为圆形图
-    if (config.new) {
-      group.addShape('circle', {
-        attrs: {
-          x: width / 2 - 3,
-          y: -height / 2 + 3,
-          r: 4,
-          fill: '#6DD400',
-          lineWidth: 0.5,
-          stroke: '#FFFFFF',
-        },
-        name: 'typeNode-tag-circle',
-      });
-    }
-
+    // // 绘制节点的连接点
+    // if (config.new) {
+    //   let linkPoints = config.linkPoints || global.node.linkPoints;
+    //   group.addShape('circle', {
+    //     attrs: {
+    //       x: width / 2,
+    //       y: 0 ,
+    //       r: 4,
+    //       fill: linkPoints.fill,
+    //       lineWidth: linkPoints.lineWidth,
+    //       stroke: linkPoints.stroke,
+    //     },
+    //     name: 'right-link-circle',
+    //   });
+    //   group.addShape('circle', {
+    //     attrs: {
+    //       x: - width / 2,
+    //       y: 0 ,
+    //       r: 4,
+    //       fill: linkPoints.fill,
+    //       lineWidth: linkPoints.lineWidth,
+    //       stroke: linkPoints.stroke,
+    //     },
+    //     name: 'left-link-circle',
+    //   });
+    // }
+    // 输出默认的图形
     return nodeOutlineShape;
   },
 
   /**
-   * 椭圆节点的状态样式控制
+   * 节点绘制过程控制，绘制到哪一步
    * @param name: 当前节点状态名称
    * @param value: 当前节点的值(或者节点的标签)
    * @param item: 当前节点
@@ -206,6 +223,7 @@ export const ellipseNodeDefinition = {
   setState: (name: any, value: any, item: any) => {
     // 获取该节点的分组信息
     const group = item.get('group');
+    const keyShape = item.getKeyShape();
     // 如果当前节点状态为绘制完成，且当前节点的值不为空，则设置节点标签，并设置节点可见
     if (name === 'layoutEnd' && value) {
       const labelShape = group.find((e) => e.get('name') === 'text-shape');
@@ -217,19 +235,18 @@ export const ellipseNodeDefinition = {
       if (item.hasState('focus')) {
         return;
       }
-      const halo = group.find((e) => e.get('name') === 'halo-shape');
-      const keyShape = item.getKeyShape();
+      // 根据名称获取到绘制的悬浮效果
+      const hoverShape = group.find((e) => e.get('name') === 'hover-shape');
       const colorSet = item.getModel().colorSet || defaultColorSets[0];
       if (value) {
-        halo && halo.show();
+        hoverShape && hoverShape.show();
         keyShape.attr('fill', colorSet.activeFill);
       } else {
-        halo && halo.hide();
+        hoverShape && hoverShape.hide();
         keyShape.attr('fill', colorSet.mainFill);
       }
     } else if (name === 'focus') {
-      const stroke = group.find((e) => e.get('name') === 'stroke-shape');
-      const keyShape = item.getKeyShape();
+      const stroke = group.find((e) => e.get('name') === 'focus-shape');
       const colorSet = item.getModel().colorSet || defaultColorSets[0];
       if (value) {
         stroke && stroke.show();
@@ -240,19 +257,24 @@ export const ellipseNodeDefinition = {
       }
     }
   },
+
+  // 设置线条的连接终点
+  getAnchorPoints(){
+    return [
+      [0, 0.5], // 左侧中间
+      [1, 0.5], // 右侧中间
+    ];
+  },
   update: undefined,
 };
 
-// 采用G6，绘制圆形节点的定义，原型节点表示叶子节点
+// 定义G6 圆形节点
 export const circleNodeDefinition = {
   draw(config: any, group: any) {
     // 定义圆形节点的半径
-    let r = 30;
-    if (isNumber(config.size)) {
-      r = config.size / 2;
-    } else if (isArray(config.size)) {
-      r = config.size[0] / 2;
-    }
+    let dynamicRadio = config.name.length * 30 / 3;
+    let r = dynamicRadio < 53 ? 53 : dynamicRadio;
+
     const style = config.style || {};
     const colorSet = config.colorSet || defaultColorSets[0];
 
@@ -266,7 +288,7 @@ export const circleNodeDefinition = {
         opacity: 0.9,
         lineWidth: 0,
       },
-      name: 'halo-shape',
+      name: 'hover-shape',
       visible: false,
     });
 
@@ -281,7 +303,7 @@ export const circleNodeDefinition = {
         strokeOpacity: 0.85,
         lineWidth: 1,
       },
-      name: 'stroke-shape',
+      name: 'focus-shape',
       visible: false,
     });
 
@@ -297,7 +319,7 @@ export const circleNodeDefinition = {
         lineWidth: 2,
         cursor: 'pointer',
       },
-      name: 'aggregated-node-keyShape',
+      name: 'default-circle-shape',
     });
 
     // 原型节点的文本样式
@@ -370,7 +392,7 @@ export const circleNodeDefinition = {
       if (item.hasState('focus')) {
         return;
       }
-      const halo = group.find((e) => e.get('name') === 'halo-shape');
+      const halo = group.find((e) => e.get('name') === 'hover-shape');
       const keyShape = item.getKeyShape();
       const colorSet = item.getModel().colorSet || defaultColorSets[0];
       if (value) {
@@ -381,7 +403,7 @@ export const circleNodeDefinition = {
         keyShape.attr('fill', colorSet.mainFill);
       }
     } else if (name === 'focus') {
-      const stroke = group.find((e) => e.get('name') === 'stroke-shape');
+      const stroke = group.find((e) => e.get('name') === 'focus-shape');
       const label = group.find((e) => e.get('name') === 'text-shape');
       const keyShape = item.getKeyShape();
       const colorSet = item.getModel().colorSet || defaultColorSets[0];
@@ -399,12 +421,39 @@ export const circleNodeDefinition = {
   update: undefined,
 };
 
-// 节点连接线采用二次方的定义, 椭圆节点的连接线
-export const edgeEllipseQuadraticLine = {
+// 定义G6 椭圆形节点的边，重新定义状态事件，继承系统自带的椭圆形边
+export const edgeEllipseLineDefinition = {
+
+  // 边绘制成功后触发
+  afterDraw(cfg, group) {
+    // 这里获取默认的边对象
+    const shape = group.get('children')[0];
+    // 设置边上箭头的样式
+    shape.attr("endArrow", {
+      path: 'M 0,0 L 8,4 L 8,-4 Z',
+      fill: global.edge.style.stroke,
+      stroke: global.edge.style.stroke,
+      opacity: global.edge.style.strokeOpacity,
+    });
+    // 获取边的长度，动画绘制边的效果
+    // const length = shape.getTotalLength();
+    // 设置线条的动画
+    // shape.animate(
+    //   (ratio) => {
+    //     const startLen = ratio * length;
+    //     const cfg = {
+    //       lineDash: [startLen, length - startLen],
+    //     };
+    //     return cfg;
+    //   },
+    //   { repeat: true, duration: 2000,},
+    // );
+  },
   // 边线焦点变动后样式变化
   setState: (name: any, value: any, item: any) => {
     const group = item.get('group');
     const model = item.getModel();
+    console.log('edgeclick', name);
     if (name === 'focus') {
       const back = group.find((ele) => ele.get('name') === 'back-line');
       if (back) {
@@ -497,10 +546,12 @@ export const edgeEllipseQuadraticLine = {
       }
     }
   },
+
+  update: undefined,
 };
 
 // 定义圆形节点的连接线
-export const edgeCircleLine = {
+export const edgeCircleLineDefinition = {
   // 边线焦点变动后样式变化
   setState: (name: any, value: any, item: any) => {
     const group = item.get('group');
@@ -602,7 +653,7 @@ export const edgeCircleLine = {
  * 节点通用处理方法
  * @param graph
  */
-// 截断长文本。length 为文本截断后长度，elipsis 是后缀
+// 截断长文本。length 为文本截断后长度
 export const formatText = (text, length = 5, elipsis = '...') => {
   if (!text) return '';
   if (text.length > length) {
@@ -619,8 +670,8 @@ const labelFormatter = (text, minLength = 10) => {
 // 清除图上所有节点的 focus 状态及相应样式
 const clearFocusNodeState = (graph) => {
   const focusNodes = graph.findAllByState('node', 'focus');
-  focusNodes.forEach((fnode) => {
-    graph.setItemState(fnode, 'focus', false); // false
+  focusNodes.forEach((nodeItem) => {
+    graph.setItemState(nodeItem, 'focus', false); // false
   });
 };
 
@@ -653,25 +704,20 @@ export const formatApiDataNode = (data: any) => {
   data.nodes.forEach((item, i) => {
     let node = {
       id: item.id,
-      name: item.id,
+      name: item.name,
       code: item.code,
+      new: true,
       label: item.label ? item.label.split(',') : [],
-      // 设置节点展示的默认样式
       colorSet: defaultColorSets[i],
       type: g6NodeEdgeDefinition.ellipseNode, // 椭圆
-      style: global.node.style,
-      labelCfg: global.node.labelCfg,
-      stateStyles: global.node.stateStyles,
+      style: item.style || global.node.style,
+      entityType: item.entityType,
     };
     // @ts-ignore
     formatData.nodes.push(node);
   });
 
   data.edges.forEach((item, i) => {
-    let lineType = 'line';
-    if (item.source === item.target) {
-      lineType = 'loop';
-    }
     let edge = {
       id: item.id,
       source: item.fromEntityId,
@@ -680,80 +726,46 @@ export const formatApiDataNode = (data: any) => {
       targetType: item.toEntityType,
       relationType: item.relationType,
       colorSet: defaultColorSets[i],
-      type: lineType,
-      style: global.edge.style,
-      labelCfg: global.edge.labelCfg,
-      stateStyles: global.edge.stateStyles,
+      type: g6NodeEdgeDefinition.ellipseEdge,
+      style: item.style || global.edge.style,
+      targetAnchor: 3,
+      sourceAnchor: 1,
     };
     // @ts-ignore
     formatData.edges.push(edge);
   });
-  console.log('formatData', formatData);
   return formatData;
 };
 
 /**
  * 添加G6中的事件回调，包括节点光标移入移除等
  * @param g6Instance
+ * @param entityClickCallback
  */
-const bindListener = (g6Instance: any) => {
+const bindListener = (g6Instance: any, entityClickCallback: any) => {
   // 鼠标节点悬浮事件
   g6Instance.on('node:mouseenter', (evt) => {
-    const { item } = evt;
-    const model = item.getModel();
-    console.log('model', model);
-    const currentLabel = model.name;
-    model.oriFontSize = model.labelCfg.style.fontSize;
-    item.update({
-      label: model.oriLabel,
-    });
-    model.oriLabel = currentLabel;
+    const item = evt.item;
     g6Instance.setItemState(item, 'hover', true);
-    item.toFront();
   });
   // 鼠标节点移出事件
   g6Instance.on('node:mouseleave', (evt) => {
-    const { item } = evt;
-    const model = item.getModel();
-    const currentLabel = model.label;
-    item.update({
-      label: model.oriLabel,
-    });
-    model.oriLabel = currentLabel;
+    const item = evt.item;
     g6Instance.setItemState(item, 'hover', false);
   });
-  // 鼠标边悬浮事件
-  g6Instance.on('edge:mouseenter', (evt) => {
-    const { item } = evt;
-    const model = item.getModel();
-    const currentLabel = model.label;
-    item.update({
-      label: model.oriLabel,
-    });
-    model.oriLabel = currentLabel;
-    item.toFront();
-    item.getSource().toFront();
-    item.getTarget().toFront();
-  });
-  // 鼠标边移出事件
-  g6Instance.on('edge:mouseleave', (evt) => {
-    const { item } = evt;
-    const model = item.getModel();
-    const currentLabel = model.label;
-    item.update({
-      label: model.oriLabel,
-    });
-    model.oriLabel = currentLabel;
-  });
 
-  // click canvas to cancel all the focus state
-  g6Instance.on('canvas:click', () => {
+  g6Instance.on('node:click', (evt) => {
+    const item = evt.item;
     clearFocusItemState(g6Instance);
-    console.log(
-      g6Instance.getGroup(),
-      g6Instance.getGroup().getBBox(),
-      g6Instance.getGroup().getCanvasBBox()
-    );
+    g6Instance.setItemState(item, 'focus', true);
+    // 激活边的动画效果和样式
+    if(entityClickCallback){
+      entityClickCallback(item.get('id'), item.get('model').entityType);
+    }
+  });
+  // click canvas to cancel all the focus state
+  g6Instance.on('canvas:click', evt => {
+    clearFocusItemState(g6Instance);
   });
 };
 
@@ -764,7 +776,6 @@ export const getG6LayoutConfig = (graph, largeGraphMode, configSettings) => {
     edgeStrength, // 边的重力作用
     nodeStrength, // 节点的重力作用
     nodeSpacing, // 节点间的间隔
-    preventOverlap, // 是否防止重叠
     nodeSize, // 节点大小
     collideStrength, // 混合力大小
     alpha, // 透明度
@@ -778,11 +789,11 @@ export const getG6LayoutConfig = (graph, largeGraphMode, configSettings) => {
   if (!nodeSpacing && nodeSpacing !== 0) nodeSpacing = 5;
 
   const config = {
-    type: 'gForce',
     minMovement: 0.01,
     maxIteration: 5000,
-    preventOverlap,
+    preventOverlap: true,
     damping: 0.99,
+    // 设置边的长度，长度等于量节点间的距离
     linkDistance: () => {
       // let dist = linkDistance;
       // const sourceNode = nodeMap[d.source] || aggregatedNodeMap[d.source];
@@ -792,7 +803,7 @@ export const getG6LayoutConfig = (graph, largeGraphMode, configSettings) => {
       // // 一端是聚合点，一端是真实节点
       // else if (sourceNode.level || targetNode.level) dist = linkDistance * 1.5;
       // if (!sourceNode.level && !targetNode.level) dist = linkDistance * 0.3;
-      return linkDistance * 0.3;
+      return linkDistance * 0.7;
     },
     nodeStrength: (d) => {
       // 给离散点引力，让它们聚集
@@ -834,13 +845,13 @@ export const getG6LayoutConfig = (graph, largeGraphMode, configSettings) => {
 };
 
 // 初始化
-export const G6Register = () => {
+export const G6RegisterNodeAndEdge = () => {
   // 注册椭圆节点
   G6.registerNode(g6NodeEdgeDefinition.ellipseNode, ellipseNodeDefinition, 'single-node');
   // 注册圆形节点，该圆形节点继承至椭圆节点
-  G6.registerNode(g6NodeEdgeDefinition.circleNode, ellipseNodeDefinition, 'ellipse-node');
+  // G6.registerNode(g6NodeEdgeDefinition.circleNode, circleNodeDefinition, g6NodeEdgeDefinition.ellipseNode);
   // 注册椭圆节点的边
-  G6.registerEdge(g6NodeEdgeDefinition.ellipseEdge, ellipseNodeDefinition, 'quadratic');
+  G6.registerEdge(g6NodeEdgeDefinition.ellipseEdge, edgeEllipseLineDefinition, 'line');
   // 注册圆形节点的边
   // G6.registerEdge(g6NodeEdgeDefinition.circleEdge, ellipseNodeDefinition, 'single-edge');
 };
@@ -851,35 +862,32 @@ export const G6Register = () => {
  * @param largeGraphMode  是否为大图模式，默认为true
  * @param canvasWidth     画布宽度
  * @param canvasHeight    画布高度
+ * @param type            采用何种类型布局
  * @param data            数据
+ * @param entityClickCallback 节点点击后触发的回调事件
  * @constructor
  */
-export const G6Start = (
+export const G6Starter = (
   g6Instance: any,
   largeGraphMode: boolean,
   canvasWidth: number,
   canvasHeight: number,
-  data: any
+  type: string,
+  data: any,
+  entityClickCallback?: (entityId: number, entityType: string) => void
 ) => {
   // 1、格式化数据
   const formatData = formatApiDataNode(data);
-  // 3、禁止画布本地刷新
+  // 2、禁止画布本地刷新
   g6Instance.get('canvas').set('localRefresh', false);
-  // 4、设置画布的样式及画布中心位置
-  const layoutConfig: any = getG6LayoutConfig(g6Instance, largeGraphMode, {});
+  // 3、设置画布的样式及画布中心位置
+  const layoutConfig: any = getG6LayoutConfig(g6Instance, largeGraphMode, null);
   layoutConfig.center = [canvasWidth / 2, canvasHeight / 2];
-  // 5、初始化画布，并实例化、绘制
-  const layoutInstance = new G6.Layout['gForce'](layoutConfig);
-  layoutInstance.init({
-    nodes: formatData.nodes,
-    edges: formatData.edges,
-  });
-  layoutInstance.execute();
-
+  layoutConfig.type = type || defaultG6Layout;
+  g6Instance.updateLayout(layoutConfig);
   // 6、绑定回调事件并初始化G6数据并渲染
-  bindListener(g6Instance);
+  bindListener(g6Instance, entityClickCallback);
   g6Instance.data({ nodes: formatData.nodes, edges: formatData.edges });
-  g6Instance.render();
 };
 
 
