@@ -1,5 +1,4 @@
-import {BasicPageParams} from "/@/api/model/baseModel";
-
+import {BasicFetchResult, BasicPageParams} from "/@/api/model/baseModel";
 
 export type RelationAtlasSearchParam = BasicPageParams & {
   // ?表示参数是可选项，可能存在，可能不存在
@@ -40,5 +39,7 @@ export interface RelationAtlasModel {
   nodes: RelationNode[];
   edges: RelationEdge[];
 }
+
+export type ListEntitiesResult = BasicFetchResult<RelationNode>;
 
 

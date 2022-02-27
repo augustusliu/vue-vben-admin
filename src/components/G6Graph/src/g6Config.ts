@@ -874,7 +874,7 @@ export const G6Starter = (
   canvasHeight: number,
   type: string,
   data: any,
-  entityClickCallback?: (entityId: number, entityType: string) => void
+  entityClickCallback?: (entityId: number, entityType: string, entityName?:string) => void
 ) => {
   // 1、格式化数据
   const formatData = formatApiDataNode(data);
