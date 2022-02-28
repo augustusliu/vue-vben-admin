@@ -7,6 +7,7 @@ export default {
   userMgr: 'User Management',
   sceneLink: 'Scene Link',
   rulers: 'Flow Ruler',
+  ruleDetail: 'Ruler Detail',
   asset: 'Asset',
   assetDetail: 'Asset Detail',
   device: 'Device',

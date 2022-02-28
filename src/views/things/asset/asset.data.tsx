@@ -40,8 +40,7 @@ export const assetColumn: BasicColumn[] = [
           // @ts-ignore
           re.push(
             <Tag color={indexColor(index)} style={'margin-right:3px'}>
-              {' '}
-              {label}{' '}
+              {label}
             </Tag>
           );
         });

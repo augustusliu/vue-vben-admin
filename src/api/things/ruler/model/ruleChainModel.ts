@@ -1,5 +1,11 @@
 import { BasicPageParams, BasicFetchResult } from '/@/api/model/baseModel';
 
+// 规则链搜索
+export type ChainSearchParams = BasicPageParams & {
+  ruleChainName?: string;
+  active?: boolean;
+};
+
 export type RuleSearchParams = BasicPageParams & {
   // 规则链名称
   ruleChainName?: string;
@@ -12,9 +18,9 @@ export interface RuleChainListItem {
   id: string;
   ruleChainName: string;
   active: boolean;
+  description: string;
   createdTime: string;
   modifiedTime: string;
-  ruleChainInfo: RuleChainInfo;
 }
 
 export interface RuleChainInfo {
