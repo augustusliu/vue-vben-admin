@@ -8,6 +8,10 @@ export const attributeColumn: BasicColumn[] = [
     defaultHidden: true,
   },
   {
+    title: '设备名称',
+    dataIndex: 'entityName',
+  },
+  {
     title: '属性名称',
     dataIndex: 'name',
   },

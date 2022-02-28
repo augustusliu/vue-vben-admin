@@ -21,6 +21,9 @@ export interface AddOrUpdateAttributeParam {
 
 export interface AttributeListItem {
   id: number;
+  entityId: number,
+  entityType: string,
+  entityName: string,
   name: string;
   code: string;
   valueType: string;

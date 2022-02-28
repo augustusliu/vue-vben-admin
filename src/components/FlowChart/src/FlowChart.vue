@@ -131,6 +131,9 @@
         lfInstance.value.on('node:dbclick', nodeEvent =>{
           console.log(nodeEvent.data)
         })
+        lfInstance.value.on('edge:click', nodeEvent =>{
+          console.log(nodeEvent.data)
+        })
         const lf = unref(lfInstance)!;
         lf?.setDefaultEdgeType('bezier');
         onRender();

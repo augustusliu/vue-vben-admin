@@ -701,6 +701,7 @@ export const clearFocusItemState = (graph) => {
  */
 export const formatApiDataNode = (data: any) => {
   const formatData = { nodes: [], edges: [] };
+  console.log('处理数据', data)
   data.nodes.forEach((item, i) => {
     let node = {
       id: item.id,

@@ -33,7 +33,7 @@
   import { EntityTypeEnum } from "/@/enums/entityEnum";
 
   // 依赖接口
-  import { listAttribute, delAttribute } from '/@/api/things/attribute/attrApi';
+  import { listInheritAttribute, delAttribute } from '/@/api/things/attribute/attrApi';
   import { attributeColumn } from './attribute.data';
   import { useDrawer } from '/@/components/Drawer';
   import AttributeDrawer from  './AttributeDrawer.vue';
@@ -51,7 +51,7 @@
       const createBtnShow = entityType === EntityTypeEnum.DEVICE;
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
-        api: listAttribute,
+        api: listInheritAttribute,
         columns: attributeColumn,
         bordered: true,
         showIndexColumn: true,

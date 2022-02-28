@@ -40,6 +40,13 @@ export interface RelationAtlasModel {
   edges: RelationEdge[];
 }
 
+
+export interface RelationEntityAllInfo{
+  self: RelationNode,
+  froms: RelationNode[],
+  tos: RelationNode[],
+}
 export type ListEntitiesResult = BasicFetchResult<RelationNode>;
+
 
 

@@ -16,7 +16,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from "/@/components/Form/index";
   import { modelFormSchema } from './relation.data';
-  import { listAllEntities } from '/@/api/things/relation/relationApi';
+  import { listAllEntities, entityRelationInfo } from '/@/api/things/relation/relationApi';
   import {EntityTypeEnum} from "/@/enums/entityEnum";
 
   export default defineComponent({
@@ -26,7 +26,7 @@
       const entityChildrenList = ref(Object as any); // 动态数据关联
       const param = ref();
       const modelTitle = ref();
-      const [ registerForm, { updateSchema, validate }] = useForm({
+      const [ registerForm, { updateSchema, setFieldsValue,validate }] = useForm({
         labelWidth: 120,
         schemas: modelFormSchema,
         showActionButtonGroup: false,
@@ -44,10 +44,14 @@
       const [register] = useModalInner(async (data) => {
         param.value = data;
         modelTitle.value = '编辑' + getTitle(data.entityType) + '关系';
+        const entityInfo = await entityRelationInfo(data.entityId, data.entityType);
         await loadDropData(data.entityType);
-
         // 获取当前选中节点的关系数据
-
+        await setFieldsValue({
+          entityName: entityInfo.self.name,
+          parentId: processEntityInfoRelation(entityInfo.froms),
+          children: processEntityInfoRelation(entityInfo.tos),
+        })
       });
 
       async function loadDropData(entityType: string, fuzzy?: any){
@@ -100,7 +104,7 @@
       // 提交保存
       async function handleSubmit(){
         const values = await validate();
-        console.log('结果数据', values );
+        console.log('结果数据', values);
       }
 
       function preProcessParentData(entities){
@@ -126,6 +130,15 @@
           label: item.name,
           value: [item.id],
         }));
+        return options;
+      }
+
+      function processEntityInfoRelation(relation){
+        if(!relation){
+          return ;
+        }
+        let options:Array<any> = new Array<any>();
+        relation.forEach(item => options.push(item.id));
         return options;
       }
 
