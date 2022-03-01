@@ -2,23 +2,24 @@
   position: absolute;
   background: rgba(255, 255, 255, 0.8);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  /*border-radius: 5px;*/
   height: 100%;
   float: left;
-  width: 130px;
+  width: 125px;
   padding: 5px 5px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .lf-dnd-things-item {
   float:left;
   width: 110px;
+  height: 27px;
+  line-height: 27px;
   text-align: center;
   font-size: 12px;
   border:1px solid #dddddd;
-  border-radius:5px;
-  margin-bottom: 5px;
-  margin-bottom: 5px;
+  border-radius:4px;
+  margin-bottom: 8px;
   cursor: grab;
 }
 
@@ -42,28 +43,7 @@
   float:left;
   margin: 0 auto;
 }
-.lf-dndpanel-things {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  height: 100%;
-  float: left;
-  width: 120px;
-  padding: 5px 5px;
-}
 
-.lf-dnd-things-item {
-  float:left;
-  width: 110px;
-  height: 27px;
-  line-height: 27px;
-  text-align: center;
-  font-size: 12px;
-  border:1px solid #dddddd;
-  border-radius:4px;
-  margin-bottom: 8px;
-  cursor: grab;
-}
 
 .lf-dnd-things-item-icon {
   width: 25px;
