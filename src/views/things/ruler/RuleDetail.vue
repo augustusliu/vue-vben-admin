@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import {FlowChart} from '/@/components/FlowChart';
-  import {listAllLeftNodesApi} from '/@/api/things/ruler/ruleApi';
+  import {getNodeTemplateMenuApi} from '/@/api/things/ruler/ruleApi';
   import {onMounted, ref} from "vue";
 
   export default {
@@ -16,7 +16,7 @@
       // 用于控制组件的数据同步
       const isShow = ref(false)
       async function init(){
-        const res = await listAllLeftNodesApi();
+        const res = await getNodeTemplateMenuApi();
         if(!res){
           return;
         }

@@ -15,7 +15,7 @@
   import LogicFlow from '@logicflow/core';
   import ThingsDndPanel from '/@/components/FlowChartPanel';
   import ThingsNode from '/@/components/FlowChartNode';
-  import { Snapshot, BpmnElement, Menu, SelectionSelect } from '@logicflow/extension';
+  import { Snapshot, BpmnElement } from '@logicflow/extension';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useAppStore } from '/@/store/modules/app';
   import { createFlowChartContext } from './useFlowContext';
@@ -52,6 +52,12 @@
       patternItems: {
         type: Array,
       },
+      nodeClickBack:{ // 用于节点点击的回调函数
+        type: Object,
+      },
+      edgeClickBack:{ // 用于边点击的回调函数
+        type: Object,
+      },
     },
     setup(props) {
 
@@ -78,6 +84,7 @@
 
         const defaultOptions: Partial<Definition> = {
           grid: true,
+          nodeTextEdit: false,
           background: {
             color: appStore.getDarkMode === 'light' ? '#f7f9ff' : '#151515',
           },
@@ -112,19 +119,16 @@
           return;
         }
         LogicFlow.use(ThingsDndPanel);
-
         // Canvas configuration
         LogicFlow.use(Snapshot);
         // Use the bpmn plug-in to introduce bpmn elements, which can be used after conversion in turbo
         LogicFlow.use(BpmnElement);
-        // Start the right-click menu
-        LogicFlow.use(Menu);
-        LogicFlow.use(SelectionSelect);
 
         lfInstance.value = new LogicFlow({
           ...unref(getFlowOptions),
           container: lfEl,
         });
+
         // 注册自定义节点
         lfInstance.value.register(ThingsNode);
         // 注册自定义节点单击事件
@@ -160,7 +164,6 @@
       }
 
       onMounted(init);
-
       return {
         register,
         prefixCls,

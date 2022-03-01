@@ -1,10 +1,17 @@
 
 // 节点的分组信息
 export interface RuleNodeGroupItem {
-  group: string;
-  groupName: string;
-  bgColor: string;
-  items: RuleNodeDefinition[];
+  id: string;
+  name: string;
+  properties: any;
+  nodes: RuleNodeMenuItem[];
+}
+
+export interface RuleNodeMenuItem {
+  id: string;
+  name: string;
+  properties: any;
+  type: string;
 }
 
 // 节点的定义信息

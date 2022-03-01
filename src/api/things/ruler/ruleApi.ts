@@ -7,6 +7,7 @@ import {
 } from '/@/api/things/ruler/model/ruleChainModel';
 
 import {
+  RuleNodeGroupItem,
   RuleNodeGroupResult
 } from '/@/api/things/ruler/model/ruleNodeModel';
 
@@ -15,7 +16,9 @@ enum RulerApi {
 
   // 获取当前用户的规则链列表
   RuleChainListApi = '/api/chains/list',
+  RuleChainTemplateMenuApi = '/api/chains/template',
 
+  // ---- old
   // 获取左侧节点列表
   NodeListApi = '/api/chains/rule/node/list',
 
@@ -30,6 +33,11 @@ enum RulerApi {
 // 获取所有规则链
 export const listAllRuleChainApi = (params: RuleSearchParams) =>
   defHttp.post<RuleChainListResultModel>({ url: RulerApi.RuleChainListApi, params});
+
+export const getNodeTemplateMenuApi = () =>
+  defHttp.get<RuleNodeGroupResult>({ url: RulerApi.RuleChainTemplateMenuApi});
+
+
 
 // 获取所有左侧节点列表
 export const listAllLeftNodesApi = () =>
