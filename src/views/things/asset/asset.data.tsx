@@ -32,22 +32,7 @@ export const assetColumn: BasicColumn[] = [
   {
     title: '资产标签',
     dataIndex: 'label',
-    customRender: ({ record }) => {
-      if (record.label != null && record.label.length > 0) {
-        let re = [];
-        // @ts-ignore
-        record.label.forEach((label, index) => {
-          // @ts-ignore
-          re.push(
-            <Tag color={indexColor(index)} style={'margin-right:3px'}>
-              {label}
-            </Tag>
-          );
-        });
-        return re;
-      }
-      return null;
-    },
+    customRender: ({ record }) => formatLabel(record),
   },
   {
     title: '描述',
@@ -72,6 +57,7 @@ export const assetColumn: BasicColumn[] = [
 ];
 
 // 用于资产详情页信息展示
+// @ts-ignore
 // @ts-ignore
 export const assetInfoScheme: DescItem[] = [
   {
@@ -101,21 +87,8 @@ export const assetInfoScheme: DescItem[] = [
   {
     field: 'label',
     label: '资产标签',
-    render: (label: any) => {
-      if (label != null && label.length > 0) {
-        let re = [];
-        // @ts-ignore
-        label.forEach((item) =>
-          re.push(
-            <Tag color="#87d068" style={'margin-right:3px'}>
-              {' '}
-              {item}{' '}
-            </Tag>
-          )
-        );
-        return re;
-      }
-      return null;
+    render: ( val ) => {
+      return formatLabelv1(val) ;
     },
   },
   {
@@ -213,3 +186,33 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     colProps: { span: 20 },
   },
 ];
+
+const formatLabel = ( record ) => {
+  let re = [];
+  if (record.label != null && record.label.length > 0) {
+    // @ts-ignore
+    record.label.forEach((label, index) => {
+      // @ts-ignore
+      re.push(<Tag color={indexColor(index)} style={'margin-right:3px'}>
+          {label}
+        </Tag>
+      );
+    });
+  }
+  return re;
+}
+
+const formatLabelv1 = ( label ) => {
+  let re = [];
+  if (label != null && label.length > 0) {
+    // @ts-ignore
+    label.forEach((label, index) => {
+      // @ts-ignore
+      re.push(<Tag color={indexColor(index)} style={'margin-right:3px'}>
+          {label}
+        </Tag>
+      );
+    });
+  }
+  return re;
+}

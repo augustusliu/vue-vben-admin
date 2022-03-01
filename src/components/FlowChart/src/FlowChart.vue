@@ -15,7 +15,7 @@
   import LogicFlow from '@logicflow/core';
   import ThingsDndPanel from '/@/components/FlowChartPanel';
   import ThingsNode from '/@/components/FlowChartNode';
-  import { Snapshot, BpmnElement } from '@logicflow/extension';
+  import { Snapshot } from '@logicflow/extension';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useAppStore } from '/@/store/modules/app';
   import { createFlowChartContext } from './useFlowContext';
@@ -52,10 +52,13 @@
       patternItems: {
         type: Array,
       },
-      nodeClickBack:{ // 用于节点点击的回调函数
+      nodeDbClickCallback: { // 用于节点点击的回调函数
         type: Object,
       },
-      edgeClickBack:{ // 用于边点击的回调函数
+      edgeDbClickCallback: { // 用于边点击的回调函数
+        type: Object,
+      },
+      addEdgeClickCallback: { // 用于边添加的回调函数
         type: Object,
       },
     },
@@ -85,6 +88,8 @@
         const defaultOptions: Partial<Definition> = {
           grid: true,
           nodeTextEdit: false,
+          edgeTextEdit: false,
+          adjustEdge: false,
           background: {
             color: appStore.getDarkMode === 'light' ? '#f7f9ff' : '#151515',
           },
@@ -121,8 +126,8 @@
         LogicFlow.use(ThingsDndPanel);
         // Canvas configuration
         LogicFlow.use(Snapshot);
-        // Use the bpmn plug-in to introduce bpmn elements, which can be used after conversion in turbo
-        LogicFlow.use(BpmnElement);
+        // // Use the bpmn plug-in to introduce bpmn elements, which can be used after conversion in turbo
+        // LogicFlow.use(BpmnElement);
 
         lfInstance.value = new LogicFlow({
           ...unref(getFlowOptions),
@@ -131,13 +136,16 @@
 
         // 注册自定义节点
         lfInstance.value.register(ThingsNode);
+
         // 注册自定义节点单击事件
-        lfInstance.value.on('node:dbclick', nodeEvent =>{
-          console.log(nodeEvent.data)
-        })
-        lfInstance.value.on('edge:click', nodeEvent =>{
-          console.log(nodeEvent.data)
-        })
+        const nodeClickCallback = props.nodeDbClickCallback as (data: any) => void;
+        const edgeClickCallback = props.edgeDbClickCallback as (data: any) => void;
+        const edgeAddedCallback = props.addEdgeClickCallback as (data: any) => void;
+        lfInstance.value.on('node:dbclick', (ev) => nodeClickCallback(ev));
+        lfInstance.value.on('edge:add', (ev) => edgeAddedCallback(ev));
+        lfInstance.value.on('edge:click', () => {});
+        lfInstance.value.on('edge:click', (ev) => edgeClickCallback(ev));
+
         const lf = unref(lfInstance)!;
         lf?.setDefaultEdgeType('bezier');
         onRender();

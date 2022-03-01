@@ -52,7 +52,6 @@ class ThingsDndPanel{
     if (shapeGroup.id) {
       groupItem.id = shapeGroup.id;
     }
-
     const summary = document.createElement('summary');
     if (shapeGroup.name) {
       summary.innerText = shapeGroup.name;
@@ -93,10 +92,11 @@ class ThingsDndPanel{
     // 1、创建item图标
     const iconItem = document.createElement('span');
     iconItem.className = 'lf-dnd-things-item-icon';
-    if (properties?.icon) {
-      iconItem.style.backgroundImage = `url(${style.icon})`;
-    }
     el.appendChild(iconItem);
+    if(style.icon){
+      iconItem.style.backgroundImage = `url(../../../assets/icons/${style.icon}.svg)`;
+      console.log('icon', iconItem.style.backgroundImage);
+    }
 
     // 2、创建item文字
     if (shapeItem.name) {

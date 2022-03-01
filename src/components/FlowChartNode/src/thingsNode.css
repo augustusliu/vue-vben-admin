@@ -1,11 +1,12 @@
 .things-node {
-  width: 120px;
+  width: 110px;
   height: 27px;
   text-align: center;
   font-size: 12px;
   border:1px solid #dddddd;
   border-radius:5px;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .things-node-icon {
@@ -17,10 +18,20 @@
   float:left;
 }
 .things-node-text {
-  width: 90px;
+  width: 82px;
   height: 25px;
   text-align: center;
   line-height: 25px;
   font-size: 12px;
   float:left;
+}
+
+.lf-node-content .lf-element-text{
+  width: 82px;
+  height: 25px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 12px;
+  float:left;
+  cursor: pointer;
 }
