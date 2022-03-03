@@ -25,26 +25,19 @@
   import { configDefaultDndPanel } from './config';
   import '@logicflow/core/dist/style/index.css';
   import '@logicflow/extension/lib/style/index.css';
-  import JsScriptDrawer from './draws/JsScriptDrawer.vue';
-  import KafkaOutDrawer from './draws/KafkaOutDrawer.vue';
-  import KafkaInDrawer from './draws/KafkaInDrawer.vue';
-  import RestInDrawer from './draws/RestInDrawer.vue';
-  import {useDrawer} from "/@/components/Drawer";
 
   export default defineComponent({
     name: 'FlowChart',
-    components: { BasicModal, FlowChartToolbar, JsonPreview, JsScriptDrawer, KafkaOutDrawer, KafkaInDrawer, RestInDrawer},
+    components: { BasicModal, FlowChartToolbar, JsonPreview },
     props: {
       flowOptions: {
         type: Object as PropType<Definition>,
         default: () => ({}),
       },
-
       data: {
         type: Object as PropType<any>,
         default: () => ({}),
       },
-
       toolbar: {
         type: Boolean,
         default: true,
@@ -63,12 +56,6 @@
       },
     },
     setup(props) {
-
-      // 注册组件
-      const [jsScriptRegister, { openDrawer: openJsScriptDrawer }] = useDrawer();
-      const [kafkaOutRegister, { openDrawer: openKafkaOutDrawer }] = useDrawer();
-      const [kafkaInRegister, { openDrawer: openKafkaInDrawer }] = useDrawer();
-      const [restInRegister, { openDrawer: openRestInDrawer }] = useDrawer();
 
       const lfElRef = ref(null);
       const graphData = ref({});
@@ -137,7 +124,7 @@
         // 注册自定义节点
         lfInstance.value.register(ThingsNode);
 
-        // 注册自定义节点单击事件
+        // 注册自定义节点单击事件并屏蔽掉无用事件
         const nodeClickCallback = props.nodeDbClickCallback as (data: any) => void;
         const edgeClickCallback = props.edgeDbClickCallback as (data: any) => void;
         const edgeAddedCallback = props.addEdgeClickCallback as (data: any) => void;
@@ -176,16 +163,10 @@
         register,
         prefixCls,
         lfElRef,
+        // 暴露流程图对象，供上级组件使用
+        lfInstance,
         handlePreview,
         graphData,
-        jsScriptRegister,
-        kafkaOutRegister,
-        kafkaInRegister,
-        restInRegister,
-        openJsScriptDrawer,
-        openKafkaOutDrawer,
-        openKafkaInDrawer,
-        openRestInDrawer,
       };
     },
   });

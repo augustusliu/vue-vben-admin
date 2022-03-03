@@ -37,7 +37,6 @@ class ThingsNodeModel extends HtmlNodeModel {
         ]
     }
     this.anchorsOffset = anchors;
-
   }
 }
 
@@ -60,16 +59,17 @@ class ThingsNodeNode extends HtmlNode {
     el.style.opacity = style.opacity || '1';
 
     // 1、创建图标显示
-    const iconContainer = document.createElement('span');
+    const iconContainer = document.createElement('div');
     iconContainer.className = 'things-node-icon';
     if(style.icon){
-      iconContainer.style.backgroundImage = style.icon;
+      const img = document.createElement('img');
+      img.src = style.icon;
+      iconContainer.appendChild(img);
     }
 
     // 2、创建文本样式
     const textContainer = document.createElement('span');
     textContainer.className = 'things-node-text';
-    // textContainer.innerText = text.value;
     textContainer.style.backgroundColor = style.backgroundColor || '#FFF';
     textContainer.style.opacity = style.opacity || '1';
 
@@ -83,7 +83,6 @@ class ThingsNodeNode extends HtmlNode {
 const defaultConnectRule: ConnectRule = {
   message: '单向节点无法连接',
   validate: (src: BaseNodeModel, target: BaseNodeModel) => {
-    console.log('link src', src);
     if(src.id === target.id){
       return false;
     }

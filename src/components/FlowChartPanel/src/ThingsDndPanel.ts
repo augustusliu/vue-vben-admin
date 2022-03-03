@@ -90,13 +90,15 @@ class ThingsDndPanel{
     el.id = shapeItem.id;
 
     // 1、创建item图标
-    const iconItem = document.createElement('span');
+    const iconItem = document.createElement('div');
     iconItem.className = 'lf-dnd-things-item-icon';
-    el.appendChild(iconItem);
     if(style.icon){
-      iconItem.style.backgroundImage = `url(../../../assets/icons/${style.icon}.svg)`;
-      console.log('icon', iconItem.style.backgroundImage);
+      const img = document.createElement('img');
+      img.src = style.icon;
+      iconItem.appendChild(img);
     }
+    el.appendChild(iconItem);
+
 
     // 2、创建item文字
     if (shapeItem.name) {

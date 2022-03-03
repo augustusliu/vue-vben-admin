@@ -23,16 +23,6 @@
   cursor: grab;
 }
 
-.lf-dnd-things-item-icon {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  text-align: center;
-  float:left;
-  background-repeat: no-repeat;
-  background-position: center center;
-  margin: 0 auto;
-}
 .lf-dnd-things-item-text {
   width: 82px;
   height: 25px;
@@ -55,17 +45,7 @@
   background-position: center center;
   margin: 0 auto;
   background-color:#FFFFFF;
-}
-
-.lf-dnd-things-item-text {
-  height: 25px;
-  text-align: center;
-  line-height: 25px;
-  font-size: 8px;
-  border-left:1px solid #dddddd;
-  float:left;
-  padding: 0 0;
-  margin: 0 auto;
+  padding: 3px 3px;
 }
 
 details.dntMenu {

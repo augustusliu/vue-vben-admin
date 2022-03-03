@@ -16,6 +16,7 @@
   text-align: center;
   background-color: #ffffff;
   float:left;
+  padding: 3px 3px;
 }
 .things-node-text {
   width: 82px;
