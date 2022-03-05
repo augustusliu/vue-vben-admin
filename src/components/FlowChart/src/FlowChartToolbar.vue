@@ -1,17 +1,24 @@
 <template>
-  <div :class="`${prefixCls}-toolbar`" class="flex items-center px-2 py-1">
-    <template v-for="item in toolbarItemList" :key="item.type">
-      <Tooltip placement="bottom" v-bind="item.disabled ? { visible: false } : {}">
-        <template #title>{{ item.tooltip }}</template>
-        <span :class="`${prefixCls}-toolbar__icon`" v-if="item.icon" @click="onControl(item)">
-          <Icon
-            :icon="item.icon"
-            :class="item.disabled ? 'cursor-not-allowed disabeld' : 'cursor-pointer'"
-          />
-        </span>
-      </Tooltip>
-      <Divider v-if="item.separate" type="vertical" />
-    </template>
+  <div :class="`${prefixCls}-toolbar`" class="flex items-center px-2 py-1" >
+    <div class="h-full" style="width:60%">
+      <template v-for="item in toolbarItemList" :key="item.type">
+        <Tooltip placement="bottom" v-bind="item.disabled ? { visible: false } : {}">
+          <template #title>{{ item.tooltip }}</template>
+          <span :class="`${prefixCls}-toolbar__icon`" v-if="item.icon" @click="onControl(item)">
+            <Icon
+              :icon="item.icon"
+              :class="item.disabled ? 'cursor-not-allowed disabeld' : 'cursor-pointer'"
+            />
+          </span>
+        </Tooltip>
+        <Divider v-if="item.separate" type="vertical" />
+      </template>
+    </div>
+    <div class="h-full" style="width: 40%">
+      <Button size="large"  class="mx-2" style="float: right; background-color: #CD5C5C; color: #fff; cursor: pointer" @click="publishEvent(true)">部署</Button>
+      <Button size="large" class="mx-2" style="float: right; background-color: #3498DB; color: #fff; cursor: pointer">保存</Button>
+      <Button size="large" class="mx-2" style="float: right; cursor: pointer">调试</Button>
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -74,11 +81,6 @@
           icon: 'carbon:document-view',
           tooltip: '查看数据',
         },
-        {
-          type: ToolbarTypeEnum.DATA_SAVE,
-          icon: 'ion:upload-outline',
-          tooltip: '保存',
-        },
       ]);
 
       const { logicFlow } = useFlowChartContext();
@@ -93,6 +95,15 @@
         if (redoIndex !== -1) {
           unref(toolbarItemList)[redoIndex].disabled = !redoAble;
         }
+      }
+
+      // 发布事件
+      const publishEvent = (isPublish: boolean) => {
+        const lf = unref(logicFlow);
+        if (!lf) {
+          return;
+        }
+        console.log('publish data', isPublish, lf.getGraphData());
       }
 
       const onControl = (item) => {
@@ -139,7 +150,7 @@
       onUnmounted(() => {
         unref(logicFlow)?.off('history:change', onHistoryChange);
       });
-      return { toolbarItemList, onControl };
+      return { toolbarItemList, onControl, publishEvent };
     },
   });
 </script>

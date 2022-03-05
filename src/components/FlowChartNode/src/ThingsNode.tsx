@@ -10,8 +10,8 @@ class ThingsNodeModel extends HtmlNodeModel {
     const height = 27;
     this.width = width;
     this.height = height;
-    this.text.x = this.text.x + 3;
-    this.text.y = this.text.y + 2;
+    // this.text.x = this.text.x + 3;
+    // this.text.y = this.text.y + 2;
     // 设置连接规则
     this.targetRules = [defaultConnectRule];
     this.sourceRules = [defaultConnectRule];

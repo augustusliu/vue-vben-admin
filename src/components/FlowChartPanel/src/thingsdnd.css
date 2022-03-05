@@ -45,9 +45,13 @@
   background-position: center center;
   margin: 0 auto;
   background-color:#FFFFFF;
-  padding: 3px 3px;
+  padding: 6px 6px;
 }
 
+.lf-dnd-things-item-icon img{
+  width: 13px;
+  height: 13px;
+}
 details.dntMenu {
   float:left;
 }

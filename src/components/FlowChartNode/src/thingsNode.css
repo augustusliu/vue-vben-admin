@@ -16,8 +16,13 @@
   text-align: center;
   background-color: #ffffff;
   float:left;
-  padding: 3px 3px;
+  padding: 6px 6px;
 }
+.things-node-icon img{
+  width: 13px;
+  height: 13px;
+}
+
 .things-node-text {
   width: 82px;
   height: 25px;
