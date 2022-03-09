@@ -7,13 +7,19 @@
     showFooter
     @ok="handleSubmit">
     <div>
-      <BasicForm @register="registerForm" ref="formEl"/>
+      <BasicForm @register="registerForm" ref="formEl">
+      <!--  创建动态表单 ，field = 0 的属性 -->
+        <template #add="{ field }">
+          <Button v-if="Number(field) === 0" @click="addField">+</Button>
+          <Button v-if="field > 0" @click="delField(field)">-</Button>
+        </template>
+      </BasicForm>
     </div>
   </BasicDrawer>
 </template>
 
 <script lang="ts">
-  import {computed, defineComponent, ref, unref} from 'vue';
+  import {computed, defineComponent, nextTick, ref, unref} from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
 
@@ -25,18 +31,25 @@
     setup(_,{ emit }) {
       const titleRef: any = ref(null);
       const [ registerForm , formAction ] = useForm({
-        labelWidth: 90,
+        baseColProps: {
+          span: 6,
+        },
         schemas: [],  // 初始化时为空，基于上个页面动态传入
         showActionButtonGroup: false,
         showResetButton: true,
         showSubmitButton: true,
       });
 
+      // 缓存当前页面展示的所有fields
+      const currentFormFields: any = ref([]);
+
       // 动态title
       const getTitle = computed(() => (!unref(titleRef) ? '配置信息' : titleRef.value));
 
       // 如果是更新，则设置对应的属性值
-      const [ registerDrawer, { closeDrawer } ] = useDrawerInner(async (data) => {
+      const [ registerDrawer ] = useDrawerInner(async (data) => {
+
+        await nextTick();
 
         const { title, config, values } = data;
         // 设置title
@@ -46,7 +59,9 @@
         const schemasData: FormSchema[] = [];
         config.forEach(item => {
           schemasData.push(item);
+          currentFormFields.value.push(item.field);
         })
+        console.log('fields', currentFormFields.value);
         // 更新form 表单
         await formAction.setProps({schemas: schemasData})
 
@@ -58,13 +73,63 @@
 
       async function handleSubmit() {
         const values = await formAction.validate();
+        // 清空schema
+        await formAction.removeSchemaByFiled(currentFormFields.value);
+        currentFormFields.value = [];
         // 采用emit 将值传递给父组件
-        closeDrawer();
-        await formAction.resetFields();
         emit('success', values);
       }
 
-      return { getTitle, registerForm, registerDrawer, handleSubmit };
+
+      // 默认待添加的第n个field
+      const fieldCount = ref(1);
+
+      function addField(){
+        formAction.appendSchemaByField({
+            field: `headerKey${fieldCount.value}`,
+            component: 'Input',
+            label: '',
+            colProps: {
+              span: 10,
+            },
+            required: true,
+          },
+          `0`
+        );
+
+        formAction.appendSchemaByField(
+          {
+            field: `headerValue${fieldCount.value}`,
+            component: 'Input',
+            label: '',
+            colProps: {
+              span: 10,
+            },
+            required: true,
+          },
+          `headerKey${fieldCount.value}`
+        );
+        formAction.appendSchemaByField({
+            field: `${fieldCount.value}`,
+            component: 'Input',
+            label: '',
+            colProps: {
+              span: 2,
+            },
+            slot: 'add',
+          },
+          `headerValue${fieldCount.value}`
+        );
+        fieldCount.value++
+      }
+
+      function delField(field) {
+        formAction.removeSchemaByFiled([`headerKey${field}`, `headerValue${field}`, `${field}`]);
+        fieldCount.value--;
+      }
+
+
+      return { getTitle, registerForm, registerDrawer, handleSubmit, addField, delField };
     },
   });
 </script>

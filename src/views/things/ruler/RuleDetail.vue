@@ -32,7 +32,7 @@
       const isShow = ref(false)
       // 获取子组件的的对象
       const flowEl = ref(null);
-      const [registerDrawer, { openDrawer }] = useDrawer();
+      const [registerDrawer, { openDrawer, closeDrawer }] = useDrawer();
 
       // 保存当前点击的接单信息
       const curNodeState = ref({});
@@ -49,12 +49,12 @@
 
       // 注册回调事件
       const nodeDbClickCallback = (ev) => {
-        console.log('node', ev.data);
         curNodeState.value = {
           id: ev.data.id,
           properties: ev.data.properties
         }
 
+        console.log('click', ev.data.properties);
         // 获取对应的流程组件
         openDrawer(true, {
           title: ev.data.properties.drawTitle,  // set drawer title
@@ -77,6 +77,8 @@
         if(values.nodeName){
           lfInstance.updateText(unref(curNodeState).id, values.nodeName);
         }
+
+        closeDrawer();
       }
 
       // 边的添加事件

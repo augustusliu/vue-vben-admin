@@ -20,6 +20,7 @@
             valueField="id"
           />
         </template>
+
         <template #remoteSearch="{ model, field }">
           <ApiSelect
             :api="optionsListApi"

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative !h-full w-full overflow-hidden" ref="el"> </div>
+  <div class="relative h-full w-full overflow-hidden" ref="el"> </div>
 </template>
 
 <script lang="ts">
@@ -10,7 +10,6 @@
     watchEffect,
     watch,
     defineComponent,
-    unref,
     nextTick,
   } from 'vue';
   import { useDebounceFn } from '@vueuse/core';
@@ -30,6 +29,10 @@
     mode: { type: String, default: 'application/json' },
     value: { type: String, default: '' },
     readonly: { type: Boolean, default: false },
+    lineNumbers: { type: Boolean, default: true },
+    theme: {type: String, default: 'dracula'},
+    styleActiveLine: { type: Boolean, default: true }, //当前行高亮
+    matchBrackets: { type: Boolean, default: true } //括号匹配
   };
 
   export default defineComponent({
@@ -58,22 +61,22 @@
         editor?.setOption('mode', props.mode);
       });
 
-      watch(
-        () => appStore.getDarkMode,
-        async () => {
-          setTheme();
-        },
-        {
-          immediate: true,
-        }
-      );
+      // watch(
+      //   () => appStore.getDarkMode,
+      //   async () => {
+      //     setTheme();
+      //   },
+      //   {
+      //     immediate: true,
+      //   }
+      // );
 
-      function setTheme() {
-        unref(editor)?.setOption(
-          'theme',
-          appStore.getDarkMode === 'light' ? 'idea' : 'material-palenight'
-        );
-      }
+      // function setTheme() {
+      //   unref(editor)?.setOption(
+      //     'theme',
+      //     appStore.getDarkMode === 'light' ? 'idea' : 'material-palenight'
+      //   );
+      // }
 
       function refresh() {
         editor?.refresh();
@@ -86,7 +89,7 @@
           foldGutter: true,
           gutters: ['CodeMirror-linenumbers'],
         };
-
+        console.log('editor', props)
         editor = CodeMirror(el.value!, {
           value: '',
           mode: props.mode,
@@ -94,11 +97,11 @@
           tabSize: 2,
           theme: 'material-palenight',
           lineWrapping: true,
-          lineNumbers: true,
+          lineNumbers: props.lineNumbers,
           ...addonOptions,
         });
         editor?.setValue(props.value);
-        setTheme();
+        // setTheme();
         editor?.on('change', () => {
           emit('change', editor?.getValue());
         });
