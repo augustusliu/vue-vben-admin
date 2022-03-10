@@ -22,11 +22,12 @@
   import {computed, defineComponent, nextTick, ref, unref} from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
+  import { CodeEditor } from "/@/components/CodeEditor";
 
   // 定义抽屉组件
   export default defineComponent({
     name: 'DynamicNodeDrawer',
-    components: { BasicDrawer, BasicForm },
+    components: { BasicDrawer, BasicForm, CodeEditor },
     emit: ['success', 'register'], // 父组件中采用@success接收参数
     setup(_,{ emit }) {
       const titleRef: any = ref(null);
@@ -42,15 +43,15 @@
 
       // 缓存当前页面展示的所有fields
       const currentFormFields: any = ref([]);
+      // 默认待添加的第n个field
+      const fieldCount = ref(1);
 
       // 动态title
       const getTitle = computed(() => (!unref(titleRef) ? '配置信息' : titleRef.value));
 
       // 如果是更新，则设置对应的属性值
       const [ registerDrawer ] = useDrawerInner(async (data) => {
-
         await nextTick();
-
         const { title, config, values } = data;
         // 设置title
         titleRef.value = title;
@@ -61,8 +62,8 @@
           schemasData.push(item);
           currentFormFields.value.push(item.field);
         })
-        console.log('fields', currentFormFields.value);
-        // 更新form 表单
+
+        // 重置属性
         await formAction.setProps({schemas: schemasData})
 
         // 获取当前form值，如果不为空，则更新
@@ -73,16 +74,25 @@
 
       async function handleSubmit() {
         const values = await formAction.validate();
+
+        // 如果存在动态添加表单
+        if(Reflect.has(values, 'headerKey0')){
+          const headers: any = {};
+          // 将动态表单中添加的输入内容变成统一
+          for(let i = 0; i < fieldCount.value; i++){
+            let headerKey = `headerKey${i}`;
+            let headerValue = `headerValue${i}`;
+            Reflect.set(headers, Reflect.get(values, headerKey), Reflect.get(values, headerValue));
+          }
+          values.headers = headers;
+        }
+
         // 清空schema
         await formAction.removeSchemaByFiled(currentFormFields.value);
         currentFormFields.value = [];
         // 采用emit 将值传递给父组件
         emit('success', values);
       }
-
-
-      // 默认待添加的第n个field
-      const fieldCount = ref(1);
 
       function addField(){
         formAction.appendSchemaByField({

@@ -11,7 +11,7 @@
 <script lang="ts">
   import { defineComponent, computed } from 'vue';
   import CodeMirrorEditor from './codemirror/CodeMirror.vue';
-  import { isString } from '/@/utils/is';
+  // import { isString } from '/@/utils/is';
 
   const MODE = {
     JSON: 'application/json',
@@ -33,12 +33,13 @@
     setup(props, { emit }) {
       const getValue = computed(() => {
         const { value, mode } = props;
-        if (mode !== MODE.JSON) {
-          return value as string;
-        }
-        return isString(value)
-          ? JSON.stringify(JSON.parse(value), null, 2)
-          : JSON.stringify(value, null, 2);
+        // if (mode !== MODE.JSON) {
+        //   return value as string;
+        // }
+        // return (value && isString(value))
+        //   ? JSON.stringify(JSON.parse(value), null, 2)
+        //   : JSON.stringify(value, null, 2);
+        return value as string;
       });
 
       function handleValueChange(v) {

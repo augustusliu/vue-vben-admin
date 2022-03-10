@@ -1,6 +1,8 @@
 <template>
   <div class="h-full" :class="prefixCls">
-    <FlowChartToolbar :prefixCls="prefixCls" v-if="toolbar" @view-data="handlePreview" />
+    <FlowChartToolbar :prefixCls="prefixCls" v-if="toolbar"
+                      @view-data="handlePreview"
+                      @save-click="submitHandler"/>
     <div ref="lfElRef" class="h-full"></div>
     <BasicModal @register="register" title="流程数据" width="50%">
       <JsonPreview :data="graphData" />
@@ -19,7 +21,6 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useAppStore } from '/@/store/modules/app';
   import { createFlowChartContext } from './useFlowContext';
-  import { toLogicFlowData } from './adpterForTurbo';
   import { useModal, BasicModal } from '/@/components/Modal';
   import { JsonPreview } from '/@/components/CodeEditor';
   import { configDefaultDndPanel } from './config';
@@ -47,15 +48,10 @@
       },
       nodeDbClickCallback: { // 用于节点点击的回调函数
         type: Object,
-      },
-      edgeDbClickCallback: { // 用于边点击的回调函数
-        type: Object,
-      },
-      addEdgeClickCallback: { // 用于边添加的回调函数
-        type: Object,
-      },
+      }
     },
-    setup(props) {
+    emits: ['submitBefore'],
+    setup(props,{ emit }) {
 
       const lfElRef = ref(null);
       const graphData = ref({});
@@ -73,9 +69,10 @@
         const { flowOptions } = props;
 
         const defaultOptions: Partial<Definition> = {
-          grid: true,
+          grid: false,
           nodeTextEdit: false,
-          edgeTextEdit: false,
+          edgeTextEdit: true,
+          edgeTextDraggable: true,
           adjustEdge: false,
           background: {
             color: appStore.getDarkMode === 'light' ? '#f7f9ff' : '#151515',
@@ -126,17 +123,12 @@
 
         // 注册自定义节点单击事件并屏蔽掉无用事件
         const nodeClickCallback = props.nodeDbClickCallback as (data: any) => void;
-        const edgeClickCallback = props.edgeDbClickCallback as (data: any) => void;
-        const edgeAddedCallback = props.addEdgeClickCallback as (data: any) => void;
         lfInstance.value.on('node:dbclick', (ev) => nodeClickCallback(ev));
-        lfInstance.value.on('edge:add', (ev) => edgeAddedCallback(ev));
-        lfInstance.value.on('edge:click', () => {});
-        lfInstance.value.on('edge:click', (ev) => edgeClickCallback(ev));
 
         const lf = unref(lfInstance)!;
         lf?.setDefaultEdgeType('bezier');
-        onRender();
         lf?.setPatternItems(props.patternItems || configDefaultDndPanel(lf));
+        await onRender();
       }
 
       async function onRender() {
@@ -145,8 +137,8 @@
         if (!lf) {
           return;
         }
-        const lFData = toLogicFlowData(props.data);
-        lf.render(lFData);
+        // const lFData = toLogicFlowData(props.data);
+        lf.render(props.data);
       }
 
       function handlePreview() {
@@ -158,6 +150,17 @@
         openModal();
       }
 
+      function submitHandler(saveType: number){
+        const lf = unref(lfInstance);
+        if (!lf) {
+          return;
+        }
+        emit('submitBefore', {
+          type: saveType,
+          data: unref(lf).getGraphData()
+        });
+      }
+
       onMounted(init);
       return {
         register,
@@ -166,6 +169,7 @@
         // 暴露流程图对象，供上级组件使用
         lfInstance,
         handlePreview,
+        submitHandler,
         graphData,
       };
     },

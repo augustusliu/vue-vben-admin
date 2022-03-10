@@ -7,6 +7,9 @@ export enum ResultEnum {
   EXPIRED = 20,
   AUTHENTICATION_FAILED = 11,
   LOGIN_FAILED = 12,
+  BAD_REQUEST_PARAMS = 31,
+  BIZ_ERROR = 35,
+
   TIMEOUT = 401,
 
   TYPE = 'success',

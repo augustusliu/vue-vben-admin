@@ -1,6 +1,26 @@
 import {BasicColumn, FormSchema} from "/@/components/Table";
 import moment from "moment";
-import {Switch} from "ant-design-vue";
+import { Switch } from "ant-design-vue";
+
+export const ruleChainModelSchema: FormSchema[] =[
+  {
+    field: 'ruleChainName',
+    label: '规则链名称',
+    required: true,
+    component: 'Input',
+    componentProps: {
+      placeholder: "输入规则链名称，长度不能超过50个字符"
+    }
+  },
+  {
+    field: 'description',
+    label: '描述',
+    component: 'InputTextArea',
+    componentProps: {
+      style: {'min-height': '100px'}
+    }
+  },
+];
 
 // 列表展示
 export const ruleChainColumn: BasicColumn[] = [

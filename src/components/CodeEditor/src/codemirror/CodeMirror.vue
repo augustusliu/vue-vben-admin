@@ -89,7 +89,6 @@
           foldGutter: true,
           gutters: ['CodeMirror-linenumbers'],
         };
-        console.log('editor', props)
         editor = CodeMirror(el.value!, {
           value: '',
           mode: props.mode,

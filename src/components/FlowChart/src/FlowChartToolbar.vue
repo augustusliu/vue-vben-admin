@@ -1,6 +1,6 @@
 <template>
-  <div :class="`${prefixCls}-toolbar`" class="flex items-center px-2 py-1" >
-    <div class="h-full" style="width:60%">
+  <div :class="`${prefixCls}-toolbar`" class="flex items-center px-2" >
+    <div class="h-full py-1" style="width:60%">
       <template v-for="item in toolbarItemList" :key="item.type">
         <Tooltip placement="bottom" v-bind="item.disabled ? { visible: false } : {}">
           <template #title>{{ item.tooltip }}</template>
@@ -15,9 +15,12 @@
       </template>
     </div>
     <div class="h-full" style="width: 40%">
-      <Button size="large"  class="mx-2" style="float: right; background-color: #CD5C5C; color: #fff; cursor: pointer" @click="publishEvent(true)">部署</Button>
-      <Button size="large" class="mx-2" style="float: right; background-color: #3498DB; color: #fff; cursor: pointer">保存</Button>
-      <Button size="large" class="mx-2" style="float: right; cursor: pointer">调试</Button>
+      <Button size="large" class="h-full mx-2"
+              style="width:70px; float: right; background-color: #FF7F50; color: #fff; cursor: pointer"
+              @click="publishEvent(1)">启用</Button>
+      <Button size="large" class="h-full mx-2"
+              style="width:70px; float: right; background-color: #00BFFF; color: #fff; cursor: pointer"
+              @click="publishEvent(2)" >保存</Button>
     </div>
   </div>
 </template>
@@ -38,7 +41,7 @@
       prefixCls: String,
     },
     // vue 事件校验器
-    emits: ['view-data'],
+    emits: ['view-data','save-click'],
     setup(_, { emit }) {
       const toolbarItemList = ref<ToolbarConfig[]>([
         {
@@ -98,12 +101,12 @@
       }
 
       // 发布事件
-      const publishEvent = (isPublish: boolean) => {
+      const publishEvent = (saveType: number) => {
         const lf = unref(logicFlow);
         if (!lf) {
           return;
         }
-        console.log('publish data', isPublish, lf.getGraphData());
+        emit('save-click', saveType);
       }
 
       const onControl = (item) => {
@@ -132,10 +135,6 @@
             break;
           case ToolbarTypeEnum.VIEW_DATA:
             emit('view-data');
-            break;
-          case ToolbarTypeEnum.DATA_SAVE:
-            // 打印画布数据
-            console.log(lf.getGraphData());
             break;
         }
       };

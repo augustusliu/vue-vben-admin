@@ -31,7 +31,7 @@
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
-  import { listAllRuleChainApi } from '/@/api/things/ruler/ruleApi';
+  import { listAllRuleChainApi, deleteApi } from '/@/api/things/ruler/ruleApi';
   import { ruleChainColumn, searchFormSchema } from './rulechain.data';
   import { SvgIcon, Icon } from '/@/components/Icon';
   import { useGo } from '/@/hooks/web/usePage';
@@ -45,7 +45,7 @@
     setup() {
       const go = useGo();
       // 定义当前要展示的表格
-      const [registerTable] = useTable({
+      const [registerTable, { reload }] = useTable({
         // title: '资产列表',
         api: listAllRuleChainApi,
         columns: ruleChainColumn,
@@ -67,14 +67,16 @@
       });
 
       function handleCreate() {
-        go('/rule_detail/' + '0'); // 表示新建
+        go('/rule_detail/' + '-1'); // 表示新建
       }
       function handleEdit(record: Recordable) {
         go('/rule_detail/' + record.id);
       }
-      // 删除操作
-      function handleDelete(record: Recordable) {
 
+      // 删除操作
+      async function handleDelete(record: Recordable) {
+        await deleteApi(record.id);
+        await reload();
       }
 
       return {

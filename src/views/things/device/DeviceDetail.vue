@@ -1,6 +1,8 @@
 <template>
   <PageWrapper v-if="isLoaded">
-    <Description @register="registerDeviceDetailInfo" class="mt-4" />
+    <Description @register="registerDeviceDetailInfo"
+                 :collapseOptions="{ canExpand: true }"
+                 class="mt-4" />
     <div :class="`${prefixCls}-bottom`">
       <Tabs>
         <template v-for="item in tabListScheme" :key="item.key">

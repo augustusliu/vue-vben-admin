@@ -15,7 +15,7 @@ export type RuleSearchParams = BasicPageParams & {
 
 // 规则链列表的展示信息
 export interface RuleChainListItem {
-  id: string;
+  id: number;
   ruleChainName: string;
   active: boolean;
   description: string;
@@ -23,42 +23,54 @@ export interface RuleChainListItem {
   modifiedTime: string;
 }
 
-export interface RuleChainInfo {
+// 用于保存规则链
+export interface RuleChainSaveParams {
+  id: number;
+  ruleChainName: string;
+  active: boolean;
+  description: string;
   nodes: RuleChainNode[];
   edges: RuleChainNodeRelation[];
 }
 
 // 规则链中某个节点的信息
 export interface RuleChainNode {
-  id: string;
-  type: string;
-  label: string;
-  bgColor: string;
-  chainId: string;
-  description: string;
+  id: number;
+  dynamicId: string;
+  ruleChainId: number;
+  fixId: number;
   x: string;
   y: string;
-  configuration: string;
+  text: RuleCommonText;
   clazz: string;
-  nodeId: string;
+  properties: any;
+  type: string;
 }
 
 // 规则链中节点的关系
 export interface RuleChainNodeRelation {
-  id: string;
+  id?: number;
   type: string;
   sourceNodeId: string;
   targetNodeId: string;
   startPoint: RuleChainNodePoint;
   endPoint: RuleChainNodePoint;
   pointsList: RuleChainNodePoint[];
+  text: RuleCommonText;
+  properties: any;
 }
+
 
 // 规则链中节点的坐标
 export interface RuleChainNodePoint {
   x: string;
   y: string;
 }
+export type RuleCommonText = RuleChainNodePoint & {
+  value: string;
+}
+
+
 
 
 export type RuleChainListResultModel = BasicFetchResult<RuleChainListItem>;

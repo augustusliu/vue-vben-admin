@@ -1,0 +1,774 @@
+[
+  {
+    "id": "01",
+    "name": "通用组件",
+    "properties": {
+      "style": {
+        "backgroundColor": "#D5F5E3",
+        "opacity": "1",
+        "fontSize": "",
+        "color": ""
+      }
+    },
+    "nodes": [
+      {
+        "id": "100",
+        "name": "手工输入",
+        "type": "thingsNode",
+        "properties": {
+          "fixId": "100",
+          "drawTitle": "手工输入配置",
+          "clazz":"com.lau.things.rule.engine.common.InputNode",
+          "degreeType": "OUT",
+          "description": "用于手工输入数据，触发整个规则链的数据流动。 往往用在测试性场景中，测试配置的规则链流程及相关数据的准确性。",
+          "style": {
+            "backgroundColor": "#ABEBC6",
+            "opacity": "1",
+            "icon": "data:image/png;base64,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"
+          },
+          "config": [
+            {
+              "label": "节点名称",
+              "field": "nodeName",
+              "component": "Input",
+              "required": true,
+              "defaultValue": "手工输入",
+              "colProps": {"span": 22},
+              "componentProps": {
+                "placeholder": "定义一个节点的业务名称"
+              }
+            },
+            {
+              "label": "调用方式",
+              "field": "scheduleType",
+              "component": "Select",
+              "required": true,
+              "colProps": {"span": 11},
+              "componentProps": {
+                "style": {"width": "90%"},
+                "options": [
+                  { "label": "一次调用", "value": "one" },
+                  { "label": "循环调用", "value": "round" }
+                ]
+              },
+              "value": "",
+              "description": "填写需要发送给规则链的数据内容，推荐采用JSON格式输入。"
+            },
+            {
+              "label": "调用间隔(秒)",
+              "field": "delay",
+              "component": "Select",
+              "required": true,
+              "colProps": {"span": 11},
+              "componentProps":{
+                "options": [
+                  { "label": "1", "value": 1 },
+                  { "label": "2", "value": 2 },
+                  { "label": "3", "value": 3 },
+                  { "label": "4", "value": 4 },
+                  { "label": "5", "value": 5 }
+                ],
+                "style": {"width": "90%"}
+              }
+            },
+            {
+              "label": "输入内容",
+              "field": "inputContent",
+              "component": "CodeEditor",
+              "required": true,
+              "helpMessage": "请输入字符串或者JSON格式对象",
+              "colProps": {"span": 22},
+              "componentProps": {
+                "mode": "application/json",
+                "lineNumbers": false,
+                "lineWrapping": true,
+                "value": "",
+                "style": {
+                  "width": "100%",
+                  "min-height": "200px"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "101",
+        "name": "调试",
+        "type": "thingsNode",
+        "properties": {
+          "fixId": "101",
+          "drawTitle": "调试信息配置",
+          "clazz":"com.lau.things.rule.engine.common.DebugNode",
+          "description": "该节点是一个打印节点，用于打印出上个流程的输出结果方便调试。在部署时，请及时从流程中删除对应的节点",
+          "degreeType": "INOUT",
+          "style": {
+            "backgroundColor": "#ABEBC6",
+            "opacity": "1",
+            "icon": "data:image/png;base64,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"
+          },
+          "config": [
+            {
+              "label": "节点名称",
+              "field": "nodeName",
+              "component": "Input",
+              "required": true,
+              "colProps": {"span": 22},
+              "defaultValue": "调试",
+              "componentProps": {
+                "placeholder": "定义一个节点的业务名称"
+              }
+            },
+            {
+              "label": "打印内容",
+              "field": "outType",
+              "component": "Select",
+              "required": true,
+              "colProps": {"span": 10},
+              "componentProps": {
+                "options": [
+                  { "label": "全部", "value": "All" },
+                  { "label": "消息头", "value": "Header" },
+                  { "label": "消息体", "value": "Body" }
+                ]
+              }
+            },
+            {
+              "field": "dividerLine",
+              "component": "Divider",
+              "colProps": {"span": 22},
+              "label": ""
+            },
+            {
+              "label": "控制台",
+              "field": "console",
+              "component": "InputTextArea",
+              "disabled": true,
+              "colProps": {"span": 22},
+              "componentProps": {
+                "placeholder": "定义一个节点的业务名称",
+                "autoSize": {
+                  "minRows": 5,
+                  "maxRows": 8
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "02",
+    "name": "功能组件",
+    "properties": {
+      "style": {
+        "backgroundColor": "#FDEBD0",
+        "opacity": "1",
+        "fontSize": "",
+        "color": ""
+      }
+    },
+    "nodes": [
+      {
+        "id": "200",
+        "name": "脚本处理",
+        "type": "thingsNode",
+        "properties": {
+          "fixId": "200",
+          "clazz":"com.lau.things.rule.engine.script.ScriptNode",
+          "drawTitle": "脚本信息配置",
+          "description": "用于对接收到的数据进行脚本性处理，脚本的编写采用JavaScript语言。",
+          "degreeType": "INOUT",
+          "style": {
+            "backgroundColor": "#FAD7A0",
+            "opacity": "1",
+            "icon": "data:image/png;base64,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"
+          },
+          "config": [
+            {
+              "label": "节点名称",
+              "field": "nodeName",
+              "component": "Input",
+              "defaultValue": "脚本处理",
+              "required": true,
+              "colProps": {"span": 22},
+              "componentProps": {
+                "placeholder": "定义一个节点的业务名称"
+              }
+            },
+            {
+              "label": "编辑脚本",
+              "field": "scriptBody",
+              "component": "CodeEditor",
+              "helpMessage": "请输入Javascript脚本处理数据",
+              "required": true,
+              "colProps": {"span": 22},
+              "componentProps": {
+                "mode": "javascript",
+                "lineNumbers": true,
+                "lineWrapping": true,
+                "value": "",
+                "style": {
+                  "width": "100%",
+                  "min-height": "300px"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "201",
+        "name": "拆分",
+        "type": "thingsNode",
+        "properties": {
+          "fixId": "201",
+          "clazz":"com.lau.things.rule.engine.common.SplitNode",
+          "drawTitle": "数据拆分配置",
+          "description": "用于对数据进行拆分，可以按照不同类型的数据格式进行拆分",
+          "degreeType": "INOUT",
+          "style": {
+            "backgroundColor": "#FAD7A0",
+            "opacity": "1",
+            "icon": "data:image/png;base64,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"
+          },
+          "config": [
+            {
+              "label": "节点名称",
+              "field": "nodeName",
+              "component": "Input",
+              "defaultValue": "拆分",
+              "required": true,
+              "colProps": {"span": 22},
+              "componentProps": {
+                "placeholder": "定义一个节点的业务名称"
+              }
+            },
+            {
+              "label": "数据类型",
+              "field": "dataType",
+              "component": "Select",
+              "required": true,
+              "colProps": {"span": 11},
+              "componentProps": {
+                "options": [
+                  { "label": "字符串", "value": "STR_V" },
+                  { "label": "数组", "value": "ARRAY_V" }
+                ],
+                "style": {"width": "90%"}
+              }
+            },
+            {
+              "label": "分割规则",
+              "field": "splitStrategy",
+              "component": "Input",
+              "required": true,
+              "colProps": {"span": 11},
+              "componentProps": {
+                "style": {"width": "90%"},
+                "placeholder": "输入分割符或者分割的长度"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "03",
+    "name": "网络组件",
+    "properties": {
+      "style": {
+        "backgroundColor": "#D6EAF8",
+        "opacity": "1",
+        "fontSize": "",
+        "color": ""
+      }
+    },
+    "nodes": [
+      {
+        "id": "300",
+        "name": "HTTP请求",
+        "type": "thingsNode",
+        "properties": {
+          "fixId": "300",
+          "clazz":"com.lau.things.rule.engine.rest.RestApiNode",
+          "drawTitle": "Http 请求配置",
+          "description": "采用http方式，请求获取某些资源数据，以方便后期对获取的资源数据进行处理.",
+          "style": {
+            "backgroundColor": "#85C1E9",
+            "opacity": "1",
+            "icon": "data:image/png;base64,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"
+          },
+          "config": [
+            {
+              "label": "节点名称：",
+              "field": "nodeName",
+              "component": "Input",
+              "defaultValue": "HTTP请求",
+              "required": true,
+              "colProps": {"span": 22},
+              "componentProps": {
+                "placeholder": "定义一个节点的业务名称"
+              }
+            },
+            {
+              "label": "请求地址：",
+              "field": "endpoint",
+              "component": "Input",
+              "required": true,
+              "colProps": {"span": 22},
+              "type": "INPUT",
+              "componentProps": {
+                "placeholder": "请输入地址请求地址"
+              }
+            },
+            {
+              "label": "请求方式：",
+              "field": "method",
+              "required": true,
+              "component": "Select",
+              "colProps": {"span": 22},
+              "componentProps": {
+                "options": [
+                  {
+                    "label": "GET",
+                    "value": "GET"
+                  },
+                  {
+                    "label": "POST",
+                    "value": "POST"
+                  },
+                  {
+                    "label": "PUT",
+                    "value": "PUT"
+                  },
+                  {
+                    "label": "DELETE",
+                    "value": "DELETE"
+                  }
+                ]
+              },
+              "defaultValue": "GET"
+            },
+            {
+              "field": "dividerLine",
+              "component": "Divider",
+              "colProps": {"span": 22},
+              "label": "添加请求头：",
+              "componentProps": {
+                "type": "horizontal",
+                "orientation": "left",
+                "orientationMargin": 35
+              }
+            },
+            {
+              "label": "",
+              "field": "headerKey0",
+              "component": "Input",
+              "colProps": {"span": 10},
+              "componentProps": {
+                "placeholder": "添加请求头Key"
+              }
+            },
+            {
+              "label": "",
+              "field": "headerValue0",
+              "component": "Input",
+              "colProps": {"span": 10},
+              "componentProps": {
+                "placeholder": "填写需要向规则链填充的内容"
+              }
+            },
+            {
+              "label": "",
+              "field": "0",
+              "component": "Input",
+              "colProps": {"span": 2},
+              "slot": "add"
+            },
+            {
+              "label": "参数",
+              "subLabel": "(application/json)",
+              "field": "payload",
+              "component": "CodeEditor",
+              "helpMessage": "请输入JSON格式参数",
+              "colProps": {"span": 22},
+              "componentProps": {
+                "mode": "application/json",
+                "lineNumbers": false,
+                "lineWrapping": true,
+                "value": "",
+                "style": {
+                  "width": "100%",
+                  "min-height": "150px"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "302",
+        "name": "MQTT接收",
+        "type": "thingsNode",
+        "properties": {
+          "style": {
+            "backgroundColor": "#85C1E9",
+            "opacity": "1"
+          },
+          "clazz":"com.lau.things.rule.engine.rest.RestApiNode",
+          "drawModel": "HttpNodeDrawer",
+          "description": "用于接收MQTT消息。",
+          "config": [
+            {
+              "name": "请求地址",
+              "field": "endpoint",
+              "type": "input",
+              "value": "",
+              "description": "填写需要向规则链填充的内容"
+            },
+            {
+              "name": "请求头",
+              "code": "header",
+              "type": "inputDynamic",
+              "value": "",
+              "description": "填写需要向规则链填充的内容"
+            },
+            {
+              "name": "请求方式",
+              "code": "method",
+              "type": "select",
+              "options": [
+                {
+                  "code": "GET",
+                  "value": "GET"
+                },
+                {
+                  "code": "POST",
+                  "value": "POST"
+                },
+                {
+                  "code": "PUT",
+                  "value": "PUT"
+                },
+                {
+                  "code": "DELETE",
+                  "value": "DELETE"
+                }
+              ],
+              "value": "GET",
+              "description": "选择对应的请求方法"
+            },
+            {
+              "name": "参数",
+              "code": "payload",
+              "type": "text",
+              "value": "",
+              "description": "请输入请求内容"
+            }
+          ]
+        }
+      },
+      {
+        "id": "303",
+        "name": "MQTT发送",
+        "type": "thingsNode",
+        "properties": {
+          "style": {
+            "backgroundColor": "#85C1E9",
+            "opacity": "1"
+          },
+          "clazz":"com.lau.things.rule.engine.rest.RestApiNode",
+          "drawModel": "HttpNodeDrawer",
+          "description": "用于发送MQTT消息。",
+          "config": [
+            {
+              "name": "请求地址",
+              "code": "endpoint",
+              "type": "input",
+              "value": "",
+              "description": "填写需要向规则链填充的内容"
+            },
+            {
+              "name": "请求头",
+              "code": "header",
+              "type": "inputDynamic",
+              "value": "",
+              "description": "填写需要向规则链填充的内容"
+            },
+            {
+              "name": "请求方式",
+              "code": "method",
+              "type": "select",
+              "options": [
+                {
+                  "code": "GET",
+                  "value": "GET"
+                },
+                {
+                  "code": "POST",
+                  "value": "POST"
+                },
+                {
+                  "code": "PUT",
+                  "value": "PUT"
+                },
+                {
+                  "code": "DELETE",
+                  "value": "DELETE"
+                }
+              ],
+              "value": "GET",
+              "description": "选择对应的请求方法"
+            },
+            {
+              "name": "参数",
+              "code": "payload",
+              "type": "text",
+              "value": "",
+              "description": "请输入请求内容"
+            }
+          ]
+        }
+      },
+      {
+        "id": "304",
+        "name": "Kafka消费",
+        "type": "thingsNode",
+        "properties": {
+          "style": {
+            "backgroundColor": "#85C1E9",
+            "opacity": "1"
+          },
+          "clazz":"com.lau.things.rule.engine.kafka.KafkaProductNode",
+          "drawModel": "KafkaProductDrawer",
+          "description": "用于向kafka发送对应的消息内容",
+          "config": [
+            {
+              "name": "主题",
+              "code": "topic",
+              "type": "input",
+              "value": "",
+              "description": "请输入kafka主题"
+            },
+            {
+              "name": "地址",
+              "code": "servers",
+              "type": "input",
+              "value": "",
+              "description": "请输入kafka连接地址"
+            },
+            {
+              "name": "客户端分组",
+              "code": "groupId",
+              "type": "input",
+              "value": "",
+              "description": "请输入kafka消费者分组"
+            },
+            {
+              "name": "自动提交",
+              "code": "autoCommit",
+              "type": "input",
+              "value": "",
+              "description": "是否需要自动提交. 请输入true 或者 false"
+            },
+            {
+              "name": "客户端id",
+              "code": "clientId",
+              "type": "input",
+              "value": "",
+              "description": "请自定义客户端Id"
+            },
+            {
+              "name": "偏移量",
+              "code": "offsetReset",
+              "type": "input",
+              "value": "",
+              "description": "请输入kafka消费者监听的偏移量"
+            }]
+        }
+      },
+      {
+        "id": "305",
+        "name": "Kafka生产",
+        "type": "thingsNode",
+        "properties": {
+          "style": {
+            "backgroundColor": "#85C1E9",
+            "opacity": "1"
+          },
+          "clazz":"",
+          "drawModel": "",
+          "description": "",
+          "config": [
+            {
+              "name": "主题",
+              "code": "topic",
+              "type": "input",
+              "value": "",
+              "description": "请输入kafka主题"
+            },
+            {
+              "name": "地址",
+              "code": "servers",
+              "type": "input",
+              "value": "",
+              "description": "请输入kafka连接地址"
+            },
+            {
+              "name": "客户端id",
+              "code": "clientId",
+              "type": "input",
+              "value": "",
+              "description": "请输入kafka客户端id"
+            },
+            {
+              "name": "重试",
+              "code": "retries",
+              "type": "input",
+              "value": "",
+              "description": "请输入重试次数"
+            },
+            {
+              "name": "开启消息头",
+              "code": "needHeader",
+              "type": "select",
+              "value": "true",
+              "description": "请输入重试次数",
+              "options": [
+                {
+                  "code": "是",
+                  "value": "true"
+                },
+                {
+                  "code": "否",
+                  "value": "false"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "04",
+    "name": "业务组件",
+    "properties": {
+      "style": {
+        "backgroundColor": "#E8DAEF",
+        "opacity": "1",
+        "fontSize": "",
+        "color": ""
+      }
+    },
+    "nodes": [
+      {
+        "id": "400",
+        "name": "资产处理",
+        "type": "thingsNode",
+        "properties": {
+          "style": {
+            "backgroundColor": "#C39BD3",
+            "opacity": "1"
+          },
+          "clazz":"com.lau.things.rule.engine.rest.RestApiNode",
+          "drawModel": "HttpNodeDrawer",
+          "description": "用于对接收到的数据进行脚本性处理，脚本的编写采用JavaScript语言。",
+          "config": []
+        }
+      },
+      {
+        "id": "401",
+        "name": "设备处理",
+        "type": "thingsNode",
+        "properties": {
+          "style": {
+            "backgroundColor": "#C39BD3",
+            "opacity": "1"
+          },
+          "clazz":"com.lau.things.rule.engine.kafka.KafkaProductNode",
+          "drawModel": "KafkaProductDrawer",
+          "description": "用于向kafka发送对应的消息内容",
+          "config": []
+        }
+      },
+      {
+        "id": "402",
+        "name": "可视化",
+        "type": "thingsNode",
+        "properties": {
+          "style": {
+            "backgroundColor": "#C39BD3",
+            "opacity": "1"
+          },
+          "clazz":"",
+          "drawModel": "",
+          "description": "",
+          "config": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "05",
+    "name": "存储组件",
+    "properties": {
+      "style": {
+        "backgroundColor": "#F6DDCC",
+        "opacity": "1",
+        "fontSize": "",
+        "color": ""
+      }
+    },
+    "nodes": [
+      {
+        "id": "500",
+        "name": "Postgres",
+        "type": "thingsNode",
+        "properties": {
+          "style": {
+            "backgroundColor": "#E59866",
+            "opacity": "1"
+          },
+          "clazz":"com.lau.things.rule.engine.rest.RestApiNode",
+          "drawModel": "HttpNodeDrawer",
+          "description": "用于对接收到的数据进行脚本性处理，脚本的编写采用JavaScript语言。",
+          "config": []
+        }
+      },
+      {
+        "id": "501",
+        "name": "Mysql",
+        "type": "thingsNode",
+        "properties": {
+          "style": {
+            "backgroundColor": "#E59866",
+            "opacity": "1"
+          },
+          "clazz":"com.lau.things.rule.engine.kafka.KafkaProductNode",
+          "drawModel": "KafkaProductDrawer",
+          "description": "用于向kafka发送对应的消息内容",
+          "config": []
+        }
+      },
+      {
+        "id": "502",
+        "name": "InfluxDB",
+        "type": "thingsNode",
+        "properties": {
+          "style": {
+            "backgroundColor": "#E59866",
+            "opacity": "1"
+          },
+          "clazz":"",
+          "drawModel": "",
+          "description": "",
+          "config": []
+        }
+      }
+    ]
+  }
+]
