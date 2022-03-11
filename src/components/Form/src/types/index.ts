@@ -111,4 +111,5 @@ export type ComponentType =
   | 'Slider'
   | 'Rate'
   | 'Divider'
-  | 'CodeEditor';
+  | 'CodeEditor'
+  | 'OperationTips';

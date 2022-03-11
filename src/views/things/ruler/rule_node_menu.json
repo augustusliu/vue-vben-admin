@@ -31,7 +31,6 @@
               "label": "节点名称",
               "field": "nodeName",
               "component": "Input",
-              "required": true,
               "defaultValue": "手工输入",
               "colProps": {"span": 22},
               "componentProps": {
@@ -55,7 +54,7 @@
               "description": "填写需要发送给规则链的数据内容，推荐采用JSON格式输入。"
             },
             {
-              "label": "调用间隔(秒)",
+              "label": "延时(秒)",
               "field": "delay",
               "component": "Select",
               "required": true,
@@ -77,7 +76,7 @@
               "component": "CodeEditor",
               "required": true,
               "helpMessage": "请输入字符串或者JSON格式对象",
-              "colProps": {"span": 22},
+              "colProps": {"span": 24},
               "componentProps": {
                 "mode": "application/json",
                 "lineNumbers": false,
@@ -87,6 +86,18 @@
                   "width": "100%",
                   "min-height": "200px"
                 }
+              }
+            },
+            {
+              "label": "",
+              "field": "optTips",
+              "component": "OperationTips",
+              "colProps": {"span": 20},
+              "componentProps": {
+                  "header": "操作提示:",
+                  "dataSource": [
+                    "主要用于测试规则链，可以在此手工数据相关数据模板，校验规则链的结果是否与预期一致"
+                  ]
               }
             }
           ]
@@ -112,7 +123,6 @@
               "label": "节点名称",
               "field": "nodeName",
               "component": "Input",
-              "required": true,
               "colProps": {"span": 22},
               "defaultValue": "调试",
               "componentProps": {
@@ -152,26 +162,25 @@
                   "maxRows": 8
                 }
               }
+            },
+            {
+              "label": "",
+              "field": "optTips",
+              "component": "OperationTips",
+              "colProps": {"span": 20},
+              "componentProps": {
+                "header": "操作提示:",
+                "dataSource": [
+                  "1. 用于打印当前节点接收到的消息",
+                  "2. 可以选择打印全部消息内容、打印消息头、打印消息体"
+                ]
+              }
             }
           ]
         }
-      }
-    ]
-  },
-  {
-    "id": "02",
-    "name": "功能组件",
-    "properties": {
-      "style": {
-        "backgroundColor": "#FDEBD0",
-        "opacity": "1",
-        "fontSize": "",
-        "color": ""
-      }
-    },
-    "nodes": [
+      },
       {
-        "id": "200",
+        "id": "102",
         "name": "脚本处理",
         "type": "thingsNode",
         "properties": {
@@ -191,19 +200,19 @@
               "field": "nodeName",
               "component": "Input",
               "defaultValue": "脚本处理",
-              "required": true,
-              "colProps": {"span": 22},
+              "colProps": {"span": 24},
               "componentProps": {
                 "placeholder": "定义一个节点的业务名称"
               }
             },
             {
               "label": "编辑脚本",
+              "subLabel": "(javascript)",
               "field": "scriptBody",
               "component": "CodeEditor",
               "helpMessage": "请输入Javascript脚本处理数据",
               "required": true,
-              "colProps": {"span": 22},
+              "colProps": {"span": 24},
               "componentProps": {
                 "mode": "javascript",
                 "lineNumbers": true,
@@ -214,60 +223,21 @@
                   "min-height": "300px"
                 }
               }
-            }
-          ]
-        }
-      },
-      {
-        "id": "201",
-        "name": "拆分",
-        "type": "thingsNode",
-        "properties": {
-          "fixId": "201",
-          "clazz":"com.lau.things.rule.engine.common.SplitNode",
-          "drawTitle": "数据拆分配置",
-          "description": "用于对数据进行拆分，可以按照不同类型的数据格式进行拆分",
-          "degreeType": "INOUT",
-          "style": {
-            "backgroundColor": "#FAD7A0",
-            "opacity": "1",
-            "icon": "data:image/png;base64,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"
-          },
-          "config": [
-            {
-              "label": "节点名称",
-              "field": "nodeName",
-              "component": "Input",
-              "defaultValue": "拆分",
-              "required": true,
-              "colProps": {"span": 22},
-              "componentProps": {
-                "placeholder": "定义一个节点的业务名称"
-              }
             },
             {
-              "label": "数据类型",
-              "field": "dataType",
-              "component": "Select",
-              "required": true,
-              "colProps": {"span": 11},
+              "label": "",
+              "field": "optTips",
+              "component": "OperationTips",
+              "colProps": {"span": 20},
               "componentProps": {
-                "options": [
-                  { "label": "字符串", "value": "STR_V" },
-                  { "label": "数组", "value": "ARRAY_V" }
-                ],
-                "style": {"width": "90%"}
-              }
-            },
-            {
-              "label": "分割规则",
-              "field": "splitStrategy",
-              "component": "Input",
-              "required": true,
-              "colProps": {"span": 11},
-              "componentProps": {
-                "style": {"width": "90%"},
-                "placeholder": "输入分割符或者分割的长度"
+                "header": "操作提示:",
+                "dataSource": [
+                  "1. 可以使用msg 获取接收到的消息，同时对消息进行处理",
+                  "2. return 表示将处理结果传递给下个流程节点",
+                  "3. 样例: ",
+                  "      var count = msg.count + 1; ",
+                  "      return count;"
+                ]
               }
             }
           ]
@@ -307,8 +277,7 @@
               "field": "nodeName",
               "component": "Input",
               "defaultValue": "HTTP请求",
-              "required": true,
-              "colProps": {"span": 22},
+              "colProps": {"span": 24},
               "componentProps": {
                 "placeholder": "定义一个节点的业务名称"
               }
@@ -318,10 +287,10 @@
               "field": "endpoint",
               "component": "Input",
               "required": true,
-              "colProps": {"span": 22},
+              "colProps": {"span": 24},
               "type": "INPUT",
               "componentProps": {
-                "placeholder": "请输入地址请求地址"
+                "addonBefore": "http://"
               }
             },
             {
@@ -329,7 +298,7 @@
               "field": "method",
               "required": true,
               "component": "Select",
-              "colProps": {"span": 22},
+              "colProps": {"span": 24},
               "componentProps": {
                 "options": [
                   {
@@ -353,48 +322,29 @@
               "defaultValue": "GET"
             },
             {
-              "field": "dividerLine",
-              "component": "Divider",
-              "colProps": {"span": 22},
-              "label": "添加请求头：",
+              "label": "请求头:",
+              "field": "headers",
+              "subLabel": "(application/json)",
+              "component": "CodeEditor",
+              "colProps": {"span": 24},
               "componentProps": {
-                "type": "horizontal",
-                "orientation": "left",
-                "orientationMargin": 35
+                "mode": "application/json",
+                "lineNumbers": false,
+                "lineWrapping": true,
+                "value": "",
+                "style": {
+                  "width": "100%",
+                  "min-height": "50px"
+                }
               }
             },
             {
-              "label": "",
-              "field": "headerKey0",
-              "component": "Input",
-              "colProps": {"span": 10},
-              "componentProps": {
-                "placeholder": "添加请求头Key"
-              }
-            },
-            {
-              "label": "",
-              "field": "headerValue0",
-              "component": "Input",
-              "colProps": {"span": 10},
-              "componentProps": {
-                "placeholder": "填写需要向规则链填充的内容"
-              }
-            },
-            {
-              "label": "",
-              "field": "0",
-              "component": "Input",
-              "colProps": {"span": 2},
-              "slot": "add"
-            },
-            {
-              "label": "参数",
+              "label": "参数:",
               "subLabel": "(application/json)",
               "field": "payload",
               "component": "CodeEditor",
               "helpMessage": "请输入JSON格式参数",
-              "colProps": {"span": 22},
+              "colProps": {"span": 24},
               "componentProps": {
                 "mode": "application/json",
                 "lineNumbers": false,
@@ -404,6 +354,22 @@
                   "width": "100%",
                   "min-height": "150px"
                 }
+              }
+            },
+            {
+              "label": "",
+              "field": "optTips",
+              "component": "OperationTips",
+              "colProps": {"span": 20},
+              "componentProps": {
+                "header": "操作提示:",
+                "dataSource": [
+                  "1. 请求方法为POST、PUSH方式时，参数格式：JSON格式",
+                  "2. 如需引用消息中数据时，请采用 ${msg.payload} 来提取消息中内容数据",
+                  "3. 样例：",
+                  "   示例1: http://www.baidu.com?key=${msg.payload.key}",
+                  "   示例2: { Content-Type: ${msg.header.contentType }"
+                ]
               }
             }
           ]

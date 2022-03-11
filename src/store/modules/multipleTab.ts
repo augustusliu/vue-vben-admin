@@ -335,6 +335,25 @@ export const useMultipleTabStore = defineStore({
         await this.updateCacheTab();
       }
     },
+
+    async updateTabPathByType(fullPath: string, routePath: string, router: Router) {
+      const findTab = this.getTabList.find((item) => item.fullPath === routePath);
+      if (findTab) {
+        findTab.fullPath = fullPath;
+        findTab.path = fullPath;
+        await this.updateCacheTab();
+        const toTarget = getToTarget(findTab);
+        await router.replace(toTarget);
+      }
+    },
+
+    async updateTabTitle(title: string, route: RouteLocationNormalized) {
+      const findTab = this.getTabList.find((item) => item.fullPath === route.fullPath);
+      if (findTab) {
+        findTab.meta.title = title;
+        await this.updateCacheTab();
+      }
+    },
   },
 });
 

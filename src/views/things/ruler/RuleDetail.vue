@@ -28,15 +28,17 @@
   import { saveChainApi, chainInfoApi } from '/@/api/things/ruler/ruleApi';
   import {useModal} from "/@/components/Modal";
   import RuleDetailModel from './RuleDetailModel.vue';
-  import { useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import { Loading, useLoading } from '/@/components/Loading';
+  import { useMultipleTabStore } from '/@/store/modules/multipleTab';
 
   export default defineComponent({
     name: 'RuleDetail',
     components: { FlowChart , DynamicNodeDrawer, RuleDetailModel, Loading },
     setup() {
       const route = useRoute();
-
+      const router = useRouter();
+      const tabStore = useMultipleTabStore();
       const leftNodes:any = ref([]);
       // 用于控制组件的数据同步
       const isShow = ref(false)
@@ -80,6 +82,7 @@
 
           currentChainInfoModel.value.ruleChainName = ruleChainData.ruleChainName;
           currentChainInfoModel.value.description = ruleChainData.description;
+          await tabStore.updateTabTitle(ruleChainData.ruleChainName, router.currentRoute.value);
         }
         isShow.value = true;
         closeFullLoading();
@@ -139,8 +142,12 @@
       async function doSaveChain(){
         openFullLoading();
         ruleSaveDataCache.value.id = (chainId && Number(chainId) > 0) ? chainId : null;
-        await saveChainApi(ruleSaveDataCache.value);
+        const newChainId = await saveChainApi(ruleSaveDataCache.value);
         ruleSaveDataCache.value = {};
+        // 如果是新建，创建成功后跳转到最新的地址
+        if(!isUpdate){
+          await tabStore.updateTabPathByType('/rule_detail/' + newChainId, '/rule_detail/-1', router);
+        }
         closeFullLoading();
       }
       onMounted(init);
