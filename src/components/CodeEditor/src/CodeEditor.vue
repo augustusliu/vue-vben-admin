@@ -32,7 +32,7 @@
     emits: ['change', 'update:value'],
     setup(props, { emit }) {
       const getValue = computed(() => {
-        const { value, mode } = props;
+        const { value } = props;
         // if (mode !== MODE.JSON) {
         //   return value as string;
         // }

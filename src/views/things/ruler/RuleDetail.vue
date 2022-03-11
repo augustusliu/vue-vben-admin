@@ -105,9 +105,13 @@
       // 提交流程数据
       function chainSaveBefore(graphData: any){
         const { data } = graphData;
-        ruleSaveDataCache.value = formatGraphData({
+
+        let obj = formatGraphData({
           data: data,
         });
+
+        ruleSaveDataCache.value = JSON.parse(JSON.stringify(obj));
+        console.log('json data', ruleSaveDataCache.value)
         openModal(true, currentChainInfoModel.value);
       }
 
