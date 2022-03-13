@@ -51,15 +51,14 @@ export function useFormEvents({
     const fields = unref(getSchema)
       .map((item) => item.field)
       .filter(Boolean);
-
-    const validKeys: string[] = [];
+    const validKeys: any[] = [];
     Object.keys(values).forEach((key) => {
       const schema = unref(getSchema).find((item) => item.field === key);
       let value = values[key];
 
       const hasKey = Reflect.has(values, key);
-
       value = handleInputNumberValue(schema?.component, value);
+
       // 0| '' is allow
       if (hasKey && fields.includes(key)) {
         // time type
@@ -78,7 +77,7 @@ export function useFormEvents({
             }
             formModel[key] = value ? (_props?.valueFormat ? value : dateUtil(value)) : null;
           }
-        } else {
+        }else {
           formModel[key] = value;
         }
         validKeys.push(key);

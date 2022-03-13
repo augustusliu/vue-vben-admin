@@ -71,8 +71,7 @@
               }
             },
             {
-              "label": "输入内容",
-              "subLabel": "(Json)",
+              "label": "输入内容:",
               "field": "inputContent",
               "component": "CodeEditor",
               "helpMessage": "请输入字符串或者JSON格式对象",
@@ -81,7 +80,6 @@
                 "mode": "application/json",
                 "lineNumbers": false,
                 "lineWrapping": true,
-                "value": "",
                 "style": {
                   "width": "100%",
                   "min-height": "200px"

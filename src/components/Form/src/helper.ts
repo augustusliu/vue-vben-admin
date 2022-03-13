@@ -2,7 +2,7 @@ import type { ValidationRule } from 'ant-design-vue/lib/form/Form';
 import type { ComponentType } from './types/index';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { dateUtil } from '/@/utils/dateUtil';
-import { isNumber, isObject } from '/@/utils/is';
+import {isNumber, isObject, isString} from '/@/utils/is';
 
 const { t } = useI18n();
 
@@ -62,6 +62,9 @@ export function handleInputNumberValue(component?: ComponentType, val?: any) {
   if (!component) return val;
   if (['Input', 'InputPassword', 'InputSearch', 'InputTextArea'].includes(component)) {
     return val && isNumber(val) ? `${val}` : val;
+  }
+  if(['CodeEditor'].includes(component)){
+    return (val && isString(val)) ? val : JSON.parse(val);
   }
   return val;
 }

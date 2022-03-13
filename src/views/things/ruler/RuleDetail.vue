@@ -111,12 +111,12 @@
         });
 
         ruleSaveDataCache.value = JSON.parse(JSON.stringify(obj));
-        console.log('json data', ruleSaveDataCache.value)
         openModal(true, currentChainInfoModel.value);
       }
 
       // 节点配置成功后的回调，更新节点名称
       function handleNodeSettingSuccess(values: any){
+
         let flowChartEl: any = unref(flowEl);
         let lfInstance = flowChartEl?.lfInstance as LogicFlow;
         if(!flowChartEl || !unref(lfInstance)){

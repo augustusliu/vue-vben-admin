@@ -2,14 +2,14 @@
   <div class="h-full">
     <CodeMirrorEditor
       :value="getValue"
-      @change="handleValueChange"
       :mode="mode"
       :readonly="readonly"
+      @change="handleValueChange"
     />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed } from 'vue';
+  import {computed, defineComponent} from 'vue';
   import CodeMirrorEditor from './codemirror/CodeMirror.vue';
   import { isString } from '/@/utils/is';
 
@@ -31,23 +31,44 @@
     props,
     emits: ['change', 'update:value'],
     setup(props, {emit}) {
-      console.log('editor mode', props.mode, props.value);
       const getValue = computed(() => {
-        const { value } = props;
-        if (props.mode != MODE.JSON) {
-          return value as string;
+        const { value, mode } = props;
+        if(value){
+          if (mode !== MODE.JSON) {
+            return value as string;
+          }
+          if (isString(props.value)) {
+            return value as string;
+          }else{
+            try {
+              return JSON.stringify(JSON.parse(value as string));
+            } catch (e) {
+              console.log('json format', e)
+            }
+          }
+        }else{
+          return '';
         }
-        return (value && isString(value))
-          ? JSON.stringify(JSON.parse(value))
-          : JSON.stringify(value);
       });
-
       function handleValueChange(v) {
-        emit('update:value', v);
-        emit('change', v);
+        let result = v;
+        if(v){
+          if (props.mode === MODE.JSON) {
+            try {
+              result = (v && isString(v)) ? JSON.stringify(JSON.parse(v)) : JSON.stringify(v)
+            }catch (e) {
+            }
+          }
+        }else{
+          result = '';
+        }
+        emit('change', result);
+        emit('update:value', result);
       }
 
-      return { handleValueChange, getValue };
+      return {
+        getValue,
+        handleValueChange};
     },
   });
 </script>

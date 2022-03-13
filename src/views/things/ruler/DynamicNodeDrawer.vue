@@ -54,7 +54,6 @@
           schemasData.push(item);
           currentFormFields.value.push(item.field);
         })
-
         // 重置属性
         await formAction.setProps({schemas: schemasData})
 

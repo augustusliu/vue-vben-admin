@@ -41,9 +41,8 @@
     setup(props, { emit }) {
       const el = ref();
       let editor: Nullable<CodeMirror.Editor>;
-
       const debounceRefresh = useDebounceFn(refresh, 100);
-      const appStore = useAppStore();
+      // const appStore = useAppStore();
 
       watch(
         () => props.value,
@@ -61,23 +60,6 @@
         editor?.setOption('mode', props.mode);
       });
 
-      // watch(
-      //   () => appStore.getDarkMode,
-      //   async () => {
-      //     setTheme();
-      //   },
-      //   {
-      //     immediate: true,
-      //   }
-      // );
-
-      // function setTheme() {
-      //   unref(editor)?.setOption(
-      //     'theme',
-      //     appStore.getDarkMode === 'light' ? 'idea' : 'material-palenight'
-      //   );
-      // }
-
       function refresh() {
         editor?.refresh();
       }
@@ -93,7 +75,7 @@
           value: '',
           mode: props.mode,
           readOnly: props.readonly,
-          tabSize: 2,
+          tabSize: 4,
           theme: 'material-palenight',
           lineWrapping: true,
           lineNumbers: props.lineNumbers,
