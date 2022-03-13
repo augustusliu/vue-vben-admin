@@ -71,27 +71,10 @@
               }
             },
             {
-              "label": "数据类型",
-              "field": "dataType",
-              "component": "Select",
-              "required": true,
-              "colProps": {"span": 24},
-              "componentProps": {
-                "style": {"width": "90%"},
-                "options": [
-                  { "label": "JSON", "value": "JSON" },
-                  { "label": "文本", "value": "TEXT" },
-                  { "label": "数组", "value": "ARRAY" }
-                ]
-              },
-              "value": "",
-              "description": "填写需要发送给规则链的数据内容，推荐采用JSON格式输入。"
-            },
-            {
               "label": "输入内容",
+              "subLabel": "(Json)",
               "field": "inputContent",
               "component": "CodeEditor",
-              "required": true,
               "helpMessage": "请输入字符串或者JSON格式对象",
               "colProps": {"span": 24},
               "componentProps": {
@@ -224,11 +207,10 @@
             },
             {
               "label": "编辑脚本",
-              "subLabel": "(javascript)",
+              "subLabel": "(Javascript)",
               "field": "scriptBody",
               "component": "CodeEditor",
               "helpMessage": "请输入Javascript脚本处理数据",
-              "required": true,
               "colProps": {"span": 24},
               "componentProps": {
                 "mode": "javascript",

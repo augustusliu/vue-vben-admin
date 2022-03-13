@@ -11,7 +11,7 @@
 <script lang="ts">
   import { defineComponent, computed } from 'vue';
   import CodeMirrorEditor from './codemirror/CodeMirror.vue';
-  // import { isString } from '/@/utils/is';
+  import { isString } from '/@/utils/is';
 
   const MODE = {
     JSON: 'application/json',
@@ -22,7 +22,7 @@
   const props = {
     value: { type: [Object, String] as PropType<Record<string, any> | string> },
     mode: { type: String, default: MODE.JSON },
-    readonly: { type: Boolean },
+    readonly: { type: Boolean, default: false },
   };
 
   export default defineComponent({
@@ -30,16 +30,16 @@
     components: { CodeMirrorEditor },
     props,
     emits: ['change', 'update:value'],
-    setup(props, { emit }) {
+    setup(props, {emit}) {
+      console.log('editor mode', props.mode, props.value);
       const getValue = computed(() => {
         const { value } = props;
-        // if (mode !== MODE.JSON) {
-        //   return value as string;
-        // }
-        // return (value && isString(value))
-        //   ? JSON.stringify(JSON.parse(value), null, 2)
-        //   : JSON.stringify(value, null, 2);
-        return value as string;
+        if (props.mode != MODE.JSON) {
+          return value as string;
+        }
+        return (value && isString(value))
+          ? JSON.stringify(JSON.parse(value))
+          : JSON.stringify(value);
       });
 
       function handleValueChange(v) {
