@@ -295,7 +295,7 @@
               "field": "method",
               "required": true,
               "component": "Select",
-              "colProps": {"span": 24},
+              "colProps": {"span": 10},
               "componentProps": {
                 "options": [
                   {
@@ -317,6 +317,26 @@
                 ]
               },
               "defaultValue": "GET"
+            },
+            {
+              "label": "响应格式：",
+              "field": "respType",
+              "component": "Select",
+              "required": true,
+              "defaultValue": "JSON",
+              "colProps": {"span": 10, "offset": 2},
+              "componentProps": {
+                "options": [
+                  {
+                    "label": "JSON",
+                    "value": "JSON"
+                  },
+                  {
+                    "label": "字符串",
+                    "value": "TEXT"
+                  }
+                ]
+              }
             },
             {
               "label": "请求头:",
@@ -380,7 +400,7 @@
           "fixId": "302",
           "clazz":"com.lau.things.rule.engine.kafka.KafkaConsumerNode",
           "drawTitle": "Kafka消费者配置",
-          "degreeType": "OUT",
+          "degreeType": "INOUT",
           "description": "用于接收Kafka某个Topic中的消息",
           "style": {
             "backgroundColor": "#85C1E9",
@@ -403,7 +423,16 @@
               "field": "endpoint",
               "component": "Input",
               "required": true,
-              "colProps": {"span": 24},
+              "colProps": {"span": 10},
+              "componentProps": {
+              }
+            },
+            {
+              "label": "端口：",
+              "field": "port",
+              "component": "Input",
+              "required": true,
+              "colProps": {"span": 10, "offset": 2},
               "componentProps": {
               }
             },
@@ -412,7 +441,7 @@
               "field": "topic",
               "component": "Input",
               "required": true,
-              "colProps": {"span": 12},
+              "colProps": {"span": 10},
               "componentProps": {
               }
             },
@@ -421,7 +450,7 @@
               "field": "interval",
               "component": "InputNumber",
               "required": true,
-              "colProps": {"span": 12},
+              "colProps": {"span": 10, "offset": 2},
               "componentProps": {
               }
             },
@@ -430,7 +459,7 @@
               "field": "groupId",
               "component": "Input",
               "required": true,
-              "colProps": {"span": 12},
+              "colProps": {"span": 10},
               "componentProps": {
               }
             },
@@ -439,16 +468,16 @@
               "field": "clientId",
               "component": "Input",
               "required": true,
-              "colProps": {"span": 12},
+              "colProps": {"span": 10, "offset": 2},
               "componentProps": {
               }
             },
             {
               "label": "自动提交：",
               "field": "autoCommit",
-              "component": "Input",
+              "component": "Select",
               "required": true,
-              "colProps": {"span": 12},
+              "colProps": {"span": 10},
               "defaultValue": true,
               "componentProps": {
                 "options": [
@@ -468,7 +497,7 @@
               "field": "offsetReset",
               "component": "Select",
               "required": true,
-              "colProps": {"span": 12},
+              "colProps": {"span": 10, "offset": 2},
               "defaultValue": "latest",
               "componentProps": {
                 "options": [
@@ -517,16 +546,34 @@
               "field": "endpoint",
               "component": "Input",
               "required": true,
-              "colProps": {"span": 24},
+              "colProps": {"span": 10},
               "componentProps": {
               }
             },
             {
-              "label": "生产者编号：",
+              "label": "端口：",
+              "field": "port",
+              "component": "Input",
+              "required": true,
+              "colProps": {"span": 10, "offset": 2},
+              "componentProps": {
+              }
+            },
+            {
+              "label": "主题：",
+              "field": "topic",
+              "component": "Input",
+              "required": true,
+              "colProps": {"span": 10},
+              "componentProps": {
+              }
+            },
+            {
+              "label": "生产者Id：",
               "field": "clientId",
               "component": "Input",
               "required": true,
-              "colProps": {"span": 12},
+              "colProps": {"span": 10, "offset": 2},
               "componentProps": {
               }
             },
@@ -534,7 +581,7 @@
               "label": "重试次数：",
               "field": "retries",
               "component": "InputNumber",
-              "colProps": {"span": 12},
+              "colProps": {"span": 10},
               "componentProps": {
               }
             },
@@ -542,7 +589,8 @@
               "label": "消息头：",
               "field": "needHeader",
               "component": "Select",
-              "colProps": {"span": 12},
+              "defaultValue": false,
+              "colProps": {"span": 10, "offset": 2},
               "componentProps": {
                 "options": [
                   {
@@ -561,7 +609,7 @@
               "field": "isMsgDiv",
               "component": "Select",
               "defaultValue": false,
-              "colProps": {"span": 12},
+              "colProps": {"span": 24},
               "componentProps": {
                 "options": [
                   {
