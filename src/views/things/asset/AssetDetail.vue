@@ -34,6 +34,7 @@
   import EntityEvent from '../common/entityTabs/EntityEvent.vue';
   import EntityAlarm from '../common/entityTabs/EntityAlarm.vue';
   import EntityRelation from '../common/relation/index.vue';
+  import EntityCommand from "../common/entityTabs/EntityCommand.vue";
 
   // tab信息参考/page/account/setting配置
   export default defineComponent({
@@ -50,6 +51,7 @@
       EntityEvent,
       EntityAlarm,
       EntityRelation,
+      EntityCommand,
     },
     setup() {
       const route = useRoute();

@@ -11,11 +11,16 @@ export const tabListScheme = [
   },
   {
     key: '3',
+    name: '指令',
+    component: 'EntityCommand',
+  },
+  {
+    key: '4',
     name: '遥测',
     component: 'EntityTelemetry',
   },
   {
-    key: '4',
+    key: '5',
     name: '事件',
     component: 'EntityEvent',
   },

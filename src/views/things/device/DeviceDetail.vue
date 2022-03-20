@@ -32,6 +32,7 @@
   import EntityEvent from '../common/entityTabs/EntityEvent.vue'
   import EntityAlarm from '../common/entityTabs/EntityAlarm.vue'
   import EntityRelation from '../common/relation/index.vue';
+  import EntityCommand from "../common/entityTabs/EntityCommand.vue";
 
   // tab信息参考/page/account/setting配置
   export default defineComponent({
@@ -41,7 +42,7 @@
       Tag,
       Tabs,
       TabPane: Tabs.TabPane,
-      ScrollContainer, EntityAttributes, EntityTelemetry, EntityEvent, EntityAlarm, EntityRelation },
+      ScrollContainer, EntityAttributes, EntityTelemetry, EntityEvent, EntityAlarm, EntityRelation, EntityCommand },
     setup() {
       const route = useRoute();
       // 此处可以得到用户ID

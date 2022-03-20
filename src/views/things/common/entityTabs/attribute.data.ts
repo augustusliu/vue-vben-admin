@@ -75,7 +75,7 @@ export const attributeColumn: BasicColumn[] = [
 export const createOrUpdateAttrSchema: FormSchema[] = [
   {
     field: 'id',
-    label: '资产Id',
+    label: '属性Id',
     component: 'Input',
     colProps: { span: 22 },
     show: false,
