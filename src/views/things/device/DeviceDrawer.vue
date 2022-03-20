@@ -36,7 +36,7 @@
         resetFields();
         setDrawerProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
-
+        console.log('deviceDrawer.update', data);
         if (unref(isUpdate)) {
           setFieldsValue({
             ...data.record,
@@ -58,6 +58,7 @@
       async function handleSubmit() {
         try {
           const values = await validate();
+          console.log('deviceDrawer.values', values);
           setDrawerProps({ confirmLoading: true });
           await addOrUpdateDeviceApi(values);
           closeDrawer();
@@ -71,7 +72,7 @@
         nodes.forEach(item => options.push({
           label: item,
           key: item,
-          value: [item],
+          value: item,
         }));
         return options;
       }

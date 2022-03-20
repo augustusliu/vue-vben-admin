@@ -72,7 +72,7 @@
         nodes.forEach(item => options.push({
           label: item,
           key: item,
-          value: [item],
+          value: item,
         }));
         return options;
       }
