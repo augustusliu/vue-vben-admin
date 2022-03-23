@@ -19,6 +19,7 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
   import { createOrUpdateCustomerApi } from '/@/api/things/customer/customerApi';
+  import {listAreas, listIndustryByParent} from "/@/api/things/common/commonApi";
 
   export default defineComponent({
     name: 'CustomerAddOrUpdateDrawer',
@@ -26,7 +27,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
-      const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
+      const [registerForm, { resetFields, setFieldsValue, validate, updateSchema }] = useForm({
         labelWidth: 90,
         schemas: createOrUpdateFormSchema,
         showActionButtonGroup: false,
@@ -42,9 +43,41 @@
             ...data.record,
           });
         }
+
+        // 获取地区信息
+        let areaData = await listAreas();
+        let industryData = await listIndustryByParent('0');
+        await updateSchema({
+          field: 'areaCode',
+          componentProps: {
+            dropdownStyle: { maxHeight: 270, overflow: 'auto'},
+            options: areaData,
+          },
+        });
+
+        await updateSchema({
+          field: 'industryCode',
+          componentProps: {
+            dropdownStyle: { maxHeight: 270, overflow: 'auto'},
+            options: industryData,
+            changeOnSelect: true,
+            onChange: onChangeIndustry,
+          },
+        });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增客户' : '编辑客户'));
+
+      function onChangeIndustry(value, selectedOptions){
+        if(value || value.length > 0){
+          const targetOption = selectedOptions[selectedOptions.length - 1];
+          targetOption.loading = true;
+          listIndustryByParent(targetOption.code).then((data)=>{
+            targetOption.children = data;
+            targetOption.loading = false;
+          })
+        }
+      }
 
       async function handleSubmit() {
         try {

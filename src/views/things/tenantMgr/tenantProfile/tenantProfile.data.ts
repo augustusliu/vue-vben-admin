@@ -1,4 +1,5 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import moment from "moment";
 
 // 租户画像列表展示
 export const tenantProfileColumn: BasicColumn[] = [
@@ -11,6 +12,7 @@ export const tenantProfileColumn: BasicColumn[] = [
   {
     title: '租户配置名称',
     dataIndex: 'name',
+    width: 150,
     fixed: 'left',
   },
   {
@@ -71,10 +73,18 @@ export const tenantProfileColumn: BasicColumn[] = [
   {
     title: '创建时间',
     dataIndex: 'createdTime',
+    width:180,
+    customRender: ({ record }) => {
+      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   {
     title: '更新时间',
     dataIndex: 'modifiedTime',
+    width:180,
+    customRender: ({ record }) => {
+      return moment(Number(record.modifiedTime)).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
 ];
 

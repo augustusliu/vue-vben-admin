@@ -17,8 +17,8 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { createOrUpdateFormSchema } from './tenant.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-
   import { createOrUpdateTenantApi } from '/@/api/things/tenant/tenantApi';
+  import { listAreas, listIndustryByParent } from '/@/api/things/common/commonApi';
 
   export default defineComponent({
     name: 'TenantAddOrUpdateDrawer',
@@ -26,7 +26,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
-      const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
+      const [registerForm, { resetFields, setFieldsValue, validate, updateSchema }] = useForm({
         labelWidth: 90,
         schemas: createOrUpdateFormSchema,
         showActionButtonGroup: false,
@@ -37,6 +37,28 @@
         setDrawerProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
 
+        // 获取地区信息
+        let areaData = await listAreas();
+        let industryData = await listIndustryByParent('0');
+        await updateSchema({
+          field: 'areaCode',
+          componentProps: {
+            dropdownStyle: { maxHeight: 270, overflow: 'auto'},
+            options: areaData,
+          },
+        });
+
+        await updateSchema({
+          field: 'industryCode',
+          componentProps: {
+            dropdownStyle: { maxHeight: 270, overflow: 'auto'},
+            options: industryData,
+            changeOnSelect: true,
+            onChange: onChangeIndustry,
+          },
+        });
+
+        // 赋值
         if (unref(isUpdate)) {
           setFieldsValue({
             ...data.record,
@@ -45,6 +67,17 @@
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增租户' : '编辑租户'));
+
+      function onChangeIndustry(value, selectedOptions){
+        if(value || value.length > 0){
+          const targetOption = selectedOptions[selectedOptions.length - 1];
+          targetOption.loading = true;
+          listIndustryByParent(targetOption.code).then((data)=>{
+            targetOption.children = data;
+            targetOption.loading = false;
+          })
+        }
+      }
 
       async function handleSubmit() {
         try {

@@ -16,6 +16,7 @@ export interface DeviceItem {
   name: string;
   code: string;
   icon: string;
+  online: boolean;
   disabled: boolean;
   isGateway: string;
   transportType: string;

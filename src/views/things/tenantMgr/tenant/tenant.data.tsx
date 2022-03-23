@@ -1,5 +1,7 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { listTenantProfileAll } from '/@/api/things/tenant/tenantApi';
+import moment from "moment";
+import {Tag} from "ant-design-vue";
 // 列表显示字段
 export const tenantColumn: BasicColumn[] = [
   {
@@ -10,41 +12,41 @@ export const tenantColumn: BasicColumn[] = [
   {
     title: '邮箱',
     dataIndex: 'email',
-    width: 80,
   },
   {
-    title: '省份',
-    dataIndex: 'province',
-    width: 50,
+    title: '区域',
+    dataIndex: 'areaName',
   },
   {
-    title: '城市',
-    dataIndex: 'city',
-    width: 50,
+    title: '行业',
+    dataIndex: 'industryName',
+  },
+  {
+    title: '租户配置',
+    dataIndex: 'tenantProfileName',
   },
   {
     title: '当前状态',
     dataIndex: 'enabled',
-    width: 50,
     customRender: ({ record }) => {
-      if (!Reflect.has(record, 'enabled')) {
-        record.isDefault = false;
-      }
-      if (record.isDefault) {
-        return '是';
-      }
-      return '否';
+      return record.enabled ? <Tag color="purple">启用</Tag> : <Tag color="cyan">禁用</Tag>;
     },
   },
   {
     title: '创建时间',
     dataIndex: 'createdTime',
-    width: 120,
+    width:180,
+    customRender: ({ record }) => {
+      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   {
     title: '更新时间',
     dataIndex: 'modifiedTime',
-    width: 120,
+    width:180,
+    customRender: ({ record }) => {
+      return moment(Number(record.modifiedTime)).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
 ];
 
@@ -54,19 +56,19 @@ export const searchFormSchema: FormSchema[] = [
     field: 'name',
     label: '租户名称',
     component: 'Input',
-    colProps: { span: 12 },
+    colProps: { span: 8 },
   },
   {
     field: 'email',
     label: '租户邮箱',
     component: 'Input',
-    colProps: { span: 12 },
+    colProps: { span: 8 },
   },
   {
     field: 'phone',
     label: '租户手机号',
     component: 'Input',
-    colProps: { span: 12 },
+    colProps: { span: 8 },
   },
   {
     field: 'enabled',
@@ -78,7 +80,7 @@ export const searchFormSchema: FormSchema[] = [
         { label: '禁用', value: false },
       ],
     },
-    colProps: { span: 12 },
+    colProps: { span: 8 },
   },
 ];
 
@@ -136,22 +138,32 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     colProps: { span: 22 },
   },
   {
-    field: 'province',
-    label: '所在省份',
-    component: 'Input',
-    colProps: { span: 8 },
+    field: 'areaCode',
+    label: '所在地区',
+    component: 'Cascader',
+    colProps: { span: 11 },
+    required: true,
+    componentProps: {
+      fieldNames: {
+        label: 'name',
+        value: 'code',
+      },
+      getPopupContainer: () => document.body,
+    },
   },
   {
-    field: 'city',
-    label: '所在城市',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'country',
-    label: '所在区/县',
-    component: 'Input',
-    colProps: { span: 8 },
+    field: 'industryCode',
+    label: '所在行业',
+    component: 'Cascader',
+    colProps: { span: 11 },
+    required: true,
+    componentProps: {
+      fieldNames: {
+        label: 'name',
+        value: 'code',
+      },
+      getPopupContainer: () => document.body,
+    },
   },
   {
     field: 'addressDetail',
@@ -164,5 +176,5 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     label: '邮编',
     component: 'Input',
     colProps: { span: 12 },
-  },
+  }
 ];

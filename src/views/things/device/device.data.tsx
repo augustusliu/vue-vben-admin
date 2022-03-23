@@ -30,6 +30,13 @@ export const deviceTableColumn: BasicColumn[] = [
     },
   },
   {
+    title: '在线状态',
+    dataIndex: 'online',
+    customRender: ({ record }) => {
+      return record.online ? <Tag color="lime">在线</Tag> : <Tag color="cyan">掉线</Tag>;
+    },
+  },
+  {
     title: '传输协议',
     dataIndex: 'transportType',
   },

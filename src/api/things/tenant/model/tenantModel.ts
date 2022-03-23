@@ -6,7 +6,6 @@ export type TenantParams = BasicPageParams & {
   // ?表示参数可以为空，如果不为空的话为string类型
   name?: string;
   email?: string;
-  city?: string;
   phone?: string;
   enabled?: boolean;
 };
@@ -17,16 +16,16 @@ export interface TenantListItem {
   name: string;
   email: string;
   phone: string;
-  address: string;
-  province: string;
-  city: string;
-  country: string;
+  areaCode: string[];
+  areaName: string;
+  industryCode: string[];
+  industryName: string;
+  addressDetail: string;
   createdTime: string;
 }
 // 创建、更新租户模型
 
 export interface TenantAddOrUpdateParams {
-
   id: number;
   name: string;
   email: string;
@@ -34,9 +33,8 @@ export interface TenantAddOrUpdateParams {
   enabled: boolean;
   address: string;
   addressDetail: string;
-  province: string;
-  city: string;
-  country: string;
+  areaCode: string[];
+  industryCode: string[];
   zipcode: string;
   tenantProfileId: number;
 }

@@ -56,8 +56,14 @@
           schemas: searchFormSchema,
         },
         showTableSetting: true,
+        tableSetting: {
+          redo: true,
+          size: false,
+          setting: false,
+          fullScreen: false,
+        },
         bordered: true,
-        showIndexColumn: true,
+        showIndexColumn: false,
         actionColumn: {
           width: 80,
           title: '操作',

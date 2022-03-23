@@ -1,4 +1,5 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import moment from "moment";
 
 export const customerColumn: BasicColumn[] = [
   {
@@ -26,25 +27,30 @@ export const customerColumn: BasicColumn[] = [
     dataIndex: 'tenantName',
   },
   {
-    title: '省份',
-    dataIndex: 'province',
+    title: '区域',
+    dataIndex: 'areaName',
   },
   {
-    title: '城市',
-    dataIndex: 'city',
-  },
-  {
-    title: '区县',
-    dataIndex: 'country',
+    title: '行业',
+    dataIndex: 'industryName',
   },
   {
     title: '创建时间',
     dataIndex: 'createdTime',
+    width:180,
+    customRender: ({ record }) => {
+      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   {
     title: '修改时间',
     dataIndex: 'modifiedTime',
+    width:180,
+    customRender: ({ record }) => {
+      return moment(Number(record.modifiedTime)).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
+
 ];
 
 export const searchFormSchema: FormSchema[] = [
@@ -61,20 +67,8 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
   {
-    field: 'province',
-    label: '所在省份',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'city',
-    label: '所在城市',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'country',
-    label: '所在区县',
+    field: 'phone',
+    label: '手机号',
     component: 'Input',
     colProps: { span: 8 },
   },
@@ -107,22 +101,32 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     colProps: { span: 12 },
   },
   {
-    field: 'province',
-    label: '省份',
-    component: 'Input',
-    colProps: { span: 8 },
+    field: 'areaCode',
+    label: '所在地区',
+    component: 'Cascader',
+    colProps: { span: 11 },
+    required: true,
+    componentProps: {
+      fieldNames: {
+        label: 'name',
+        value: 'code',
+      },
+      getPopupContainer: () => document.body,
+    },
   },
   {
-    field: 'city',
-    label: '城市',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'country',
-    label: '区县',
-    component: 'Input',
-    colProps: { span: 8 },
+    field: 'industryCode',
+    label: '所在行业',
+    component: 'Cascader',
+    colProps: { span: 11 },
+    required: true,
+    componentProps: {
+      fieldNames: {
+        label: 'name',
+        value: 'code',
+      },
+      getPopupContainer: () => document.body,
+    },
   },
   {
     field: 'addressDetail',

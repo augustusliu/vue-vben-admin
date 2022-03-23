@@ -13,6 +13,10 @@
               onClick: handleEdit.bind(null, record),
             },
             {
+              icon: 'ant-design:unlock-outlined',
+              onClick: handleEdit.bind(null, record),
+            },
+            {
               icon: 'ant-design:delete-outlined',
               color: 'error',
               popConfirm: {
@@ -53,14 +57,20 @@
         columns: tenantColumn,
         useSearchForm: true,
         formConfig: {
-          labelWidth: 120,
+          labelWidth: 200,
           schemas: searchFormSchema,
         },
-        showTableSetting: false,
+        showTableSetting: true,
+        tableSetting: {
+          redo: true,
+          size: false,
+          setting: false,
+          fullScreen: false,
+        },
         bordered: true,
         showIndexColumn: true,
         actionColumn: {
-          width: 80,
+          width: 120,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },

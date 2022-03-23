@@ -15,9 +15,10 @@ export interface CustomerListItem {
   email: string;
   phone: string;
   address: string;
-  province: string;
-  city: string;
-  country: string;
+  areaCode: string[];
+  areaName: string;
+  industryCode: string[];
+  industryName: string;
   createdTime: string;
 }
 // 创建、更新租户模型
@@ -28,9 +29,8 @@ export interface CustomerAddOrUpdateParams {
   phone: string;
   address: string;
   addressDetail: string;
-  province: string;
-  city: string;
-  country: string;
+  areaCode: string[];
+  industryCode: string[];
   zipcode: string;
 }
 
