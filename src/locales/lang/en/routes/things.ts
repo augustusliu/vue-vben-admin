@@ -17,4 +17,6 @@ export default {
   industry: 'Industry Data',
   area: 'Area Data',
   relation: 'Entity Relation',
+  deviceTemplate: 'Device Template',
+  deviceGroup: 'Device Group',
 };

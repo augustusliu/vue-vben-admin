@@ -17,4 +17,6 @@ export default {
   industry: '行业数据',
   area: '地区数据',
   relation: '实体关系',
+  deviceTemplate: '物模型',
+  deviceGroup: '设备分组',
 };

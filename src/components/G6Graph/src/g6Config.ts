@@ -187,7 +187,7 @@ export const ellipseNodeDefinition = {
     // // 绘制节点的连接点
     // if (config.new) {
     //   let linkPoints = config.linkPoints || global.node.linkPoints;
-    //   group.addShape('circle', {
+    //   entityGroup.addShape('circle', {
     //     attrs: {
     //       x: width / 2,
     //       y: 0 ,
@@ -198,7 +198,7 @@ export const ellipseNodeDefinition = {
     //     },
     //     name: 'right-link-circle',
     //   });
-    //   group.addShape('circle', {
+    //   entityGroup.addShape('circle', {
     //     attrs: {
     //       x: - width / 2,
     //       y: 0 ,

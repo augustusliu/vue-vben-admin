@@ -386,7 +386,7 @@ export default {
     'google-plus-outlined',
     'google-plus-square-filled',
     'google-square-filled',
-    'group-outlined',
+    'entityGroup-outlined',
     'hdd-filled',
     'hdd-outlined',
     'hdd-twotone',

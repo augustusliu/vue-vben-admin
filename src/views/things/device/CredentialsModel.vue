@@ -35,7 +35,6 @@
       });
 
       function onDataReceive(data){
-        console.log("接收到数据", data.deviceId)
         getDeviceCredentials(data.deviceId);
       }
 
