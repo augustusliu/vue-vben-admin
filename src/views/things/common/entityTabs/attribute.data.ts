@@ -66,6 +66,7 @@ export const attributeColumn: BasicColumn[] = [
   {
     title: '创建时间',
     dataIndex: 'createdTime',
+    width:180,
     customRender: ({ record }) => {
       return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
     },

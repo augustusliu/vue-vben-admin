@@ -48,13 +48,21 @@
       const entityId = props.entityId;
       const entityType = props.entityType;
       // 用户控制是否可以添加属性，只有设备才可以添加属性，资产的属性是采用的设备的属性
-      const createBtnShow = entityType === EntityTypeEnum.DEVICE;
+      const createBtnShow = (entityType === EntityTypeEnum.DEVICE || entityType === EntityTypeEnum.DEVICE_TEMPLATE);
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
         api: listCommand,
         columns: commandColumn,
+        showTableSetting: true,
+        tableSetting: {
+          redo: true,
+          size: false,
+          setting: false,
+          fullScreen: false,
+        },
         bordered: true,
         showIndexColumn: true,
+        canResize: false,
         beforeFetch: (record) => { record.entityId = entityId; record.entityType = entityType; return record},
         actionColumn: {
           width: 100,

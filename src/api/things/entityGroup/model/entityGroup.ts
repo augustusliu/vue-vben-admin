@@ -10,14 +10,14 @@ export type EntityGroupParams = BasicPageParams & {
 export interface AddOrUpdateEntityGroup {
   id: number;
   name: string;
-  desc: string;
+  description: string;
   entityType: string;
 }
 
 export interface EntityGroupItem {
   id: number;
   name: string;
-  desc: string;
+  description: string;
   entityType: string;
   createdTime: string;
   modifiedTime: string;

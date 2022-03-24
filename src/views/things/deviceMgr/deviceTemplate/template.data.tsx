@@ -14,7 +14,7 @@ export const templateColumn: BasicColumn[] = [
     dataIndex: 'name',
   },
   {
-    title: '是否启用',
+    title: '启用状态',
     dataIndex: 'enabled',
     customRender: ({ record }) => {
       return record.enabled ? <Tag color="lime">启用</Tag> : <Tag color="red">禁用</Tag>;
@@ -22,7 +22,7 @@ export const templateColumn: BasicColumn[] = [
   },
   {
     title: '模型描述',
-    dataIndex: 'desc',
+    dataIndex: 'description',
   },
   {
     title: '创建时间',
@@ -51,7 +51,7 @@ export const templateSearchScheme: FormSchema[] = [
   },
   {
     field: 'enabled',
-    label: '是否启用',
+    label: '启用状态',
     component: 'Select',
     colProps: { span: 8 },
     componentProps: {
@@ -65,19 +65,26 @@ export const templateSearchScheme: FormSchema[] = [
 
 export const templateAddOrUpdateFormSchema: FormSchema[] = [
   {
+    field: 'id',
+    label: '模型名称',
+    show: false,
+    component: 'Input',
+    colProps: { span: 22 },
+  },
+  {
     field: 'name',
     label: '模型名称',
     component: 'Input',
     required: true,
-    colProps: { span: 11 },
+    colProps: { span: 22 },
   },
   {
     field: 'enabled',
-    label: '启用',
+    label: '启用状态',
     component: 'Select',
     required: true,
     defaultValue: true,
-    colProps: { span: 11 },
+    colProps: { span: 22 },
     componentProps: {
       options: [
         { label: '启用', value: true },
@@ -86,9 +93,24 @@ export const templateAddOrUpdateFormSchema: FormSchema[] = [
     },
   },
   {
-    field: 'desc',
+    field: 'description',
     label: '模型描述',
     component: 'InputTextArea',
     colProps: { span: 22 },
   },
 ]
+
+
+export const templateTabListScheme = [
+  {
+    key: '1',
+    name: '属性',
+    component: 'EntityAttributes',
+  },
+  {
+    key: '2',
+    name: '指令',
+    component: 'EntityCommand',
+  },
+];
+

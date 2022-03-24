@@ -15,8 +15,7 @@ export const entityGroupColumn: BasicColumn[] = [
   },
   {
     title: '描述',
-    dataIndex: 'desc',
-    width: 200,
+    dataIndex: 'description',
   },
   {
     title: '创建时间',
@@ -47,16 +46,29 @@ export const deviceGroupSearchScheme: FormSchema[] = [
 
 export const createOrUpdateFormSchema: FormSchema[] = [
   {
+    field: 'id',
+    label: '分组id',
+    component: 'Input',
+    show: false,
+    colProps: { span: 22 },
+  },
+  {
     field: 'name',
     label: '分组名称',
     component: 'Input',
     required: true,
     colProps: { span: 22 },
+    componentProps: {
+      placeholder: '分组名称不能超过25个字符',
+    },
   },
   {
-    field: 'desc',
+    field: 'description',
     label: '分组描述',
     component: 'InputTextArea',
     colProps: { span: 22 },
+    componentProps: {
+      placeholder: '描述信息不能超过200个字符',
+    },
   },
 ]

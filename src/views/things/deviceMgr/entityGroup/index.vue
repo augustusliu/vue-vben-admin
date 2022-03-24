@@ -4,7 +4,7 @@
                 @fetch-success="onFetchSuccess"
                 :onExpand="handleOnExpand">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增字典 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增设备分组 </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -25,31 +25,35 @@
         />
       </template>
     </BasicTable>
-    <DeviceTemplateDrawer @register="registerDrawer" @success="handleSuccess" />
+    <EntityGroupModel @register="registerModel" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { listTemplateWithPager, delTemplate } from '/@/api/things/asset/templateApi';
-  import { useDrawer } from '/@/components/Drawer';
-  import DeviceTemplateDrawer from './DeviceTemplateDrawer.vue';
-  import { templateColumn, templateSearchScheme } from './template.data';
+  import { listEntityGroupByPager, delEntityGroup } from '/@/api/things/entityGroup/entityGroupApi';
+  import EntityGroupDrawer from './EntityGroupDrawer.vue';
+  import EntityGroupModel from './EntityGroupModel.vue';
+  import { entityGroupColumn, deviceGroupSearchScheme } from './entityGroup.data';
+  import { useModal } from "/@/components/Modal";
 
   export default defineComponent({
     name: 'EntityGroupManagement',
-    components: { BasicTable, DeviceTemplateDrawer, TableAction },
+    components: { BasicTable, EntityGroupDrawer, TableAction, EntityGroupModel },
     setup() {
-      const [registerDrawer, { openDrawer }] = useDrawer();
+      const groupEntityType = 'DEVICE'; //当前界面时默认设备分组界面
+      const [registerModel, { openModal }] = useModal();
+
       const [registerTable, { reload }] = useTable({
-        title: '物模型列表',
-        api: listTemplateWithPager,
-        columns: templateColumn,
+        title: '设备分组列表',
+        api: listEntityGroupByPager,
+        beforeFetch: (param: any) => { param.entityType = groupEntityType },
+        columns: entityGroupColumn,
         useSearchForm: true,
         formConfig: {
           labelWidth: 120,
-          schemas: templateSearchScheme,
+          schemas: deviceGroupSearchScheme,
         },
         showTableSetting: true,
         tableSetting: {
@@ -59,7 +63,7 @@
           fullScreen: false,
         },
         bordered: true,
-        showIndexColumn: false,
+        showIndexColumn: true,
         canResize: false,
         actionColumn: {
           width: 80,
@@ -71,29 +75,34 @@
       });
 
       function handleCreate() {
-        openDrawer(true, {
+        openModal(true, {
           isUpdate: false,
         });
       }
 
       function handleEdit(record: Recordable) {
-        openDrawer(true, {
-          record,
+        openModal(true, {
+          record: record,
           isUpdate: true,
         });
       }
 
       async function handleDelete(record: Recordable) {
-        await delTemplate(record.id)
-        reload();
+        await delEntityGroup(record.id)
+        await reload();
       }
 
+      function handleSuccess() {
+        reload()
+      }
       return {
         registerTable,
-        registerDrawer,
+        registerModel,
+        openModal,
         handleCreate,
         handleEdit,
-        handleDelete
+        handleDelete,
+        handleSuccess,
       };
     },
   });

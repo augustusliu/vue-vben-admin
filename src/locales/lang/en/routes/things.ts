@@ -10,6 +10,7 @@ export default {
   ruleDetail: 'Ruler Detail',
   asset: 'Asset',
   assetDetail: 'Asset Detail',
+  deviceMgr: 'Device Management',
   device: 'Device',
   deviceDetail: 'Device Detail',
   dictionary: 'Dictionary',
@@ -18,5 +19,6 @@ export default {
   area: 'Area Data',
   relation: 'Entity Relation',
   deviceTemplate: 'Device Template',
+  deviceTemplateInfo: 'Device Template Info',
   deviceGroup: 'Device Group',
 };

@@ -10,14 +10,14 @@ export type TemplateParams = BasicPageParams & {
 export interface AddOrUpdateTemplate {
   id: number;
   name: string;
-  desc: string;
+  description: string;
   enabled: boolean;
 }
 
 export interface TemplateItem {
   id: number;
   name: string;
-  desc: string;
+  description: string;
   enabled: boolean;
   createdTime: string;
   modifiedTime: string;

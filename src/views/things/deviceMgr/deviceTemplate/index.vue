@@ -14,6 +14,11 @@
               onClick: handleEdit.bind(null, record),
             },
             {
+              icon: 'clarity:info-standard-line',
+              tooltip: '物模型详情',
+              onClick: handleView.bind(null, record),
+            },
+            {
               icon: 'ant-design:delete-outlined',
               color: 'error',
               popConfirm: {
@@ -25,33 +30,33 @@
         />
       </template>
     </BasicTable>
-    <EntityGroupDrawer @register="registerDrawer" @success="handleSuccess" />
+    <DeviceTemplateModel @register="registerModel" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { listEntityGroupByPager, delEntityGroup } from '/@/api/things/entityGroup/entityGroupApi';
-  import { useDrawer } from '/@/components/Drawer';
-  import EntityGroupDrawer from './EntityGroupDrawer.vue';
-  import { entityGroupColumn, deviceGroupSearchScheme } from './entityGroup.data';
+  import { listTemplateWithPager, delTemplate } from '/@/api/things/asset/templateApi';
+  import DeviceTemplateModel from './DeviceTemplateModel.vue';
+  import { templateColumn, templateSearchScheme } from './template.data';
+  import {useModal} from "/@/components/Modal";
+  import {useGo} from "/@/hooks/web/usePage";
 
   export default defineComponent({
     name: 'EntityGroupManagement',
-    components: { BasicTable, EntityGroupDrawer, TableAction },
+    components: { BasicTable, DeviceTemplateModel, TableAction },
     setup() {
-      const groupEntityType = 'DEVICE'; //当前界面时默认设备分组界面
-      const [registerDrawer, { openDrawer }] = useDrawer();
+      const go = useGo();
+      const [registerModel, { openModal }] = useModal();
       const [registerTable, { reload }] = useTable({
-        title: '设备分组列表',
-        api: listEntityGroupByPager,
-        beforeFetch: (param: any) => { param.entityType = groupEntityType },
-        columns: entityGroupColumn,
+        title: '物模型列表',
+        api: listTemplateWithPager,
+        columns: templateColumn,
         useSearchForm: true,
         formConfig: {
           labelWidth: 120,
-          schemas: deviceGroupSearchScheme,
+          schemas: templateSearchScheme,
         },
         showTableSetting: true,
         tableSetting: {
@@ -64,7 +69,7 @@
         showIndexColumn: true,
         canResize: false,
         actionColumn: {
-          width: 80,
+          width: 120,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -73,29 +78,39 @@
       });
 
       function handleCreate() {
-        openDrawer(true, {
+        openModal(true, {
           isUpdate: false,
         });
       }
 
       function handleEdit(record: Recordable) {
-        openDrawer(true, {
-          record,
+        openModal(true, {
+          record: record,
           isUpdate: true,
         });
       }
 
+      // 查看详情
+      function handleView(record: Recordable){
+        go('/template_info/' + record.id );
+      }
       async function handleDelete(record: Recordable) {
-        await delEntityGroup(record.id)
+        await delTemplate(record.id)
+        reload();
+      }
+
+      function handleSuccess(){
         reload();
       }
 
       return {
         registerTable,
-        registerDrawer,
+        registerModel,
         handleCreate,
         handleEdit,
-        handleDelete
+        handleDelete,
+        handleSuccess,
+        handleView
       };
     },
   });
