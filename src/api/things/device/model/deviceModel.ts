@@ -37,6 +37,8 @@ export interface DeviceAddParam {
   label: string;
   icon: string;
   description: string;
+  deviceTemplateId: number;
+  deviceGroupId:number;
 }
 
 // 资产kv列表实体

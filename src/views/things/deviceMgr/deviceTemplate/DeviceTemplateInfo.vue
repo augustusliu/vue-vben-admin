@@ -15,14 +15,14 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, onMounted, ref} from 'vue';
+  import { defineComponent, ref} from 'vue';
   import { useRoute } from 'vue-router';
   import { PageWrapper } from '/@/components/Page';
   import { Tag, Tabs } from 'ant-design-vue';
   import { ScrollContainer } from "/@/components/Container";
   import { templateTabListScheme } from './template.data';
-  import EntityAttributes from '../common/entityTabs/EntityAttributes.vue'
-  import EntityCommand from "../common/entityTabs/EntityCommand.vue";
+  import EntityAttributes from '../../common/entityTabs/EntityAttributes.vue'
+  import EntityCommand from "../../common/entityTabs/EntityCommand.vue";
   import {EntityTypeEnum} from "/@/enums/entityEnum";
 
 

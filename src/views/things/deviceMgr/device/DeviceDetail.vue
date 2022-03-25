@@ -26,13 +26,13 @@
   import { ScrollContainer } from "/@/components/Container";
   import { getDeviceApi } from '/@/api/things/device/deviceApi';
   import { deviceDetailInfoScheme } from './device.data'
-  import { tabListScheme } from '../common/entityTabs/tab.data'
-  import EntityAttributes from '../common/entityTabs/EntityAttributes.vue'
-  import EntityTelemetry from '../common/entityTabs/EntityTelemetry.vue'
-  import EntityEvent from '../common/entityTabs/EntityEvent.vue'
-  import EntityAlarm from '../common/entityTabs/EntityAlarm.vue'
-  import EntityRelation from '../common/relation/index.vue';
-  import EntityCommand from "../common/entityTabs/EntityCommand.vue";
+  import { tabListScheme } from '../../common/entityTabs/tab.data'
+  import EntityAttributes from '../../common/entityTabs/EntityAttributes.vue'
+  import EntityTelemetry from '../../common/entityTabs/EntityTelemetry.vue'
+  import EntityEvent from '../../common/entityTabs/EntityEvent.vue'
+  import EntityAlarm from '../../common/entityTabs/EntityAlarm.vue'
+  import EntityRelation from '../../common/relation/index.vue';
+  import EntityCommand from "../../common/entityTabs/EntityCommand.vue";
 
   // tab信息参考/page/account/setting配置
   export default defineComponent({

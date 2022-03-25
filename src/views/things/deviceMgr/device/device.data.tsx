@@ -6,6 +6,8 @@ import {Tag} from "ant-design-vue";
 import {h} from "vue";
 import {SvgIcon} from "/@/components/Icon";
 import {indexColor} from "/@/views/things/common/constant/ColorRandom";
+import {listTemplateAll} from "/@/api/things/asset/templateApi";
+import {listAllEntityGroup} from "/@/api/things/entityGroup/entityGroupApi";
 
 export const deviceTableColumn: BasicColumn[] = [
   {
@@ -150,7 +152,7 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     field: 'name',
     label: '设备名称',
     component: 'Input',
-    colProps: { span: 11 },
+    colProps: { span: 12 },
     required: true,
     helpComponentProps: {
       text: '必填，长度不超过100个字符'
@@ -161,7 +163,7 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     label: '设备编号',
     component: 'Input',
     required: true,
-    colProps: { span: 11 },
+    colProps: { span: 12 },
   },
   {
     field: 'icon',
@@ -171,13 +173,13 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     componentProps: {
       mode: 'svg',
     },
-    colProps: { span: 22 },
+    colProps: { span: 24 },
   },
   {
     field: 'label',
     label: '设备标签',
     component: 'Select',
-    colProps: { span: 22 },
+    colProps: { span: 24 },
     componentProps: {
       mode: 'tags',
       placeholder: '请输入资产标签',
@@ -203,7 +205,7 @@ export const createOrUpdateFormSchema: FormSchema[] = [
         { label: 'OPC_UA', value: 'OPC_UA' },
       ],
     },
-    colProps: { span: 22 },
+    colProps: { span: 24 },
   },
   {
     field: 'isGateway',
@@ -217,13 +219,13 @@ export const createOrUpdateFormSchema: FormSchema[] = [
         { label: '普通设备', value: false },
       ],
     },
-    colProps: { span: 11 },
+    colProps: { span: 12 },
   },
   {
     field: 'parentId',
     label: '父设备',
     component: 'ApiSelect',
-    colProps: { span: 11 },
+    colProps: { span: 12 },
     componentProps: {
       api: listAllDevices,
       params: {
@@ -243,10 +245,57 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     },
   },
   {
+    field: 'deviceTemplateId',
+    label: '物模型',
+    component: 'ApiSelect',
+    colProps: { span: 12 },
+    helpComponentProps: {
+      text: '设备创建时，会自动复制无模型配置的属性及指令数据'
+    },
+    componentProps: {
+      placeholder: "请选择对应的物模型",
+      api: listTemplateAll,
+      params: {
+        name: '',
+        enabled: true,
+      },
+      resultField: 'items',
+      // use name as label
+      labelField: 'name',
+      // use id as value
+      valueField: 'id',
+      immediate: false,
+      showSearch: true,
+    },
+
+  },
+  {
+    field: 'deviceGroupId',
+    label: '所属分组',
+    component: 'ApiSelect',
+    required: false,
+    colProps: { span: 12 },
+    componentProps: {
+      placeholder: "请选择对应的设备分组",
+      api: listAllEntityGroup,
+      params: {
+        name: '',
+        entityType: 'DEVICE',
+      },
+      resultField: 'items',
+      // use name as label
+      labelField: 'name',
+      // use id as value
+      valueField: 'id',
+      immediate: false,
+      showSearch: true,
+    },
+  },
+  {
     field: 'description',
     label: '设备描述',
     component: 'InputTextArea',
-    colProps: { span: 22 },
+    colProps: { span: 24 },
   },
 ]
 

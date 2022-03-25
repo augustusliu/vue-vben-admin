@@ -12,6 +12,7 @@ enum DeviceTemplateApi {
   TemplateGet = '/api/dtemplate/get/',
   TemplateDelete = '/api/dtemplate/del/',
   TemplateAddOrUpdate = '/api/dtemplate/addOrUpdate',
+  TemplateListAll = '/api/dtemplate/list?',
 }
 
 export const addOrUpdateTemplate = (params: AddOrUpdateTemplate) =>
@@ -25,3 +26,6 @@ export const getTemplate = (templateId: number) =>
 
 export const delTemplate = (templateId: number) =>
   defHttp.get<number>({ url: DeviceTemplateApi.TemplateDelete + templateId });
+
+export const listTemplateAll = (params: TemplateParams) =>
+  defHttp.get<TemplateListResult>({ url: DeviceTemplateApi.TemplateListAll + 'enabled=' + params.enabled +"&fuzzy=" + params.name });

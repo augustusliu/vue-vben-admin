@@ -11,11 +11,12 @@ enum EntityGroupApi {
   EntityGroupListWithPager = '/api/group/listWithPager',
   EntityGroupGet = '/api/group/get/',
   EntityGroupDelete = '/api/group/del/',
-  EntityGroupOrUpdate = '/api/group/addOrUpdate'
+  EntityGroupAddOrUpdate = '/api/group/addOrUpdate',
+  EntityGroupListAll = '/api/group/list?'
 }
 
 export const addOrUpdateEntityGroup = (params: AddOrUpdateEntityGroup) =>
-  defHttp.post<number>({ url: EntityGroupApi.EntityGroupOrUpdate, params });
+  defHttp.post<number>({ url: EntityGroupApi.EntityGroupAddOrUpdate, params });
 
 export const listEntityGroupByPager = (params: EntityGroupParams) =>
   defHttp.post<EntityGroupListResult>({ url: EntityGroupApi.EntityGroupListWithPager , params });
@@ -25,3 +26,6 @@ export const getEntityGroup = (entityGroupId: string) =>
 
 export const delEntityGroup = (entityGroupId: string) =>
   defHttp.get<number>({ url: EntityGroupApi.EntityGroupDelete + entityGroupId });
+
+export const listAllEntityGroup = (params: EntityGroupParams) =>
+  defHttp.get<EntityGroupListResult>({ url: EntityGroupApi.EntityGroupListAll + 'fuzzy=' + params.name +'&entityType=' + params.entityType });
