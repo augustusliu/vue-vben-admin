@@ -45,6 +45,20 @@ export const commandColumn: BasicColumn[] = [
     }
   },
   {
+    title: '来源',
+    dataIndex: 'commandSrc',
+    customRender: ({ record }) => {
+      if (record.commandSrc === 'CREATED') {
+        return '用户定义';
+      } else if (record.commandSrc === 'THINGS') {
+        return '物模型';
+      } else if (record.commandSrc === 'TRANSPORT') {
+        return '设备声明';
+      }
+      return 'NaN';
+    }
+  },
+  {
     title: '创建时间',
     dataIndex: 'createdTime',
     customRender: ({ record }) => {

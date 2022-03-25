@@ -3,6 +3,7 @@ import { BasicPageParams, BasicFetchResult } from '/@/api/model/baseModel';
 // 设备搜索项
 export type DeviceParams = BasicPageParams & {
   // ?表示参数可以为空，如果不为空的话为string类型
+  id?: number;
   name?: string;
   code?: string;
   label?: string;

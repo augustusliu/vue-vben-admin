@@ -30,6 +30,7 @@ import { IconPicker } from '/@/components/Icon';
 import { CountdownInput } from '/@/components/CountDown';
 import { CodeEditor } from '/@/components/CodeEditor';
 import { OperationTips } from '/@/components/OperationTips';
+import SingleSearchSelect from "./components/SingleSearchSelect.vue";
 
 const componentMap = new Map<ComponentType, Component>();
 
@@ -43,6 +44,7 @@ componentMap.set('AutoComplete', AutoComplete);
 
 componentMap.set('Select', Select);
 componentMap.set('ApiSelect', ApiSelect);
+componentMap.set('SingleSearchSelect', SingleSearchSelect);
 componentMap.set('TreeSelect', TreeSelect);
 componentMap.set('ApiTreeSelect', ApiTreeSelect);
 componentMap.set('Switch', Switch);

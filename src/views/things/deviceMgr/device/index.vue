@@ -72,6 +72,12 @@
           schemas: deviceSearchScheme,
         },
         showTableSetting: true,
+        tableSetting: {
+          redo: true,
+          size: false,
+          setting: false,
+          fullScreen: false,
+        },
         bordered: true,
         showIndexColumn: true,
         actionColumn: {

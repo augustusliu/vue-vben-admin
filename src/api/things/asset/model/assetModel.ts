@@ -3,6 +3,7 @@ import { BasicPageParams, BasicFetchResult } from '/@/api/model/baseModel';
 // 资产搜索时的模型
 export type AssetParams = BasicPageParams & {
   // ?表示参数是可选项，可能存在，可能不存在
+  id?:number;
   name?: string;
   code?: string;
   label?: string;

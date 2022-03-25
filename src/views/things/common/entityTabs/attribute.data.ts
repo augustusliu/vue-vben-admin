@@ -64,6 +64,20 @@ export const attributeColumn: BasicColumn[] = [
     }
   },
   {
+    title: '来源',
+    dataIndex: 'attributeSrc',
+    customRender: ({ record }) => {
+      if (record.attributeSrc === 'CREATED') {
+        return '用户定义';
+      } else if (record.attributeSrc === 'THINGS') {
+        return '物模型';
+      } else if (record.attributeSrc === 'TRANSPORT') {
+        return '设备声明';
+      }
+      return 'NaN';
+    }
+  },
+  {
     title: '创建时间',
     dataIndex: 'createdTime',
     width:180,

@@ -112,4 +112,5 @@ export type ComponentType =
   | 'Rate'
   | 'Divider'
   | 'CodeEditor'
-  | 'OperationTips';
+  | 'OperationTips'
+  | 'SingleSearchSelect';

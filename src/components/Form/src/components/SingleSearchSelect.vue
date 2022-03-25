@@ -3,6 +3,10 @@
     @dropdownVisibleChange="handleFetch"
     v-bind="attrs"
     @change="handleChange"
+    @search="handleSearch"
+    :showSearch="true"
+    :showArrow="false"
+    :filterOption="false"
     :options="getOptions"
     v-model:value="state"
   >
@@ -34,7 +38,7 @@
   type OptionsItem = { label: string; value: string; disabled?: boolean };
 
   export default defineComponent({
-    name: 'ApiSelect',
+    name: 'SingleSearchSelect',
     components: {
       Select,
       LoadingOutlined,
@@ -71,8 +75,7 @@
       const emitData = ref<any[]>([]);
       const attrs = useAttrs();
       const { t } = useI18n();
-      // const dynamicParams: any = ref();
-      // dynamicParams.value = props.params;
+
       // Embedded in the form, just use the hook binding to perform form verification
       const [state] = useRuleFormItem(props, 'value', 'change', emitData);
 
@@ -92,25 +95,27 @@
         }, [] as OptionsItem[]);
       });
 
+
       watchEffect(() => {
-        props.immediate && fetch();
+        props.immediate && fetch(props.params);
       });
 
       watch(
         () => props.params,
         () => {
-          !unref(isFirstLoad) && fetch();
+          !unref(isFirstLoad) && fetch(props.params);
         },
         { deep: true }
       );
 
-      async function fetch() {
+      async function fetch(params: any) {
         const api = props.api;
         if (!api || !isFunction(api)) return;
         options.value = [];
         try {
           loading.value = true;
-          const res = await api(props.params);
+          const res = await api(params);
+          params.id = '';
           if (Array.isArray(res)) {
             options.value = res;
             emitChange();
@@ -129,7 +134,7 @@
 
       async function handleFetch() {
         if (!props.immediate && unref(isFirstLoad)) {
-          await fetch();
+          await fetch(props.params);
           isFirstLoad.value = false;
         }
       }
@@ -142,13 +147,13 @@
         emitData.value = args;
       }
 
-      // async function onSearch(value: any){
-      //   // 动态获取搜索内容
-      //   // dynamicParams.value.name = value;
-      //   // await fetch();
-      // }
+      function handleSearch(value: any){
+        const params = props.params;
+        params.name = value;
+        fetch(params);
+      }
 
-      return { state, attrs, getOptions, loading, t, handleFetch, handleChange };
+      return { state, attrs, getOptions, loading, t, handleFetch, handleChange, handleSearch };
     },
   });
 </script>

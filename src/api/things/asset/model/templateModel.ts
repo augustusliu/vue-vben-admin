@@ -2,6 +2,7 @@ import { BasicPageParams, BasicFetchResult } from '/@/api/model/baseModel';
 
 export type TemplateParams = BasicPageParams & {
   // ?表示参数是可选项，可能存在，可能不存在
+  id?: number;
   name?: string;
   enabled?: boolean;
 };

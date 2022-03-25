@@ -14,17 +14,19 @@ import {
 
 enum AssetApi {
   // 资产列表信息
-  AssetListByPager = '/api/asset/list',
+  AssetListByPager = '/api/asset/listByPager',
   // 资产详情信息
   AssetGet = '/api/asset/get/',
   // 资产下分页属性列表
-  AssetAttributeList = '/api/asset/attr/listWithPager',
+  AssetAttributeListByPager = '/api/asset/attr/listWithPager',
   // 为资产添加一个属性信息
   AssetAddOneAttribute = '/api/asset/attr/one/',
   // 添加编辑资产
   AssetAddOrUpdateApi = '/api/asset/addOrUpdate',
   AssetLabelsApi = '/api/asset/labels',
   AssetListAllApi = '/api/asset/listAll',
+  AssetListAllNamesApi = '/api/asset/listAllNames',
+  AssetListAllNamesByPagerApi = '/api/asset/listNamesByPager'
 }
 
 // 分页查询对应的资产列表
@@ -37,7 +39,7 @@ export const getAssetApi = (params: number) =>
 
 // 查询资产下属性列表
 export const listAttributeByAssetApi = (params: any) =>
-  defHttp.post<AttributeListResult>({ url: AssetApi.AssetAttributeList, params });
+  defHttp.post<AttributeListResult>({ url: AssetApi.AssetAttributeListByPager, params });
 
 // 为资产添加一个属性
 export const addOneAttributeApi = (_assetId: number, params: AddOrUpdateAttributeParam) =>
@@ -53,3 +55,11 @@ export const listAssetLabels = () => defHttp.get<string>({ url: AssetApi.AssetLa
 // 查询全部资产
 export const listAssetAll = () =>
   defHttp.get<AssetListResultModel>({ url: AssetApi.AssetListAllApi });
+
+// 查询全部名称
+export const listAssetAllNames = () =>
+  defHttp.get<AssetListResultModel>({ url: AssetApi.AssetListAllNamesApi });
+
+// 资产设备名称分页查询
+export const listAssetNamesByPager = (params: AssetParams) =>
+  defHttp.post<AssetListResultModel>({ url: AssetApi.AssetListAllNamesByPagerApi, params });

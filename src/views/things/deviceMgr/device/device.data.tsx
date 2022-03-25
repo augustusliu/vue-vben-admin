@@ -1,13 +1,14 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { DescItem } from '/@/components/Description';
 import moment from "moment";
-import { listAllDevices } from '/@/api/things/device/deviceApi';
+import {listDeviceWithPageApi} from '/@/api/things/device/deviceApi';
 import {Tag} from "ant-design-vue";
 import {h} from "vue";
 import {SvgIcon} from "/@/components/Icon";
 import {indexColor} from "/@/views/things/common/constant/ColorRandom";
-import {listTemplateAll} from "/@/api/things/asset/templateApi";
-import {listAllEntityGroup} from "/@/api/things/entityGroup/entityGroupApi";
+import {listTemplateWithPager} from "/@/api/things/asset/templateApi";
+import {listEntityGroupByPager} from "/@/api/things/entityGroup/entityGroupApi";
+import {listAssetNamesByPager} from "/@/api/things/asset/assetApi";
 
 export const deviceTableColumn: BasicColumn[] = [
   {
@@ -35,7 +36,7 @@ export const deviceTableColumn: BasicColumn[] = [
     title: '在线状态',
     dataIndex: 'online',
     customRender: ({ record }) => {
-      return record.online ? <Tag color="lime">在线</Tag> : <Tag color="cyan">掉线</Tag>;
+      return record.online ? <Tag color="lime">在线</Tag> : <Tag color="cyan">离线</Tag>;
     },
   },
   {
@@ -68,6 +69,11 @@ export const deviceTableColumn: BasicColumn[] = [
   {
     title: '描述',
     dataIndex: 'description',
+  },
+  {
+    title: '所属资产id',
+    dataIndex: 'belongToAsset',
+    defaultHidden: true,
   },
   {
     title: '创建时间',
@@ -127,13 +133,6 @@ export const deviceSearchScheme: FormSchema[] = [
         { label: 'HTTP', value: 'HTTP' },
         { label: 'MQTT', value: 'MQTT' },
         { label: 'CoAP', value: 'CoAP' },
-        { label: 'ModBus', value: 'ModBus' },
-        { label: 'ZigBee', value: 'ZigBee' },
-        { label: 'LoRaWAN', value: 'LoRaWAN' },
-        { label: 'BACNet', value: 'BACNet' },
-        { label: 'CAN', value: 'CAN' },
-        { label: 'BLE', value: 'BLE' },
-        { label: 'OPC_UA', value: 'OPC_UA' },
       ],
     },
     colProps: { span: 8 },
@@ -182,7 +181,7 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     colProps: { span: 24 },
     componentProps: {
       mode: 'tags',
-      placeholder: '请输入资产标签',
+      placeholder: '请输入设备标签',
     },
   },
   {
@@ -196,16 +195,31 @@ export const createOrUpdateFormSchema: FormSchema[] = [
         { label: 'HTTP', value: 'HTTP' },
         { label: 'MQTT', value: 'MQTT' },
         { label: 'CoAP', value: 'CoAP' },
-        { label: 'ModBus', value: 'ModBus' },
-        { label: 'ZigBee', value: 'ZigBee' },
-        { label: 'LoRaWAN', value: 'LoRaWAN' },
-        { label: 'BACNet', value: 'BACNet' },
-        { label: 'CAN', value: 'CAN' },
-        { label: 'BLE', value: 'BLE' },
-        { label: 'OPC_UA', value: 'OPC_UA' },
       ],
     },
-    colProps: { span: 24 },
+    colProps: { span: 12 },
+  },
+  {
+    field: 'belongToAsset',
+    label: '隶属资产',
+    component: 'SingleSearchSelect',
+    colProps: { span: 12 },
+    componentProps: {
+      placeholder: '搜索相关资产',
+      api: listAssetNamesByPager,
+      params: {
+        name: '',
+        disabled: false,
+      },
+      resultField: 'items',
+      // use name as label
+      labelField: 'name',
+      // use id as value
+      valueField: 'id',
+      immediate: false,
+      showSearch: true,
+    },
+
   },
   {
     field: 'isGateway',
@@ -224,10 +238,11 @@ export const createOrUpdateFormSchema: FormSchema[] = [
   {
     field: 'parentId',
     label: '父设备',
-    component: 'ApiSelect',
+    component: 'SingleSearchSelect',
     colProps: { span: 12 },
     componentProps: {
-      api: listAllDevices,
+      placeholder: '搜索网关设备',
+      api: listDeviceWithPageApi,
       params: {
         name: '',
         isGateway: true,
@@ -247,14 +262,14 @@ export const createOrUpdateFormSchema: FormSchema[] = [
   {
     field: 'deviceTemplateId',
     label: '物模型',
-    component: 'ApiSelect',
+    component: 'SingleSearchSelect',
     colProps: { span: 12 },
     helpComponentProps: {
       text: '设备创建时，会自动复制无模型配置的属性及指令数据'
     },
     componentProps: {
-      placeholder: "请选择对应的物模型",
-      api: listTemplateAll,
+      placeholder: "搜索相关物模型",
+      api: listTemplateWithPager,
       params: {
         name: '',
         enabled: true,
@@ -272,12 +287,12 @@ export const createOrUpdateFormSchema: FormSchema[] = [
   {
     field: 'deviceGroupId',
     label: '所属分组',
-    component: 'ApiSelect',
+    component: 'SingleSearchSelect',
     required: false,
     colProps: { span: 12 },
     componentProps: {
-      placeholder: "请选择对应的设备分组",
-      api: listAllEntityGroup,
+      placeholder: "搜索设备分组",
+      api: listEntityGroupByPager,
       params: {
         name: '',
         entityType: 'DEVICE',
@@ -357,6 +372,6 @@ export const deviceDetailInfoScheme: DescItem[] = [
   },
   {
     field: 'description',
-    label: '资产描述',
+    label: '设备描述',
   },
 ]

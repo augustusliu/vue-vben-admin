@@ -13,11 +13,10 @@
   </BasicDrawer>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, computed, unref } from 'vue';
+  import {defineComponent, ref, computed, unref} from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { createOrUpdateFormSchema } from './device.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-
   import { addOrUpdateDeviceApi, listDeviceLabels } from '/@/api/things/device/deviceApi';
 
   export default defineComponent({
@@ -35,28 +34,9 @@
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
         isUpdate.value = !!data?.isUpdate;
-        if (unref(isUpdate)) {
 
-          setFieldsValue({
-            ...data.record,
-          });
 
-          // 如果是更新，则禁用物模型边框
-          updateSchema({
-            field: 'deviceTemplateId',
-            componentProps: {
-              disabled: true,
-            },
-          });
-        }else{
-          // 如果是创建，则启用物模型选择框
-          updateSchema({
-            field: 'deviceTemplateId',
-            componentProps: {
-              disabled: false,
-            },
-          });
-        }
+        // 获取设备标签
         let labelsData = await listDeviceLabels();
         await updateSchema({
           field: 'label',
@@ -65,7 +45,15 @@
             options: preProcessData(labelsData),
           },
         });
+
+        if (unref(isUpdate)) {
+          await recallSelectValue(data.record);
+          await setFieldsValue({
+            ...data.record,
+          });
+        }
         setDrawerProps({ confirmLoading: false });
+
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增设备' : '编辑设备'));
@@ -81,6 +69,7 @@
           setDrawerProps({ confirmLoading: false });
         }
       }
+
       function preProcessData(nodes){
         let options:Array<any> = new Array<any>();
         nodes.forEach(item => options.push({
@@ -89,6 +78,55 @@
           value: item,
         }));
         return options;
+      }
+
+      // 回显下拉框值
+      async function recallSelectValue(record: any){
+
+        // 回显父设备
+        await updateSchema({
+          field: 'parentId',
+          componentProps: {
+            immediate: true,
+            params: {
+              id: record.parentId,
+              isGateway: true,
+            },
+          },
+        });
+
+        await updateSchema({
+          field: 'belongToAsset',
+          componentProps: {
+            immediate: true,
+            params: {
+              id: record.belongToAsset,
+              disabled: false,
+            },
+          },
+        });
+
+        await updateSchema({
+          field: 'deviceTemplateId',
+          componentProps: {
+            immediate: true,
+            params: {
+              id: record.deviceTemplateId,
+              enabled: true,
+            },
+          },
+        });
+
+        await updateSchema({
+          field: 'deviceGroupId',
+          componentProps: {
+            immediate: true,
+            params: {
+              id: record.deviceGroupId,
+              entityType: 'DEVICE',
+            },
+          },
+        });
       }
       return {
         registerDrawer,
