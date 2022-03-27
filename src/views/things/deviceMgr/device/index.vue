@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BasicTable @register="registerTable">
+    <CardsTable @register="registerTable">
       <template #toolbar>
         <a-button type="primary" @click="handleCreate"> 新建设备 </a-button>
       </template>
@@ -34,7 +34,35 @@
           ]"
         />
       </template>
-    </BasicTable>
+
+      <!--   3、为CardList定义card的内容  -->
+      <template #cardContent="{ record }">
+        <DeviceCardContentSlot :dataInfo="record"/>
+      </template>
+
+
+      <!--   4、为CardList定义事件插槽  ， # 是v-slot的简写, 子组件传递的参数都会放入到data中 -->
+      <template #cardAction="{ record }">
+        <Row style="height: 30px; border-top: 1px solid #f0f0f0">
+          <Col :span="6" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
+            <SettingOutlined style="color:#3076c6" :onClick="handleView.bind(null, record)"/>
+          </Col>
+
+          <Col :span="6" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
+            <LockOutlined style="color:#3076c6" :onClick="showCredentials.bind(null, record)"/>
+          </Col>
+
+          <Col :span="6" style="text-align: center;line-height: 30px; border-right: 1px solid #f0f0f0;">
+            <EditOutlined style="color:#3076c6" :onClick="handleEdit.bind(null, record)"/>
+          </Col>
+          <Col :span="6" style="text-align: center; line-height: 30px">
+            <DeleteOutlined style="color:#3076c6" :onClick="handleDelete.bind(null, record)"/>
+          </Col>
+        </Row>
+      </template>
+
+
+    </CardsTable>
     <DeviceDrawer @register="registerDrawer" @success="handleSuccess" />
     <CredentialsModel @register="registerModel"/>
   </div>
@@ -42,20 +70,24 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import {BasicTable, TableAction, useTable} from '/@/components/Table';
+  import { EditOutlined, SettingOutlined,DeleteOutlined,LockOutlined } from '@ant-design/icons-vue';
+  import {BasicTable, CardsTable, TableAction, useTable} from '/@/components/Table';
   import { useGo } from '/@/hooks/web/usePage';
   import { useDrawer } from '/@/components/Drawer';
+  import DeviceCardContentSlot from './DeviceCardContentSlot.vue';
   import { deviceTableColumn, deviceSearchScheme } from "./device.data";
   import { listDeviceWithPageApi, delDeviceApi } from '/@/api/things/device/deviceApi';
   import DeviceDrawer from "./DeviceDrawer.vue";
   import CredentialsModel from "./CredentialsModel.vue";
   import { useModal } from "/@/components/Modal";
+  import {Col, Row} from "ant-design-vue";
   // 定义当前组件
   export default defineComponent({
     // 组件名称
     name: 'DeviceComponent',
     // 当前依赖的组件
-    components: { BasicTable, TableAction, DeviceDrawer, CredentialsModel },
+    components: { CardsTable,BasicTable, TableAction, DeviceDrawer, CredentialsModel, DeviceCardContentSlot, Row, Col,
+      EditOutlined, SettingOutlined,DeleteOutlined,LockOutlined},
 
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
@@ -68,7 +100,7 @@
         columns: deviceTableColumn,
         useSearchForm: true,
         formConfig: {
-          labelWidth: 120,
+          labelWidth: 80,
           schemas: deviceSearchScheme,
         },
         showTableSetting: true,
@@ -80,6 +112,7 @@
         },
         bordered: true,
         showIndexColumn: true,
+        canResize: true,
         actionColumn: {
           width: 150,
           title: '操作',

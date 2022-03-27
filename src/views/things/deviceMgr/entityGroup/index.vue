@@ -52,7 +52,7 @@
         columns: entityGroupColumn,
         useSearchForm: true,
         formConfig: {
-          labelWidth: 120,
+          labelWidth: 80,
           schemas: deviceGroupSearchScheme,
         },
         showTableSetting: true,
@@ -64,7 +64,7 @@
         },
         bordered: true,
         showIndexColumn: true,
-        canResize: false,
+        canResize: true, // 调整表格自动高度
         actionColumn: {
           width: 80,
           title: '操作',

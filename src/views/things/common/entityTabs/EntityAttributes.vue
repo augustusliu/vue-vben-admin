@@ -62,7 +62,7 @@
         },
         bordered: true,
         showIndexColumn: true,
-        canResize: false,
+        canResize: true, // 调整表格自动高度
         beforeFetch: (record) => { record.entityId = entityId; record.entityType = entityType; return record},
         actionColumn: {
           width: 100,

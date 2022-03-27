@@ -4,6 +4,7 @@
       <template #toolbar>
         <a-button type="primary" @click="handleCreate"> 新建资产 </a-button>
       </template>
+    <!--      插槽，用于覆盖父组件中的action插槽  ，该插槽接收一个record 参数-->
       <template #action="{ record }">
         <TableAction
           :actions="[
@@ -61,12 +62,12 @@
       const go = useGo();
       // 定义当前要展示的表格
       const [registerTable, { reload }] = useTable({
-        // title: '资产列表',
+        title: '资产列表',
         api: listAssetApi,
         columns: assetColumn,
         useSearchForm: true,
         formConfig: {
-          labelWidth: 120,
+          labelWidth: 80,
           schemas: searchFormSchema,
         },
         showTableSetting: true,
@@ -106,6 +107,7 @@
       function handleSuccess() {
         reload();
       }
+
 
       return {
         registerDrawer,

@@ -14,21 +14,68 @@
       </template>
     </BasicForm>
 
-    <Table
-      ref="tableElRef"
-      v-bind="getBindValues"
-      :rowClassName="getRowClassName"
-      v-show="getEmptyDataIsShowTable"
-      @change="handleTableChange"
-    >
-      <template #[item]="data" v-for="item in Object.keys($slots)" :key="item">
-        <slot :name="item" v-bind="data || {}"></slot>
-      </template>
+    <!--    添加tabs-->
+    <div :class="`${prefixCls}-card-tabs`">
+      <Tabs defaultActiveKey="1"
+        :animated="true"
+        :size="small">
+        <TabPane tab="列表" key="1" tabBarGutter="0">
+            <Table
+              ref="tableElRef"
+              v-bind="getBindValues"
+              :rowClassName="getRowClassName"
+              v-show="getEmptyDataIsShowTable"
+              @change="handleTableChange">
 
-      <template #[`header-${column.dataIndex}`] v-for="column in columns" :key="column.dataIndex">
-        <HeaderCell :column="column" />
-      </template>
-    </Table>
+              <!--  遍历slots模板，并展示 -->
+              <template #[item]="data" v-for="item in Object.keys($slots)" :key="item">
+                <slot :name="item" v-bind="data || {}"></slot>
+              </template>
+
+              <template #[`header-${column.dataIndex}`] v-for="column in columns" :key="column.dataIndex">
+                <HeaderCell :column="column" />
+              </template>
+            </Table>
+        </TabPane>
+
+        <TabPane tab="网格" key="2" v-loading="getLoading">
+
+          <!-- 头部  -->
+          <Card v-bind="getBindValues"
+                 :rowClassName="getRowClassName"
+                 v-show="getEmptyDataIsShowTable"
+                 @change="handleTableChange">
+
+            <!--插槽注入 toobar  -->
+            <template>
+              <slot :name="toolbar" v-bind="data || {}"></slot>
+            </template>
+
+            <!--  自定义card样式 -->
+            <Row>
+              <Col :span="6" v-for="item in getBindValues.dataSource">
+                <Card :type="inner" :hoverable="true" style="margin-right: 10px; margin-top: 12px; cursor: default">
+                  <slot name="cardContent" :record="item"/>
+                  <slot name="cardAction" :record="item"></slot>
+                </Card>
+              </Col>
+            </Row>
+          </Card>
+          <Pagination
+            :total="getBindValues.pagination.total"
+            :current="getBindValues.pagination.current"
+            :pageSize="getBindValues.pagination.pageSize"
+            :size="small"
+            @change="cardListPagerChange"
+            defaultPageSize="10"
+            showQuickJumper="true"
+            showSizeChanger="true"
+            style="float: right"
+            />
+
+        </TabPane>
+      </Tabs>
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -40,13 +87,12 @@
   } from './types/table';
 
   import { defineComponent, ref, computed, unref, toRaw, inject, watchEffect } from 'vue';
-  import { Table } from 'ant-design-vue';
+  import { Table, Tag, Tabs, Card ,Row, Col, Pagination} from 'ant-design-vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { PageWrapperFixedHeightKey } from '/@/components/Page';
   import expandIcon from './components/ExpandIcon';
   import HeaderCell from './components/HeaderCell.vue';
   import { InnerHandlers } from './types/table';
-
   import { usePagination } from './hooks/usePagination';
   import { useColumns } from './hooks/useColumns';
   import { useDataSource } from './hooks/useDataSource';
@@ -68,10 +114,16 @@
   import { warn } from '/@/utils/log';
 
   export default defineComponent({
+    name: 'CardsTable',
     components: {
       Table,
       BasicForm,
       HeaderCell,
+      Tag,
+      Tabs,
+      TabPane: Tabs.TabPane,
+      Card,Row, Col,
+      Pagination,
     },
     props: basicProps,
     emits: [
@@ -93,6 +145,8 @@
       'columns-change',
     ],
     setup(props, { attrs, emit, slots, expose }) {
+
+
       const tableElRef = ref(null);
       const tableData = ref<Recordable[]>([]);
 
@@ -109,8 +163,8 @@
       const isFixedHeightPage = inject(PageWrapperFixedHeightKey);
       watchEffect(() => {
         unref(isFixedHeightPage) &&
-          props.canResize &&
-          warn("[BasicTable] 'canRize' not worked with PageWrapper while 'fixedHeight' is true");
+        props.canResize &&
+        warn("[BasicTable] 'canRize' not worked with PageWrapper while 'fixedHeight' is true");
       });
 
       const { getLoading, setLoading } = useLoading(getProps);
@@ -215,6 +269,7 @@
       const { getFormProps, replaceFormSlotKey, getFormSlotKeys, handleSearchInfoChange } =
         useTableForm(getProps, slots, fetch, getLoading);
 
+      // 获取到接口返回的数据,并组装
       const getBindValues = computed(() => {
         const dataSource = unref(getDataSourceRef);
         let propsData: Recordable = {
@@ -306,7 +361,17 @@
 
       emit('register', tableAction, formActions);
 
+      // cardList 分页查询
+      function cardListPagerChange(page: number, pageSize: number){
+        setPagination({
+          current: page,
+          pageSize: pageSize
+        })
+        reload();
+      }
+
       return {
+        prefixCls: 'things-io',
         tableElRef,
         getBindValues,
         getLoading,
@@ -323,6 +388,8 @@
         getFormSlotKeys,
         getWrapperClass,
         columns: getViewColumns,
+
+        cardListPagerChange
       };
     },
   });
@@ -388,15 +455,6 @@
         justify-content: space-between;
         align-items: center;
       }
-      .vben-basic-title{
-        font-size: 14px;
-        color: #989292;
-      }
-      .ant-btn{
-        height:28px;
-        padding: 1px 8px;
-        margin-right: 4px;
-      }
     }
 
     .ant-pagination {
@@ -422,6 +480,35 @@
       td {
         padding: 12px 8px;
       }
+    }
+  }
+
+  // 自定义样式
+  .ant-tabs{
+    .ant-tabs-bar{
+      margin-bottom: 10px;
+
+      .ant-tabs-nav .ant-tabs-tab{
+        margin:auto;
+      }
+    }
+    .ant-card-head{
+      padding: 1px 8px;
+    }
+    .ant-card-head-title{
+      padding: 6px 0px;
+    }
+  }
+
+  .ant-tabs-content{
+    .vben-basic-title{
+      font-size: 14px;
+      color: #989292;
+    }
+    .ant-btn{
+      height:28px;
+      padding: 1px 8px;
+      margin-right: 4px;
     }
   }
 

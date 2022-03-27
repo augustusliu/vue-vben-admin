@@ -1,12 +1,14 @@
 <template>
   <div>
-    <BasicTable @register="registerTable"
+    <CardsTable @register="registerTable"
                 @fetch-success="onFetchSuccess"
                 :onExpand="handleOnExpand">
+<!--      1、定义 toolbar slots，  #toolbar 等价与slot='toolbar'-->
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增字典 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增物模型 </a-button>
       </template>
-      <template #action="{ record }">
+<!--      2、定义 action slots,,,  #action 等价与slot='action', 同时 该插槽接收一个参数 record 必须要传递进去参数才可以-->
+      <template #action="{ record }" >
         <TableAction
           :actions="[
             {
@@ -29,14 +31,37 @@
           ]"
         />
       </template>
-    </BasicTable>
+
+     <!--   3、为CardList定义card的内容  -->
+      <template #cardContent="{ record }">
+        <TemplateCardContentSlot :dataInfo="record"/>
+      </template>
+
+      <!--   4、为CardList定义事件插槽  ， # 是v-slot的简写, 子组件传递的参数都会放入到data中 -->
+      <template #cardAction="{ record }">
+        <Row style="height: 30px; border-top: 1px solid #f0f0f0">
+          <Col :span="8" style="text-align: center;line-height: 30px; border-right: 1px solid #f0f0f0;">
+            <EditOutlined style="color:#3076c6" :onClick="handleEdit.bind(null, record)"/>
+          </Col>
+          <Col :span="8" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
+            <SettingOutlined style="color:#3076c6" :onClick="handleView.bind(null, record)"/>
+          </Col>
+          <Col :span="8" style="text-align: center; line-height: 30px">
+            <DeleteOutlined style="color:#3076c6" :onClick="handleDelete.bind(null, record)"/>
+          </Col>
+        </Row>
+      </template>
+    </CardsTable>
+
     <DeviceTemplateModel @register="registerModel" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
-
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { Row, Col} from 'ant-design-vue';
+  import { EditOutlined, SettingOutlined,DeleteOutlined } from '@ant-design/icons-vue';
+  import TemplateCardContentSlot from './TemplateCardContentSlot.vue';
+  import { BasicTable, useTable, TableAction, CardsTable } from '/@/components/Table';
   import { listTemplateWithPager, delTemplate } from '/@/api/things/asset/templateApi';
   import DeviceTemplateModel from './DeviceTemplateModel.vue';
   import { templateColumn, templateSearchScheme } from './template.data';
@@ -45,7 +70,8 @@
 
   export default defineComponent({
     name: 'EntityGroupManagement',
-    components: { BasicTable, DeviceTemplateModel, TableAction },
+    components: { BasicTable, DeviceTemplateModel, TableAction, CardsTable, EditOutlined,SettingOutlined,DeleteOutlined,
+      TemplateCardContentSlot, Row, Col},
     setup() {
       const go = useGo();
       const [registerModel, { openModal }] = useModal();
@@ -55,7 +81,7 @@
         columns: templateColumn,
         useSearchForm: true,
         formConfig: {
-          labelWidth: 120,
+          labelWidth: 80,
           schemas: templateSearchScheme,
         },
         showTableSetting: true,
@@ -67,7 +93,7 @@
         },
         bordered: true,
         showIndexColumn: true,
-        canResize: false,
+        canResize: true, // 调整表格自动高度
         actionColumn: {
           width: 120,
           title: '操作',
@@ -110,7 +136,8 @@
         handleEdit,
         handleDelete,
         handleSuccess,
-        handleView
+        handleView,
+
       };
     },
   });

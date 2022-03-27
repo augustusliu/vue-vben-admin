@@ -431,6 +431,9 @@ export interface BasicColumn extends ColumnProps {
   auth?: RoleEnum | RoleEnum[] | string | string[];
   // 业务控制是否显示
   ifShow?: boolean | ((column: BasicColumn) => boolean);
+  // 当前字段是否显示在卡片列表中
+  cardShow?: boolean;
+
 }
 
 export type ColumnChangeParam = {

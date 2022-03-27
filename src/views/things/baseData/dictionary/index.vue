@@ -58,7 +58,7 @@
         showTableSetting: true,
         bordered: true,
         showIndexColumn: false,
-        canResize: false,
+        canResize: true, // 调整表格自动高度
         actionColumn: {
           width: 80,
           title: '操作',

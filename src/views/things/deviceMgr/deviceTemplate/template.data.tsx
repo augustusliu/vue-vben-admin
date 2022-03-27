@@ -12,10 +12,12 @@ export const templateColumn: BasicColumn[] = [
   {
     title: '模型名称',
     dataIndex: 'name',
+    cardShow: true
   },
   {
     title: '启用状态',
     dataIndex: 'enabled',
+    cardShow: true,
     customRender: ({ record }) => {
       return record.enabled ? <Tag color="lime">启用</Tag> : <Tag color="red">禁用</Tag>;
     },
@@ -47,13 +49,13 @@ export const templateSearchScheme: FormSchema[] = [
     field: 'name',
     label: '模型名称',
     component: 'Input',
-    colProps: { span: 8 },
+    colProps: { span: 6 },
   },
   {
     field: 'enabled',
     label: '启用状态',
     component: 'Select',
-    colProps: { span: 8 },
+    colProps: { span: 6 },
     componentProps: {
       options: [
         { label: '启用', value: true },
