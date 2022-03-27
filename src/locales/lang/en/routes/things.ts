@@ -21,4 +21,6 @@ export default {
   deviceTemplate: 'Device Template',
   deviceTemplateInfo: 'Device Template Info',
   deviceGroup: 'Device Group',
+  authority: 'Authority Management',
+  systemSetting: 'System Setting',
 };

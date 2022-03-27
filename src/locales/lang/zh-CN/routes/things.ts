@@ -21,4 +21,6 @@ export default {
   deviceTemplate: '物模型',
   deviceTemplateInfo: '物模型信息',
   deviceGroup: '设备分组',
+  authority: '角色管理',
+  systemSetting: '系统设置',
 };

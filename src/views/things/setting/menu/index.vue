@@ -46,7 +46,7 @@
         api: searchMenuByPagerApi,
         columns: menuColumn,
         formConfig: {
-          labelWidth: 120,
+          labelWidth: 80,
           schemas: menuSearchFormSchema,
         },
         isTreeTable: true,
