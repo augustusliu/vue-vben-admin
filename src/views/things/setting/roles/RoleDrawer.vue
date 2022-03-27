@@ -8,25 +8,37 @@
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm">
-      <template #menu="{ model, field }"></template>
+      <template #roleMenu="{ model, field }">
+        <BasicTree
+          v-model:value="model[field]"
+          :treeData="menuData"
+          :replaceFields="{ title: 'nameSearch', key: 'id' }"
+          checkable
+          toolbar
+          title="菜单分配"
+        />
+      </template>
     </BasicForm>
   </BasicDrawer>
 </template>
 <script lang="ts">
   import { defineComponent, ref, computed, unref } from 'vue';
+  import { BasicTree } from '/@/components/Tree';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { createOrUpdateAuthorityFormSchema } from './roles.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
   import { addOrUpdateAuthority } from '/@/api/things/roles/roleApi';
+  import { listAllMenuApi } from '/@/api/things/menu/menuApi';
 
   export default defineComponent({
     name: 'RoleDrawer',
-    components: { BasicDrawer, BasicForm },
+    components: { BasicDrawer, BasicForm , BasicTree },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
-      const [registerForm, { resetFields, setFieldsValue, validate, updateSchema }] = useForm({
+      const menuData = ref<any>();
+      const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
         labelWidth: 90,
         schemas: createOrUpdateAuthorityFormSchema,
         showActionButtonGroup: false,
@@ -35,6 +47,8 @@
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
         isUpdate.value = !!data?.isUpdate;
+
+        menuData.value = await listAllMenuApi();
         if (unref(isUpdate)) {
           setFieldsValue({
             ...data.record,
@@ -62,6 +76,7 @@
         registerForm,
         getTitle,
         handleSubmit,
+        menuData,
       };
     },
   });

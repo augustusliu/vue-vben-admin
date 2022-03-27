@@ -6,12 +6,14 @@ export type RoleSearchParam = BasicPageParams & {
   id?: number;
   code?: string;
   name?: string;
+  enabled?: boolean;
 };
 
 export interface AddOrUpdateAuthorityParam {
   id: number;
   name: string;
   code: string;
+  enabled: boolean;
   description: string;
 }
 
@@ -23,6 +25,7 @@ export interface AuthorityListItem {
   systemDefault: boolean;
   createdTime: number;
   modifiedTime: number;
+  enabled: boolean;
 }
 
 export type AuthorityListResult = BasicFetchResult<AttributeListItem>;

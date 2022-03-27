@@ -18,6 +18,13 @@ export const authorityColumn: BasicColumn[] = [
     dataIndex: 'code',
   },
   {
+    title: '状态',
+    dataIndex: 'enabled',
+    customRender: ({ record }) => {
+      return record.enabled ? <Tag color="gold">启用</Tag> : <Tag color="red">禁用</Tag>;
+    },
+  },
+  {
     title: '系统角色',
     dataIndex: 'systemDefault',
     customRender: ({ record }) => {
@@ -54,6 +61,18 @@ export const authoritySearchFormSchema: FormSchema[] = [
     component: 'Input',
     colProps: { span: 8 },
   },
+  {
+    field: 'enabled',
+    label: '状态',
+    component: 'Select',
+    colProps: { span: 8 },
+    componentProps: {
+      options: [
+        { label: '启用', value: true },
+        { label: '禁用', value: false },
+      ],
+    },
+  },
 ]
 
 export const createOrUpdateAuthorityFormSchema: FormSchema[] = [
@@ -63,6 +82,16 @@ export const createOrUpdateAuthorityFormSchema: FormSchema[] = [
     component: 'Input',
     colProps: { span: 22 },
     show: false,
+  },
+  {
+    field: 'name',
+    label: '权限名称',
+    component: 'Input',
+    colProps: { span: 22 },
+    required: true,
+    componentProps: {
+      placeholder: '角色编码,长度不能30字符',
+    },
   },
   {
     field: 'code',
@@ -75,13 +104,16 @@ export const createOrUpdateAuthorityFormSchema: FormSchema[] = [
     },
   },
   {
-    field: 'name',
-    label: '权限名称',
-    component: 'Input',
+    field: 'enabled',
+    label: '状态',
+    component: 'RadioButtonGroup',
     colProps: { span: 11 },
-    required: true,
+    defaultValue: true,
     componentProps: {
-      placeholder: '角色编码,长度不能30字符',
+      options: [
+        { label: '启用', value: true },
+        { label: '禁用', value: false },
+      ],
     },
   },
   {
@@ -92,5 +124,13 @@ export const createOrUpdateAuthorityFormSchema: FormSchema[] = [
     componentProps: {
       placeholder: '角色描述，最大长度不得超过200个字符',
     },
+  },
+  // 采用插槽渲染
+  {
+    label: ' ',
+    field: 'menus',
+    slot: 'roleMenu',
+    component: 'Input',
+    colProps: { span: 18 },
   },
 ]

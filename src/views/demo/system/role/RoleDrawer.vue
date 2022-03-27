@@ -8,6 +8,12 @@
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm">
+
+
+
+<!--      创建一个slot， 替代其中某个字段的渲染-->
+
+
       <template #menu="{ model, field }">
         <BasicTree
           v-model:value="model[field]"
