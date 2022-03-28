@@ -28,7 +28,7 @@ export const authorityColumn: BasicColumn[] = [
     title: '系统角色',
     dataIndex: 'systemDefault',
     customRender: ({ record }) => {
-      return record.systemDefault ? <Tag color="purple">系统默认</Tag> : <Tag color="cyan">离线</Tag>;
+      return record.systemDefault ? <Tag color="purple">系统默认</Tag> : <Tag color="cyan">用户定义</Tag>;
     },
   },
   {
@@ -131,6 +131,7 @@ export const createOrUpdateAuthorityFormSchema: FormSchema[] = [
     field: 'menus',
     slot: 'roleMenu',
     component: 'Input',
+    required: true,
     colProps: { span: 18 },
   },
 ]

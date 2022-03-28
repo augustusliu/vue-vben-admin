@@ -32,8 +32,8 @@
 
       // 注册函数，并且将数据
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
+        setDrawerProps({ loading: true});
         await resetFields();
-        setDrawerProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
@@ -52,6 +52,7 @@
             dropdownClassName: 'area-tree-select',
           },
         });
+        setDrawerProps({ confirmLoading: false, loading:false });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增区域' : '编辑区域'));

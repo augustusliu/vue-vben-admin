@@ -28,7 +28,7 @@
   import { createOrUpdateAuthorityFormSchema } from './roles.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
-  import { addOrUpdateAuthority } from '/@/api/things/roles/roleApi';
+  import { addOrUpdateAuthority, listMenusByAuthority } from '/@/api/things/roles/roleApi';
   import { listAllMenuApi } from '/@/api/things/menu/menuApi';
 
   export default defineComponent({
@@ -45,12 +45,18 @@
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        resetFields();
+        await resetFields();
         isUpdate.value = !!data?.isUpdate;
 
         menuData.value = await listAllMenuApi();
         if (unref(isUpdate)) {
-          setFieldsValue({
+
+          // 查询当前角色的所有菜单
+          const selectMenus = await listMenusByAuthority(data.record.id);
+          if(selectMenus){
+            data.record.menus = selectMenus;
+          }
+          await setFieldsValue({
             ...data.record,
           });
         }

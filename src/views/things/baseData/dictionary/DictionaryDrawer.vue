@@ -32,8 +32,8 @@
 
       // 注册函数，并且将数据
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
+        setDrawerProps({ loading: true});
         await resetFields();
-        setDrawerProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
@@ -55,6 +55,7 @@
             // loadData: loadChildData,
           },
         });
+        setDrawerProps({ confirmLoading: false,loading: false });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增字典' : '编辑字典'));

@@ -33,15 +33,16 @@
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        resetFields();
-        setDrawerProps({ confirmLoading: false });
+        setDrawerProps({ loading: true });
+        await resetFields();
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
-          setFieldsValue({
+          await setFieldsValue({
             ...data.record,
           });
         }
+        setDrawerProps({ confirmLoading: false, loading: false });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增租户配置' : '编辑租户配置'));

@@ -42,7 +42,8 @@
       const getTitle = computed(() => (!unref(titleRef) ? '配置信息' : titleRef.value));
 
       // 如果是更新，则设置对应的属性值
-      const [ registerDrawer ] = useDrawerInner(async (data) => {
+      const [ registerDrawer, {setDrawerProps} ] = useDrawerInner(async (data) => {
+        setDrawerProps({ confirmLoading: false, loading: true });
         await nextTick();
         const { title, config, values } = data;
         // 设置title
@@ -61,6 +62,7 @@
         if(values){
           await formAction.setFieldsValue(values);
         }
+        setDrawerProps({ confirmLoading: false, loading: false });
       })
 
       async function handleSubmit() {

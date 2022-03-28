@@ -18,7 +18,7 @@ export const listAreas = () =>
 export const listAreasByParent = (parentCode: string) =>
   defHttp.get<AreasResult>({ url: CommonApi.AreaListAllByParent + parentCode });
 
-export const listIndustry = () =>
+export const listIndustryAll = () =>
   defHttp.get<IndustryResult>({ url: CommonApi.IndustryListAll });
 
 export const listIndustryByParent = (parentCode: string) =>

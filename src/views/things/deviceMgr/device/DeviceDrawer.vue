@@ -32,10 +32,9 @@
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        resetFields();
+        setDrawerProps({ confirmLoading: false, loading: true });
+        await resetFields();
         isUpdate.value = !!data?.isUpdate;
-
-
         // 获取设备标签
         let labelsData = await listDeviceLabels();
         await updateSchema({
@@ -52,7 +51,7 @@
             ...data.record,
           });
         }
-        setDrawerProps({ confirmLoading: false });
+        setDrawerProps({ confirmLoading: false, loading: false });
 
       });
 

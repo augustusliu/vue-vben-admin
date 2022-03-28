@@ -33,20 +33,21 @@
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        resetFields();
-        setDrawerProps({ confirmLoading: false });
+        setDrawerProps({ confirmLoading: false, loading: true });
+        await resetFields();
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
-          setFieldsValue({
+          await setFieldsValue({
             ...data.record,
           });
         }
         const treeData = await listAllMenuApi();
-        updateSchema({
+        await updateSchema({
           field: 'parentId',
           componentProps: { treeData },
         });
+        setDrawerProps({ confirmLoading: false, loading: false });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增菜单' : '编辑菜单'));

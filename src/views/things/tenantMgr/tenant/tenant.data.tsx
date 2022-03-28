@@ -2,6 +2,8 @@ import { BasicColumn, FormSchema } from '/@/components/Table';
 import { listTenantProfileAll } from '/@/api/things/tenant/tenantApi';
 import moment from "moment";
 import {Tag} from "ant-design-vue";
+import {listAuthorityWithPager} from "/@/api/things/roles/roleApi";
+
 // 列表显示字段
 export const tenantColumn: BasicColumn[] = [
   {
@@ -69,6 +71,7 @@ export const searchFormSchema: FormSchema[] = [
     label: '租户手机号',
     component: 'Input',
     colProps: { span: 8 },
+
   },
   {
     field: 'enabled',
@@ -99,6 +102,9 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     component: 'Input',
     colProps: { span: 22 },
     required: true,
+    componentProps: {
+      placeholder: '租户名称/公司名称',
+    },
   },
   {
     field: 'tenantProfileId',
@@ -109,8 +115,31 @@ export const createOrUpdateFormSchema: FormSchema[] = [
       labelField: 'name',
       valueField: 'id',
     },
-    colProps: { span: 22 },
+    colProps: { span: 11 },
     required: true,
+  },
+  {
+    field: 'authorityId',
+    label: '选择角色',
+    component: 'SingleSearchSelect',
+    colProps: { span: 11 },
+    required: true,
+    componentProps: {
+      api: listAuthorityWithPager,
+      placeholder: '搜索角色信息',
+      params: {
+        name: '',
+        enabled: true,
+      },
+      resultField: 'items',
+      // use name as label
+      labelField: 'name',
+      // use id as value
+      valueField: 'id',
+      immediate: false,
+      showSearch: true,
+    },
+
   },
   {
     field: 'enabled',
@@ -129,13 +158,19 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     field: 'email',
     label: '租户邮箱',
     component: 'Input',
-    colProps: { span: 22 },
+    colProps: { span: 11 },
+    componentProps: {
+      placeholder: '租户/企业邮箱',
+    },
   },
   {
     field: 'phone',
     label: '租户手机号',
     component: 'Input',
-    colProps: { span: 22 },
+    colProps: { span: 11 },
+    componentProps: {
+      placeholder: '租户/企业联系方式',
+    },
   },
   {
     field: 'areaCode',
@@ -144,6 +179,7 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     colProps: { span: 11 },
     required: true,
     componentProps: {
+      placeholder: '请选择省市县',
       fieldNames: {
         label: 'name',
         value: 'code',
@@ -158,6 +194,7 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     colProps: { span: 11 },
     required: true,
     componentProps: {
+      placeholder: '请选择所在行业',
       fieldNames: {
         label: 'name',
         value: 'code',
@@ -170,11 +207,17 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     label: '详细地址',
     component: 'Input',
     colProps: { span: 22 },
+    componentProps: {
+      placeholder: '租户/企业详细地址',
+    },
   },
   {
     field: 'zipcode',
     label: '邮编',
     component: 'Input',
     colProps: { span: 12 },
+    componentProps: {
+      placeholder: '租户/企业邮编',
+    },
   }
 ];

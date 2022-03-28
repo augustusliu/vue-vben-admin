@@ -18,7 +18,7 @@
   import { createOrUpdateFormSchema } from './tenant.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { createOrUpdateTenantApi } from '/@/api/things/tenant/tenantApi';
-  import { listAreas, listIndustryByParent } from '/@/api/things/common/commonApi';
+  import { listAreas, listIndustryAll } from '/@/api/things/common/commonApi';
 
   export default defineComponent({
     name: 'TenantAddOrUpdateDrawer',
@@ -33,13 +33,14 @@
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        resetFields();
-        setDrawerProps({ confirmLoading: false });
+        setDrawerProps({ loading: true });
+        await resetFields();
+
         isUpdate.value = !!data?.isUpdate;
 
-        // 获取地区信息
+        // 获取地区、行业、角色列表
         let areaData = await listAreas();
-        let industryData = await listIndustryByParent('0');
+        let industryData = await listIndustryAll();
         await updateSchema({
           field: 'areaCode',
           componentProps: {
@@ -53,31 +54,41 @@
           componentProps: {
             dropdownStyle: { maxHeight: 270, overflow: 'auto'},
             options: industryData,
-            changeOnSelect: true,
-            onChange: onChangeIndustry,
           },
         });
 
         // 赋值
         if (unref(isUpdate)) {
-          setFieldsValue({
+          await setFieldsValue({
             ...data.record,
           });
+          // 更新角色回显数据
+          await updateSchema({
+            field: 'authorityId',
+            componentProps: {
+              immediate: true,
+              params: {
+                id: data.record.authorityId,
+                enabled: true,
+              },
+            },
+          });
         }
+        setDrawerProps({ loading: false, confirmLoading: false });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增租户' : '编辑租户'));
 
-      function onChangeIndustry(value, selectedOptions){
-        if(value || value.length > 0){
-          const targetOption = selectedOptions[selectedOptions.length - 1];
-          targetOption.loading = true;
-          listIndustryByParent(targetOption.code).then((data)=>{
-            targetOption.children = data;
-            targetOption.loading = false;
-          })
-        }
-      }
+      // function onChangeIndustry(value, selectedOptions){
+      //   if(value || value.length > 0){
+      //     const targetOption = selectedOptions[selectedOptions.length - 1];
+      //     targetOption.loading = true;
+      //     listIndustryByParent(targetOption.code).then((data)=>{
+      //       targetOption.children = data;
+      //       targetOption.loading = false;
+      //     })
+      //   }
+      // }
 
       async function handleSubmit() {
         try {

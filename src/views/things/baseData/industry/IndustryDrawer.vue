@@ -33,8 +33,8 @@
 
       // 注册函数，并且将数据
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
+        setDrawerProps({ confirmLoading: false, loading: true });
         await resetFields();
-        setDrawerProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
@@ -53,6 +53,7 @@
             dropdownClassName: 'industry-tree-select',
           },
         });
+        setDrawerProps({ confirmLoading: false, loading: false });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增行业' : '编辑行业'));

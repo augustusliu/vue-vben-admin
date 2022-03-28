@@ -48,7 +48,7 @@
       const [registerDrawer, { openDrawer }] = useDrawer();
       // 定义当前要展示的表格
       const [registerTable, { reload }] = useTable({
-        title: '客户列表',
+        title: '角色列表',
         api: listAuthorityWithPager,
         columns: authorityColumn,
         useSearchForm: true,

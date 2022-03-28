@@ -33,8 +33,8 @@
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
+        setDrawerProps({ loading: true});
         await resetFields();
-        setDrawerProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
@@ -51,6 +51,7 @@
             options: preProcessData(labelsData),
           },
         });
+        setDrawerProps({ loading: false, confirmLoading: false });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增资产' : '编辑资产'));
