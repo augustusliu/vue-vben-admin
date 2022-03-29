@@ -69,9 +69,9 @@
         const { flowOptions } = props;
 
         const defaultOptions: Partial<Definition> = {
-          grid: false,
+          grid: true,
           nodeTextEdit: false,
-          edgeTextEdit: true,
+          edgeTextEdit: false,
           edgeTextDraggable: true,
           adjustEdge: false,
           background: {

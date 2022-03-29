@@ -62,9 +62,9 @@
         default: () => ({}),
       },
       // support xxx.xxx.xx
-      resultField: propTypes.string.def(''),
-      labelField: propTypes.string.def('label'),
-      valueField: propTypes.string.def('value'),
+      resultField: propTypes.string.def('items'),
+      labelField: propTypes.string.def('labelField'),
+      valueField: propTypes.string.def('valueField'),
       immediate: propTypes.bool.def(true),
     },
     emits: ['options-change', 'change'],
@@ -95,7 +95,6 @@
         }, [] as OptionsItem[]);
       });
 
-
       watchEffect(() => {
         props.immediate && fetch(props.params);
       });
@@ -108,6 +107,8 @@
         { deep: true }
       );
 
+
+      // 这里的bug,未替换对应的字段名称
       async function fetch(params: any) {
         const api = props.api;
         if (!api || !isFunction(api)) return;
@@ -115,14 +116,14 @@
         try {
           loading.value = true;
           const res = await api(params);
-          params.id = '';
+
           if (Array.isArray(res)) {
-            options.value = res;
+            options.value = formatData(res);
             emitChange();
             return;
           }
           if (props.resultField) {
-            options.value = get(res, props.resultField) || [];
+            options.value = formatData(get(res, props.resultField)) || [];
           }
           emitChange();
         } catch (error) {
@@ -152,6 +153,22 @@
         params.name = value;
         fetch(params);
       }
+
+      // 格式化数据
+      function formatData(records: any[]): OptionsItem[]{
+        if(!records || records.length <= 0){
+          return [] as OptionsItem[];
+        }
+        const data: OptionsItem[] = [];
+        records.forEach(item => {
+          data.push({
+            label: item[props.labelField],
+            value:  item[props.valueField],
+          })
+        })
+        return data;
+      }
+
 
       return { state, attrs, getOptions, loading, t, handleFetch, handleChange, handleSearch };
     },

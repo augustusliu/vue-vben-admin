@@ -45,6 +45,7 @@
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
+        setDrawerProps({ loading: true });
         await resetFields();
         isUpdate.value = !!data?.isUpdate;
 
@@ -60,7 +61,7 @@
             ...data.record,
           });
         }
-        setDrawerProps({ confirmLoading: false });
+        setDrawerProps({ confirmLoading: false, loading: false });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增角色' : '编辑角色'));

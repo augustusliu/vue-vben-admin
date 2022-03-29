@@ -58,13 +58,13 @@
       const [openFullLoading, closeFullLoading] = useLoading({});
       const [registerModel, { openModal, closeModal }] = useModal();
       const [registerDrawer, { openDrawer, closeDrawer }] = useDrawer();
+      openFullLoading();
 
       // 初始化
       async function init(){
         await nextTick();
         // const res = await getNodeTemplateMenuApi();
         // 初始化左侧节点菜单
-        openFullLoading();
         const res = ruleNodeMenu;
         if(!res){
           return;
@@ -96,8 +96,8 @@
         }
         // 获取对应的流程组件
         openDrawer(true, {
+          nodeFixId: ev.data.properties.fixId,
           title: ev.data.properties.drawTitle,  // set drawer title
-          config: ev.data.properties.config,   // set rule node props
           values: ev.data.properties.setting,    // set form values
         });
       }
