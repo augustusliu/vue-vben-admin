@@ -592,7 +592,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         }
       },
       {
-        label: "设备：",
+        label: "选择设备：",
         field: "deviceId",
         component: "SingleSearchSelect",
         colProps: {span: 12},
@@ -611,7 +611,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         show:  ({ values }) => { return values.deviceProcessType === 'DEVICE';},
       },
       {
-        label: "设备分组：",
+        label: "选择设备分组：",
         field: "deviceGroupId",
         component: "SingleSearchSelect",
         colProps: {span: 12},
@@ -630,7 +630,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         show:  ({ values }) => { return values.deviceProcessType === 'GROUP';},
       },
       {
-        label: "设备标签：",
+        label: "选择设备标签：",
         field: "deviceLabel",
         component: "SingleSearchSelect",
         colProps: {span: 12},
@@ -640,7 +640,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         show:  ({ values }) => { return values.deviceProcessType === 'LABEL';},
       },
       {
-        label: "物模型：",
+        label: "选择物模型：",
         field: "thingsId",
         component: "SingleSearchSelect",
         colProps: {span: 12},
@@ -658,4 +658,11 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         },
         show:  ({ values }) => { return values.deviceProcessType === 'THINGS';},
       }]
-  }]
+  },{
+    ruleNodeFixId: '401',
+    schemas:[]
+  },{
+    ruleNodeFixId: '402',
+    schemas:[]
+  }
+  ]

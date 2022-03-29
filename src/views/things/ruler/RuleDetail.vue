@@ -125,10 +125,12 @@
         unref(curNodeState).properties.setting = values;
         // 更新属性
         lfInstance.setProperties(unref(curNodeState).id, unref(curNodeState).properties);
-        // 更新文本
-        if(values.nodeName){
-          lfInstance.updateText(unref(curNodeState).id, values.nodeName);
-        }
+        // 查找到对应的业务节点名称,用于自定义
+        Object.keys(values).map(item => {
+          if(item.endsWith('NodeName') && values[item]){
+            lfInstance.updateText(unref(curNodeState).id, values[item]);
+          }
+        })
         closeDrawer();
       }
 
@@ -146,6 +148,7 @@
       async function doSaveChain(){
         openFullLoading();
         ruleSaveDataCache.value.id = (chainId && Number(chainId) > 0) ? chainId : null;
+        console.log('save data', ruleSaveDataCache.value);
         const newChainId = await saveChainApi(ruleSaveDataCache.value);
         ruleSaveDataCache.value = {};
         // 如果是新建，创建成功后跳转到最新的地址
