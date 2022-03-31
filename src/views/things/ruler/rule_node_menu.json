@@ -21,7 +21,7 @@
           "clazz":"com.lau.things.rule.engine.common.InputNode",
           "degreeType": "OUT",
           "description": "用于手工输入数据，触发整个规则链的数据流动。 往往用在测试性场景中，测试配置的规则链流程及相关数据的准确性。",
-          "entityType": "MANUAL_INPUT",
+          "nodeType": "MANUAL_INPUT",
           "style": {
             "backgroundColor": "#ABEBC6",
             "opacity": "1",
@@ -39,7 +39,7 @@
           "clazz":"com.lau.things.rule.engine.common.DebugNode",
           "description": "该节点是一个打印节点，用于打印出上个流程的输出结果方便调试。在部署时，请及时从流程中删除对应的节点",
           "degreeType": "INOUT",
-          "entityType": "DEBUG",
+          "nodeType": "DEBUG",
           "style": {
             "backgroundColor": "#ABEBC6",
             "opacity": "1",
@@ -57,7 +57,7 @@
           "drawTitle": "脚本信息配置",
           "description": "用于对接收到的数据进行脚本性处理，脚本的编写采用JavaScript语言。",
           "degreeType": "INOUT",
-          "entityType": "SCRIPT",
+          "nodeType": "SCRIPT",
           "style": {
             "backgroundColor": "#FAD7A0",
             "opacity": "1",
@@ -89,7 +89,7 @@
           "drawTitle": "Http 请求配置",
           "degreeType": "INOUT",
           "description": "采用http方式，请求获取某些资源数据，以方便后期对获取的资源数据进行处理.",
-          "entityType": "HTTP",
+          "nodeType": "HTTP",
           "style": {
             "backgroundColor": "#85C1E9",
             "opacity": "1",
@@ -107,7 +107,7 @@
           "drawTitle": "Kafka消费者配置",
           "degreeType": "INOUT",
           "description": "用于接收Kafka某个Topic中的消息",
-          "entityType": "KAFKA_CONSUMER",
+          "nodeType": "KAFKA_CONSUMER",
           "style": {
             "backgroundColor": "#85C1E9",
             "opacity": "1",
@@ -125,7 +125,7 @@
           "drawTitle": "Kafka生产者配置",
           "degreeType": "INOUT",
           "description": "用于将接受到的消息推送给kafka服务器",
-          "entityType": "KAFKA_PRODUCER",
+          "nodeType": "KAFKA_PRODUCER",
           "style": {
             "backgroundColor": "#85C1E9",
             "opacity": "1",
@@ -157,7 +157,7 @@
           "drawTitle": "设备接入配置",
           "degreeType": "OUT",
           "description": "用于配置平台设备接入的方式",
-          "entityType": "DEVICE",
+          "nodeType": "DEVICE",
           "style": {
             "backgroundColor": "#C39BD3",
             "opacity": "1",
@@ -175,7 +175,7 @@
           "drawTitle": "设备控制配置",
           "degreeType": "INOUT",
           "description": "用于远程遥控设备，为设备下发指令",
-          "entityType": "DEVICE",
+          "nodeType": "DEVICE",
           "style": {
             "backgroundColor": "#C39BD3",
             "opacity": "1",
@@ -193,7 +193,7 @@
           "drawTitle": "告警配置",
           "degreeType": "INOUT",
           "description": "用于配置平台告警信息的产生及输出",
-          "entityType": "ALARM",
+          "nodeType": "ALARM",
           "style": {
             "backgroundColor": "#C39BD3",
             "opacity": "1",
