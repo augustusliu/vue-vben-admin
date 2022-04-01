@@ -9,6 +9,7 @@
                  :data="logicFlowData"
                  :nodeDbClickCallback="nodeDbClickCallback"
                  @submitBefore="chainSaveBefore"
+                 @debugChange="ruleChainDebugChange"
       />
     <DynamicNodeDrawer @register="registerDrawer"
                        @success="handleNodeSettingSuccess"/>
@@ -148,7 +149,6 @@
       async function doSaveChain(){
         openFullLoading();
         ruleSaveDataCache.value.id = (chainId && Number(chainId) > 0) ? chainId : null;
-        console.log('save data', ruleSaveDataCache.value);
         const newChainId = await saveChainApi(ruleSaveDataCache.value);
         ruleSaveDataCache.value = {};
         // 如果是新建，创建成功后跳转到最新的地址
@@ -157,6 +157,12 @@
         }
         closeFullLoading();
       }
+
+      function ruleChainDebugChange(state: boolean){
+        console.log("debug open state", state)
+      }
+
+
       onMounted(init);
       return {
         prefixCls: 'rule-page',
@@ -170,6 +176,7 @@
         handleNodeSettingSuccess,
         chainSaveBefore,
         handleChainNameSuccess,
+        ruleChainDebugChange,
       };
     },
   });

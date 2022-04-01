@@ -2,7 +2,8 @@
   <div class="h-full" :class="prefixCls">
     <FlowChartToolbar :prefixCls="prefixCls" v-if="toolbar"
                       @view-data="handlePreview"
-                      @save-click="submitHandler"/>
+                      @save-click="submitHandler"
+                      @debug-change="rulerDebugChange"/>
     <div ref="lfElRef" class="h-full"></div>
     <BasicModal @register="register" title="流程数据" width="50%">
       <JsonPreview :data="graphData" />
@@ -50,7 +51,7 @@
         type: Object,
       }
     },
-    emits: ['submitBefore'],
+    emits: ['submitBefore', 'debugChange'],
     setup(props,{ emit }) {
 
       const lfElRef = ref(null);
@@ -161,6 +162,9 @@
         });
       }
 
+      function rulerDebugChange(state: boolean){
+        emit('debugChange', state);
+      }
       onMounted(init);
       return {
         register,
@@ -170,6 +174,7 @@
         lfInstance,
         handlePreview,
         submitHandler,
+        rulerDebugChange,
         graphData,
       };
     },

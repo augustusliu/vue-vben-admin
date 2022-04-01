@@ -14,13 +14,15 @@
         <Divider v-if="item.separate" type="vertical" />
       </template>
     </div>
-    <div class="h-full" style="width: 40%">
-      <Button size="large" class="h-full mx-2"
-              style="width:70px; float: right; background-color: #FF7F50; color: #fff; cursor: pointer"
-              @click="publishEvent(1)">启用</Button>
-      <Button size="large" class="h-full mx-2"
-              style="width:70px; float: right; background-color: #00BFFF; color: #fff; cursor: pointer"
-              @click="publishEvent(2)" >保存</Button>
+    <div class="h-full" style="width: 40%; padding-top: 5px; padding-bottom: 5px;">
+      <Button size="large" class="mx-2 iothings-deploy-btn"
+              @click="publishEvent(1)">部署</Button>
+      <Checkbox :defaultChecked="false"
+                class="mx-2 iothings-debug-btn"
+                :onChange="debugChange">调试</Checkbox>
+      <Button size="large"
+              @click="publishEvent(2)"
+              :class="!isDebug ? 'debug-btn-display-none': 'mx-2 iothings-save-btn cursor-pointer' ">调试信息</Button>
     </div>
   </div>
 </template>
@@ -28,7 +30,7 @@
   import type { ToolbarConfig } from './types';
 
   import { defineComponent, ref, onUnmounted, unref, nextTick, watchEffect } from 'vue';
-  import { Divider, Tooltip } from 'ant-design-vue';
+  import { Divider, Tooltip, Checkbox } from 'ant-design-vue';
   import { Icon } from '/@/components/Icon';
 
   import { useFlowChartContext } from './useFlowContext';
@@ -36,12 +38,12 @@
 
   export default defineComponent({
     name: 'FlowChartToolbar',
-    components: { Icon, Divider, Tooltip },
+    components: { Icon, Divider, Tooltip, Checkbox },
     props: {
       prefixCls: String,
     },
     // vue 事件校验器
-    emits: ['view-data','save-click'],
+    emits: ['view-data','save-click', 'debug-change'],
     setup(_, { emit }) {
       const toolbarItemList = ref<ToolbarConfig[]>([
         {
@@ -87,7 +89,7 @@
       ]);
 
       const { logicFlow } = useFlowChartContext();
-
+      const isDebug = ref(false);
       function onHistoryChange({ data: { undoAble, redoAble } }) {
         const itemsList = unref(toolbarItemList);
         const undoIndex = itemsList.findIndex((item) => item.type === ToolbarTypeEnum.UNDO);
@@ -109,6 +111,10 @@
         emit('save-click', saveType);
       }
 
+      const debugChange = (event: any) => {
+        isDebug.value = event.target.checked;
+        emit('debug-change', event.target.checked);
+      }
       const onControl = (item) => {
         const lf = unref(logicFlow);
         if (!lf) {
@@ -149,7 +155,7 @@
       onUnmounted(() => {
         unref(logicFlow)?.off('history:change', onHistoryChange);
       });
-      return { toolbarItemList, onControl, publishEvent };
+      return { toolbarItemList, onControl, publishEvent, isDebug, debugChange };
     },
   });
 </script>
@@ -157,8 +163,15 @@
   @prefix-cls: ~'@{namespace}-flow-chart-toolbar';
 
   html[data-theme='dark'] {
-    .lf-dnd {
+    .lf-dnd , .lf-dndpanel-things{
       background: #080808;
+    }
+    .lf-dnd-things-item-text{
+      color: #434343;
+    }
+    .lf-edge path{
+      stroke: #00feff;
+      stroke-width: 1;
     }
   }
   .@{prefix-cls} {
@@ -179,5 +192,40 @@
         color: @primary-color;
       }
     }
+
+    .iothings-deploy-btn{
+      width:70px;
+      float: right;
+      background-color: #aa3939;
+      color: #ebccd1;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+    .iothings-save-btn{
+      width:70px;
+      float: right;
+      background-color: #408ede;
+      color: #ebccd1;
+      cursor: pointer;
+      border-radius: 2px;
+      margin-right: 20px;
+    }
+    .iothings-debug-btn{
+      float: right;
+      margin-right: 10px;
+    }
+    .iothings-deploy-btn:hover{
+      color: #fff;
+      background-color: #ff4d4f;
+    }
+    .iothings-save-btn:hover{
+      background-color: #0b60be;
+      color: #fff;
+    }
   }
+
+  .debug-btn-display-none{
+    display: none;
+  }
+
 </style>
