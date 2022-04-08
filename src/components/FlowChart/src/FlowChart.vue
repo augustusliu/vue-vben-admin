@@ -1,6 +1,7 @@
 <template>
   <div class="h-full" :class="prefixCls">
     <FlowChartToolbar :prefixCls="prefixCls" v-if="toolbar"
+                      :ruleChainDeploy="ruleChainDeploy"
                       @view-data="handlePreview"
                       @save-click="submitHandler"
                       @debug-change="rulerDebugChange"/>
@@ -49,6 +50,10 @@
       },
       nodeDbClickCallback: { // 用于节点点击的回调函数
         type: Object,
+      },
+      ruleChainActive: {  // 规则链是否启动
+        type: Boolean,
+        default: false,
       }
     },
     emits: ['submitBefore', 'debugChange'],
@@ -56,6 +61,8 @@
 
       const lfElRef = ref(null);
       const graphData = ref({});
+      const ruleChainDeploy = ref(false);
+      ruleChainDeploy.value = props.ruleChainActive;
 
       const lfInstance = ref(null) as Ref<LogicFlow | null>;
 
@@ -151,23 +158,28 @@
         openModal();
       }
 
-      function submitHandler(saveType: number){
+      function submitHandler(startOrStop: boolean, callback: any){
         const lf = unref(lfInstance);
         if (!lf) {
           return;
         }
         emit('submitBefore', {
-          type: saveType,
+          callback: callback,
+          type: startOrStop,
           data: unref(lf).getGraphData()
         });
       }
 
-      function rulerDebugChange(state: boolean){
-        emit('debugChange', state);
+
+
+
+      function rulerDebugChange(state: boolean, debugCallback: any){
+        emit('debugChange', state, debugCallback);
       }
       onMounted(init);
       return {
         register,
+        ruleChainDeploy,
         prefixCls,
         lfElRef,
         // 暴露流程图对象，供上级组件使用

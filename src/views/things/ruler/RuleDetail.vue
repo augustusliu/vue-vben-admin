@@ -8,12 +8,13 @@
                  :patternItems="leftNodes"
                  :data="logicFlowData"
                  :nodeDbClickCallback="nodeDbClickCallback"
+                 :ruleChainActive="ruleChainActive"
                  @submitBefore="chainSaveBefore"
                  @debugChange="ruleChainDebugChange"
       />
     <DynamicNodeDrawer @register="registerDrawer"
                        @success="handleNodeSettingSuccess"/>
-
+    <RuleDebugInfoDrawer @register="registerDebugDrawer" :ruleChainId="chainId"/>
     <RuleDetailModel @register="registerModel" @success="handleChainNameSuccess"></RuleDetailModel>
   </PageWrapper>
 </template>
@@ -22,11 +23,12 @@
   import { FlowChart } from '/@/components/FlowChart';
   import {defineComponent, nextTick, onMounted, ref, unref} from "vue";
   import DynamicNodeDrawer from './DynamicNodeDrawer.vue';
+  import RuleDebugInfoDrawer from "./RuleDebugInfoDrawer.vue";
   import {useDrawer} from "/@/components/Drawer";
   import LogicFlow from "@logicflow/core";
   import ruleNodeMenu from './rule_node_menu.json'
   import { formatGraphData } from './ruleEvent'
-  import { saveChainApi, chainInfoApi } from '/@/api/things/ruler/ruleApi';
+  import { saveChainApi, chainInfoApi, debugChangeApi ,stopChangeApi} from '/@/api/things/ruler/ruleApi';
   import {useModal} from "/@/components/Modal";
   import RuleDetailModel from './RuleDetailModel.vue';
   import { useRoute, useRouter } from 'vue-router';
@@ -35,12 +37,14 @@
 
   export default defineComponent({
     name: 'RuleDetail',
-    components: { FlowChart , DynamicNodeDrawer, RuleDetailModel, Loading },
+    components: { FlowChart , DynamicNodeDrawer, RuleDebugInfoDrawer, RuleDetailModel, Loading },
     setup() {
       const route = useRoute();
       const router = useRouter();
       const tabStore = useMultipleTabStore();
       const leftNodes:any = ref([]);
+      // 规则链是否启动
+      const ruleChainActive = ref(false);
       // 用于控制组件的数据同步
       const isShow = ref(false)
       // 获取子组件的的对象
@@ -56,9 +60,12 @@
       const curNodeState: any = ref({});
       // 保存规则链名称等信息
       const currentChainInfoModel: any = ref({});
+
+      let ruleToolBarCallBack: any = null;
       const [openFullLoading, closeFullLoading] = useLoading({});
       const [registerModel, { openModal, closeModal }] = useModal();
       const [registerDrawer, { openDrawer, closeDrawer }] = useDrawer();
+      const [registerDebugDrawer, { openDrawer: openDebugDrawer, closeDrawer: closeDebugDrawer }] = useDrawer();
       openFullLoading();
 
       // 初始化
@@ -78,6 +85,7 @@
           if(!ruleChainData){
             return ;
           }
+          ruleChainActive.value = ruleChainData.active;
           logicFlowData.value.nodes = ruleChainData.nodes;
           logicFlowData.value.edges = ruleChainData.edges;
 
@@ -105,14 +113,26 @@
 
       // 提交流程数据
       function chainSaveBefore(graphData: any){
-        const { data } = graphData;
+        const { type, data, callback } = graphData;
 
-        let obj = formatGraphData({
-          data: data,
-        });
-
-        ruleSaveDataCache.value = JSON.parse(JSON.stringify(obj));
-        openModal(true, currentChainInfoModel.value);
+        ruleToolBarCallBack = callback;
+        // 部署
+        if(type){
+          let obj = formatGraphData({
+            data: data,
+          });
+          ruleSaveDataCache.value = JSON.parse(JSON.stringify(obj));
+          openModal(true, currentChainInfoModel.value);
+        }else{  // 停止
+          openFullLoading();
+          stopChangeApi(chainId).then(() => {
+            callback(true);
+          }).catch(() => {
+            callback(false);
+          }).finally(() => {
+            closeFullLoading();
+          });
+        }
       }
 
       // 节点配置成功后的回调，更新节点名称
@@ -144,6 +164,10 @@
         currentChainInfoModel.value.description = values.description;
         doSaveChain();
         closeModal();
+        if(ruleToolBarCallBack){
+          ruleToolBarCallBack(true);
+          closeFullLoading();
+        }
       }
 
       async function doSaveChain(){
@@ -158,8 +182,22 @@
         closeFullLoading();
       }
 
-      function ruleChainDebugChange(state: boolean){
-        console.log("debug open state", state)
+      function ruleChainDebugChange(state: boolean, debugCallback: any){
+        openFullLoading();
+        const curChainId = (chainId && Number(chainId) > 0) ? chainId : null;
+        debugChangeApi(curChainId, state).then(() => {
+          // 弹出调试弹框
+          if(state){
+            openDebugDrawer(true, {
+              ruleChainName: currentChainInfoModel.value.ruleChainName
+            });
+          }
+          debugCallback(true)
+        }).catch(() => {
+          debugCallback(false)
+        }).finally(() => {
+          closeFullLoading();
+        });
       }
 
 
@@ -167,12 +205,15 @@
       return {
         prefixCls: 'rule-page',
         leftNodes,
+        chainId,
         logicFlowData,
+        ruleChainActive,
         isShow ,
         flowEl,
         nodeDbClickCallback,
         registerModel,
         registerDrawer,
+        registerDebugDrawer,
         handleNodeSettingSuccess,
         chainSaveBefore,
         handleChainNameSuccess,

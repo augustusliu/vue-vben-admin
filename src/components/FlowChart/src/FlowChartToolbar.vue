@@ -15,9 +15,13 @@
       </template>
     </div>
     <div class="h-full" style="width: 40%; padding-top: 5px; padding-bottom: 5px;">
-      <Button size="large" class="mx-2 iothings-deploy-btn"
-              @click="publishEvent(1)">部署</Button>
-      <Checkbox :defaultChecked="false"
+      <Button size="large" class="mx-2 iothings-deploy-btn" v-if="deployed"
+              @click="publishEvent(false)" >停止</Button>
+
+      <Button size="large" class="mx-2 iothings-deploy-btn" v-if="!deployed"
+              @click="publishEvent(true)" >部署</Button>
+
+      <Checkbox :defaultChecked="false" v-if="deployed"
                 class="mx-2 iothings-debug-btn"
                 :onChange="debugChange">调试</Checkbox>
       <Button size="large"
@@ -41,10 +45,11 @@
     components: { Icon, Divider, Tooltip, Checkbox },
     props: {
       prefixCls: String,
+      ruleChainDeploy: Boolean,
     },
     // vue 事件校验器
     emits: ['view-data','save-click', 'debug-change'],
-    setup(_, { emit }) {
+    setup(props, { emit }) {
       const toolbarItemList = ref<ToolbarConfig[]>([
         {
           type: ToolbarTypeEnum.ZOOM_IN,
@@ -90,6 +95,10 @@
 
       const { logicFlow } = useFlowChartContext();
       const isDebug = ref(false);
+      // 当前部署状态
+      const deployed = ref(false);
+      deployed.value = props.ruleChainDeploy || false;
+
       function onHistoryChange({ data: { undoAble, redoAble } }) {
         const itemsList = unref(toolbarItemList);
         const undoIndex = itemsList.findIndex((item) => item.type === ToolbarTypeEnum.UNDO);
@@ -102,19 +111,41 @@
         }
       }
 
-      // 发布事件
-      const publishEvent = (saveType: number) => {
+      // 发布事件, startOrUpdate当前状态，callback回调函数
+      const publishEvent = (startOrUpdate: boolean) => {
         const lf = unref(logicFlow);
         if (!lf) {
           return;
         }
-        emit('save-click', saveType);
+
+        emit('save-click', startOrUpdate, res => {
+            // 如果是部署
+           if(startOrUpdate){
+             if(res){
+               deployed.value = true;
+             }else{
+               deployed.value = false;
+             }
+           }else{
+             if(res){
+               deployed.value = false;
+             }else{
+               deployed.value = true;
+             }
+           }
+        });
       }
 
       const debugChange = (event: any) => {
-        isDebug.value = event.target.checked;
-        emit('debug-change', event.target.checked);
+        emit('debug-change', event.target.checked, debugRes => {
+          if(debugRes){
+            isDebug.value = event.target.checked;
+          }
+        });
       }
+
+
+
       const onControl = (item) => {
         const lf = unref(logicFlow);
         if (!lf) {
@@ -155,7 +186,7 @@
       onUnmounted(() => {
         unref(logicFlow)?.off('history:change', onHistoryChange);
       });
-      return { toolbarItemList, onControl, publishEvent, isDebug, debugChange };
+      return { toolbarItemList, onControl, publishEvent, isDebug, debugChange, deployed };
     },
   });
 </script>
