@@ -63,7 +63,6 @@
       const graphData = ref({});
       const ruleChainDeploy = ref(false);
       ruleChainDeploy.value = props.ruleChainActive;
-
       const lfInstance = ref(null) as Ref<LogicFlow | null>;
 
       const { prefixCls } = useDesign('flow-chart');
@@ -169,8 +168,6 @@
           data: unref(lf).getGraphData()
         });
       }
-
-
 
 
       function rulerDebugChange(state: boolean, debugCallback: any){

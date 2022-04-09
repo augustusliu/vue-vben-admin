@@ -1,9 +1,9 @@
 export const tabListScheme = [
-  {
-    key: '1',
-    name: '关系',
-    component: 'EntityRelation',
-  },
+  // {
+  //   key: '1',
+  //   name: '关系',
+  //   component: 'EntityRelation',
+  // },
   {
     key: '2',
     name: '属性',
@@ -25,7 +25,7 @@ export const tabListScheme = [
     component: 'EntityEvent',
   },
   {
-    key: '5',
+    key: '6',
     name: '报警',
     component: 'EntityAlarm',
   },

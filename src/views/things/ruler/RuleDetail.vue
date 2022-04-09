@@ -200,7 +200,6 @@
         });
       }
 
-
       onMounted(init);
       return {
         prefixCls: 'rule-page',

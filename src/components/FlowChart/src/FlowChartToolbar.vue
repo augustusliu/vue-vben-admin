@@ -21,12 +21,9 @@
       <Button size="large" class="mx-2 iothings-deploy-btn" v-if="!deployed"
               @click="publishEvent(true)" >部署</Button>
 
-      <Checkbox :defaultChecked="false" v-if="deployed"
+      <Button   size="large" v-if="deployed"
                 class="mx-2 iothings-debug-btn"
-                :onChange="debugChange">调试</Checkbox>
-      <Button size="large"
-              @click="publishEvent(2)"
-              :class="!isDebug ? 'debug-btn-display-none': 'mx-2 iothings-save-btn cursor-pointer' ">调试信息</Button>
+                @click="openDebugInfo(true)">调试</Button>
     </div>
   </div>
 </template>
@@ -98,7 +95,6 @@
       // 当前部署状态
       const deployed = ref(false);
       deployed.value = props.ruleChainDeploy || false;
-
       function onHistoryChange({ data: { undoAble, redoAble } }) {
         const itemsList = unref(toolbarItemList);
         const undoIndex = itemsList.findIndex((item) => item.type === ToolbarTypeEnum.UNDO);
@@ -136,10 +132,10 @@
         });
       }
 
-      const debugChange = (event: any) => {
-        emit('debug-change', event.target.checked, debugRes => {
+      const openDebugInfo = (debugStatus: any) => {
+        emit('debug-change', debugStatus, debugRes => {
           if(debugRes){
-            isDebug.value = event.target.checked;
+            isDebug.value = debugStatus;
           }
         });
       }
@@ -186,7 +182,7 @@
       onUnmounted(() => {
         unref(logicFlow)?.off('history:change', onHistoryChange);
       });
-      return { toolbarItemList, onControl, publishEvent, isDebug, debugChange, deployed };
+      return { toolbarItemList, onControl, publishEvent, isDebug, openDebugInfo, deployed };
     },
   });
 </script>
@@ -230,7 +226,7 @@
       background-color: #aa3939;
       color: #ebccd1;
       cursor: pointer;
-      border-radius: 2px;
+      border-radius: 3px;
     }
     .iothings-save-btn{
       width:70px;
@@ -238,12 +234,20 @@
       background-color: #408ede;
       color: #ebccd1;
       cursor: pointer;
-      border-radius: 2px;
+      border-radius: 3px;
       margin-right: 20px;
     }
     .iothings-debug-btn{
       float: right;
+      width:70px;
       margin-right: 10px;
+      border-radius: 3px;
+      background-color: #acebc7;
+      cursor: pointer;
+    }
+    .iothings-debug-btn:hover{
+      color: #fff;
+      background-color: #008855;
     }
     .iothings-deploy-btn:hover{
       color: #fff;
