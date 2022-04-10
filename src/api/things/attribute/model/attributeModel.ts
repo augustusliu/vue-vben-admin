@@ -29,6 +29,9 @@ export interface AttributeListItem {
   valueType: string;
   readWrite: string;
   attributeScope: string;
+  lastValue: string;
+  lastValueTs: number
+  attributeSrc: string;
   createdTime: string;
 }
 

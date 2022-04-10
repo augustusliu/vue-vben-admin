@@ -1,28 +1,23 @@
 export const tabListScheme = [
-  // {
-  //   key: '1',
-  //   name: '关系',
-  //   component: 'EntityRelation',
-  // },
   {
     key: '2',
-    name: '属性',
+    name: '属性定义',
     component: 'EntityAttributes',
   },
   {
     key: '3',
-    name: '指令',
+    name: '指令定义',
     component: 'EntityCommand',
   },
   {
     key: '4',
-    name: '遥测',
-    component: 'EntityTelemetry',
+    name: '遥测属性',
+    component: 'TelemetryAttributes',
   },
   {
     key: '5',
-    name: '事件',
-    component: 'EntityEvent',
+    name: '遥测指令',
+    component: 'TelemetryCommand',
   },
   {
     key: '6',

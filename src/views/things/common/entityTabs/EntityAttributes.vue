@@ -34,7 +34,7 @@
 
   // 依赖接口
   import { listInheritAttribute, delAttribute } from '/@/api/things/attribute/attrApi';
-  import { attributeColumn } from './attribute.data';
+  import { attributeColumn, attributeColumnWidthDevice } from './attribute.data';
   import { useDrawer } from '/@/components/Drawer';
   import AttributeDrawer from  './AttributeDrawer.vue';
 
@@ -49,10 +49,11 @@
       const entityType = props.entityType;
       // 用户控制是否可以添加属性，只有设备才可以添加属性，资产的属性是采用的设备的属性
       const createBtnShow = (entityType === EntityTypeEnum.DEVICE || entityType === EntityTypeEnum.DEVICE_TEMPLATE);
+      const tableColumns = entityType === EntityTypeEnum.ASSET ? attributeColumnWidthDevice: attributeColumn;
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
         api: listInheritAttribute,
-        columns: attributeColumn,
+        columns: tableColumns,
         showTableSetting: true,
         tableSetting: {
           redo: true,

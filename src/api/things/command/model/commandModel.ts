@@ -27,6 +27,8 @@ export interface CommandListItem {
   code: string;
   valueType: string;
   createdTime: string;
+  lastValue: string;
+  lastValueTs: number;
 }
 
 export type CommandListResult = BasicFetchResult<CommandListItem>;

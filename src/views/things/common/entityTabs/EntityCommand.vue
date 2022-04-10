@@ -34,13 +34,13 @@
 
   // 依赖接口
   import { listCommand, delCommand } from '/@/api/things/command/commandApi';
-  import { commandColumn } from './command.data';
+  import { commandColumn, commandColumnWithoutDevice } from './command.data';
   import { useDrawer } from '/@/components/Drawer';
   import CommandDrawer from  './CommandDrawer.vue';
 
   export default defineComponent({
     // 组件名称
-    name: 'EntityCommand',
+    name: 'TelemetryCommand',
     // 当前依赖的组件
     components: { BasicTable, TableAction, CommandDrawer },
     props:["entityId", "entityType"],
@@ -49,10 +49,11 @@
       const entityType = props.entityType;
       // 用户控制是否可以添加属性，只有设备才可以添加属性，资产的属性是采用的设备的属性
       const createBtnShow = (entityType === EntityTypeEnum.DEVICE || entityType === EntityTypeEnum.DEVICE_TEMPLATE);
+      const tableColumns = entityType === EntityTypeEnum.ASSET ? commandColumn: commandColumnWithoutDevice;
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
         api: listCommand,
-        columns: commandColumn,
+        columns: tableColumns,
         showTableSetting: true,
         tableSetting: {
           redo: true,

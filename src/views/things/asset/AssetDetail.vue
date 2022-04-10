@@ -30,8 +30,8 @@
 
   import { tabListScheme } from '../common/entityTabs/tab.data';
   import EntityAttributes from '../common/entityTabs/EntityAttributes.vue';
-  import EntityTelemetry from '../common/entityTabs/EntityTelemetry.vue';
-  import EntityEvent from '../common/entityTabs/EntityEvent.vue';
+  import TelemetryAttributes from '../common/entityTabs/TelemetryAttributes.vue';
+  import TelemetryCommand from '../common/entityTabs/TelemetryCommand.vue';
   import EntityAlarm from '../common/entityTabs/EntityAlarm.vue';
   import EntityRelation from '../common/relation/index.vue';
   import EntityCommand from "../common/entityTabs/EntityCommand.vue";
@@ -47,8 +47,8 @@
       TabPane: Tabs.TabPane,
       ScrollContainer,
       EntityAttributes,
-      EntityTelemetry,
-      EntityEvent,
+      TelemetryAttributes,
+      TelemetryCommand,
       EntityAlarm,
       EntityRelation,
       EntityCommand,

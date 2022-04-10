@@ -1,8 +1,7 @@
-import {BasicColumn, FormSchema} from '/@/components/Table';
+import {BasicColumn} from "/@/components/Table";
 import moment from "moment";
 
-// 指令列表
-export const commandColumn: BasicColumn[] = [
+export const commandColumnWithDevice: BasicColumn[] = [
 
   {
     title: '属性id',
@@ -27,6 +26,18 @@ export const commandColumn: BasicColumn[] = [
     dataIndex: 'code',
   },
   {
+    title: '属性值',
+    dataIndex: 'lastValue',
+  },
+  {
+    title: '上传时间',
+    dataIndex: 'lastValueTs',
+    width:200,
+    customRender: ({ record }) => {
+      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss.SSS');
+    },
+  },
+  {
     title: '值类型',
     dataIndex: 'valueType',
     customRender: ({ record }) => {
@@ -47,7 +58,6 @@ export const commandColumn: BasicColumn[] = [
   {
     title: '来源',
     dataIndex: 'commandSrc',
-    helpMessage: ['物模型：继承至物模型指令', '用户定义：由平台用户创建','设备声明：由设备自动上传'],
     customRender: ({ record }) => {
       if (record.commandSrc === 'CREATED') {
         return '用户定义';
@@ -58,13 +68,6 @@ export const commandColumn: BasicColumn[] = [
       }
       return 'NaN';
     }
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createdTime',
-    customRender: ({ record }) => {
-      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
-    },
   },
 ]
 
@@ -84,6 +87,18 @@ export const commandColumnWithoutDevice: BasicColumn[] = [
     dataIndex: 'code',
   },
   {
+    title: '属性值',
+    dataIndex: 'lastValue',
+  },
+  {
+    title: '上传时间',
+    dataIndex: 'lastValueTs',
+    width:200,
+    customRender: ({ record }) => {
+      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss.SSS');
+    },
+  },
+  {
     title: '值类型',
     dataIndex: 'valueType',
     customRender: ({ record }) => {
@@ -104,7 +119,6 @@ export const commandColumnWithoutDevice: BasicColumn[] = [
   {
     title: '来源',
     dataIndex: 'commandSrc',
-    helpMessage: ['物模型：继承至物模型指令', '用户定义：由平台用户创建','设备声明：由设备自动上传'],
     customRender: ({ record }) => {
       if (record.commandSrc === 'CREATED') {
         return '用户定义';
@@ -115,51 +129,5 @@ export const commandColumnWithoutDevice: BasicColumn[] = [
       }
       return 'NaN';
     }
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createdTime',
-    customRender: ({ record }) => {
-      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
-    },
-  },
-]
-
-// 指令创建form
-export const createOrUpdateCommandSchema: FormSchema[] = [
-  {
-    field: 'id',
-    label: '指令id',
-    component: 'Input',
-    colProps: { span: 22 },
-    show: false,
-  },
-  {
-    field: 'name',
-    label: '指令名称',
-    component: 'Input',
-    colProps: { span: 22 },
-  },
-  {
-    field: 'code',
-    label: '指令编码',
-    component: 'Input',
-    colProps: { span: 22 },
-  },
-  {
-    field: 'valueType',
-    label: '指令值类型',
-    component: 'Select',
-    defaultValue: 'STR_V',
-    componentProps: {
-      options: [
-        { label: '布尔型', value: 'BOOL_V' },
-        { label: '长整形', value: 'LONG_V' },
-        { label: '浮点型', value: 'DOUBLE_V' },
-        { label: '字符型', value: 'STR_V' },
-        { label: 'JSON', value: 'JSON_V' },
-      ],
-    },
-    colProps: { span: 22 },
   },
 ]

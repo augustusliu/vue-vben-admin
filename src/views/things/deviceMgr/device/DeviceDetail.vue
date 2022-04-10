@@ -28,8 +28,8 @@
   import { deviceDetailInfoScheme } from './device.data'
   import { tabListScheme } from '../../common/entityTabs/tab.data'
   import EntityAttributes from '../../common/entityTabs/EntityAttributes.vue'
-  import EntityTelemetry from '../../common/entityTabs/EntityTelemetry.vue'
-  import EntityEvent from '../../common/entityTabs/EntityEvent.vue'
+  import TelemetryAttributes from '../../common/entityTabs/TelemetryAttributes.vue'
+  import TelemetryCommand from '../../common/entityTabs/TelemetryCommand.vue'
   import EntityAlarm from '../../common/entityTabs/EntityAlarm.vue'
   import EntityRelation from '../../common/relation/index.vue';
   import EntityCommand from "../../common/entityTabs/EntityCommand.vue";
@@ -42,7 +42,7 @@
       Tag,
       Tabs,
       TabPane: Tabs.TabPane,
-      ScrollContainer, EntityAttributes, EntityTelemetry, EntityEvent, EntityAlarm, EntityRelation, EntityCommand },
+      ScrollContainer, EntityAttributes, TelemetryAttributes, TelemetryCommand, EntityAlarm, EntityRelation, EntityCommand },
     setup() {
       const route = useRoute();
       // 此处可以得到用户ID

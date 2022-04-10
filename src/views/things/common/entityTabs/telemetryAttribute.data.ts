@@ -1,7 +1,7 @@
-import {BasicColumn, FormSchema} from '/@/components/Table';
+import {BasicColumn} from "/@/components/Table";
 import moment from "moment";
 
-export const attributeColumn: BasicColumn[] = [
+export const telemetryAttributeColumns: BasicColumn[] = [
   {
     title: '属性id',
     dataIndex: 'id',
@@ -16,6 +16,18 @@ export const attributeColumn: BasicColumn[] = [
     dataIndex: 'code',
   },
   {
+    title: '属性值',
+    dataIndex: 'lastValue',
+  },
+  {
+    title: '上传时间',
+    dataIndex: 'lastValueTs',
+    width:200,
+    customRender: ({ record }) => {
+      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss.SSS');
+    },
+  },
+  {
     title: '读写类型',
     dataIndex: 'readWrite',
     customRender: ({ record }) => {
@@ -27,18 +39,6 @@ export const attributeColumn: BasicColumn[] = [
         return '读写';
       }
       return 'NaN';
-    }
-  },
-  {
-    title: '属性类型',
-    dataIndex: 'attributeScope',
-    customRender: ({ record }) => {
-      if(record.attributeScope === 'STATIC'){
-        return '固有属性';
-      }else if(record.attributeScope === 'TELEMETRY'){
-        return '上传属性';
-      }
-      return 'Nan';
     }
   },
   {
@@ -62,7 +62,6 @@ export const attributeColumn: BasicColumn[] = [
   {
     title: '来源',
     dataIndex: 'attributeSrc',
-    helpMessage: ['物模型：属性继承至物模型属性', '用户定义：由平台用户创建','设备声明：由设备自动上传'],
     customRender: ({ record }) => {
       if (record.attributeSrc === 'CREATED') {
         return '用户定义';
@@ -74,24 +73,16 @@ export const attributeColumn: BasicColumn[] = [
       return 'NaN';
     }
   },
-  {
-    title: '创建时间',
-    dataIndex: 'createdTime',
-    width:180,
-    customRender: ({ record }) => {
-      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
-    },
-  },
 ]
 
-export const attributeColumnWidthDevice: BasicColumn[] = [
+export const telemetryAttributeColumnsWithDevice: BasicColumn[] = [
   {
     title: '属性id',
     dataIndex: 'id',
     defaultHidden: true,
   },
   {
-    title: '实体Id',
+    title: '实体id',
     dataIndex: 'entityId',
     defaultHidden: true,
   },
@@ -108,6 +99,18 @@ export const attributeColumnWidthDevice: BasicColumn[] = [
     dataIndex: 'code',
   },
   {
+    title: '属性值',
+    dataIndex: 'lastValue',
+  },
+  {
+    title: '上传时间',
+    dataIndex: 'lastValueTs',
+    width:200,
+    customRender: ({ record }) => {
+      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss.SSS');
+    },
+  },
+  {
     title: '读写类型',
     dataIndex: 'readWrite',
     customRender: ({ record }) => {
@@ -119,18 +122,6 @@ export const attributeColumnWidthDevice: BasicColumn[] = [
         return '读写';
       }
       return 'NaN';
-    }
-  },
-  {
-    title: '属性类型',
-    dataIndex: 'attributeScope',
-    customRender: ({ record }) => {
-      if(record.attributeScope === 'STATIC'){
-        return '固有属性';
-      }else if(record.attributeScope === 'TELEMETRY'){
-        return '上传属性';
-      }
-      return 'Nan';
     }
   },
   {
@@ -154,7 +145,6 @@ export const attributeColumnWidthDevice: BasicColumn[] = [
   {
     title: '来源',
     dataIndex: 'attributeSrc',
-    helpMessage: ['物模型：属性继承至物模型属性', '用户定义：由平台用户创建','设备声明：由设备自动上传'],
     customRender: ({ record }) => {
       if (record.attributeSrc === 'CREATED') {
         return '用户定义';
@@ -166,77 +156,4 @@ export const attributeColumnWidthDevice: BasicColumn[] = [
       return 'NaN';
     }
   },
-  {
-    title: '创建时间',
-    dataIndex: 'createdTime',
-    width:180,
-    customRender: ({ record }) => {
-      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
-    },
-  },
 ]
-
-export const createOrUpdateAttrSchema: FormSchema[] = [
-  {
-    field: 'id',
-    label: '属性Id',
-    component: 'Input',
-    colProps: { span: 22 },
-    show: false,
-  },
-  {
-    field: 'name',
-    label: '属性名称',
-    component: 'Input',
-    colProps: { span: 22 },
-  },
-  {
-    field: 'code',
-    label: '属性编码',
-    component: 'Input',
-    colProps: { span: 22 },
-  },
-  {
-    field: 'attributeScope',
-    label: '属性类型',
-    component: 'Select',
-    defaultValue: 'TELEMETRY',
-    componentProps: {
-      options: [
-        { label: '固有属性', value: 'STATIC' },
-        { label: '上传属性', value: 'TELEMETRY' },
-      ],
-    },
-    colProps: { span: 22 },
-  },
-  {
-    field: 'readWrite',
-    label: '读写类型',
-    component: 'Select',
-    defaultValue: 'READ_WRITE',
-    componentProps: {
-      options: [
-        { label: '只读', value: 'READ_ONLY' },
-        { label: '只写', value: 'WRITE_ONLY' },
-        { label: '读写', value: 'READ_WRITE' },
-      ],
-    },
-    colProps: { span: 22 },
-  },
-  {
-    field: 'valueType',
-    label: '属性值类型',
-    component: 'Select',
-    defaultValue: 'STR_V',
-    componentProps: {
-      options: [
-        { label: '布尔型', value: 'BOOL_V' },
-        { label: '长整形', value: 'LONG_V' },
-        { label: '浮点型', value: 'DOUBLE_V' },
-        { label: '字符型', value: 'STR_V' },
-        { label: 'JSON', value: 'JSON_V' },
-      ],
-    },
-    colProps: { span: 22 },
-  },
-];
