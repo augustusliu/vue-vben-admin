@@ -8,7 +8,14 @@
     showFooter
     @ok="handleSubmit">
     <div>
-      <BasicForm @register="registerForm" ref="formEl"/>
+      <BasicForm @register="registerForm" ref="formEl">
+        <template #autoControlList="{ model, field }">
+          <CommandDownConditionSlot
+            v-model:value="model[field]"
+            :entityId="autoControlEntityId"
+            :entityType="autoControlMethod"/>
+        </template>
+      </BasicForm>
     </div>
   </BasicDrawer>
 </template>
@@ -18,16 +25,15 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
   import { CodeEditor } from "/@/components/CodeEditor";
-  import { nodeFormSchema } from './ruleNodeColumnsDefinition';
-
+  import { nodeFormSchema, autoControlMethod, autoControlEntityId } from './ruleNodeColumnsDefinition';
+  import CommandDownConditionSlot from './CommandDownConditionSlot.vue';
   // 定义抽屉组件
   export default defineComponent({
     name: 'DynamicNodeDrawer',
-    components: { BasicDrawer, BasicForm, CodeEditor },
+    components: { BasicDrawer, BasicForm, CodeEditor, CommandDownConditionSlot },
     emit: ['success', 'register'], // 父组件中采用@success接收参数
     setup(_,{ emit }) {
       const titleRef: any = ref(null);
-
       const [ registerForm , formAction ] = useForm({
         layout: 'vertical',
         schemas: [],  // 初始化时为空，基于上个页面动态传入
@@ -61,6 +67,7 @@
         const values = await formAction.validate();
         // 清空schema
         await formAction.setProps({schemas: []})
+        console.log('form', values);
         // 采用emit 将值传递给父组件
         emit('success', values);
       }
@@ -82,7 +89,7 @@
         }
       }
 
-      return { getTitle, registerForm, registerDrawer, drawerViewChange, handleSubmit};
+      return { getTitle, registerForm, registerDrawer, drawerViewChange, handleSubmit, autoControlMethod, autoControlEntityId};
     },
   });
 </script>

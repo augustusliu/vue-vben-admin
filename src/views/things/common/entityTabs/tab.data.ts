@@ -21,6 +21,16 @@ export const tabListScheme = [
   },
   {
     key: '6',
+    name: '校准记录',
+    component: 'EntityAttributeAdjust',
+  },
+  {
+    key: '7',
+    name: '指令下发记录',
+    component: 'EntityCommandDistribute',
+  },
+  {
+    key: '8',
     name: '报警',
     component: 'EntityAlarm',
   },

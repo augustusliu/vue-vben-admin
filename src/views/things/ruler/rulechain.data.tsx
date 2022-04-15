@@ -73,6 +73,6 @@ export const searchFormSchema: FormSchema[] = [
         { label: '禁用', value: false },
       ],
     },
-    colProps: { span: 8 },
+    colProps: { span: 6 },
   },
 ];

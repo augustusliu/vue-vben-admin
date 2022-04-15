@@ -8,6 +8,8 @@ export default {
   sceneLink: 'Scene Link',
   rulers: 'Flow Ruler',
   ruleDetail: 'Ruler Detail',
+  ruleTempleList: 'Ruler Templates',
+  ruleTempleDetail: 'Ruler Template Detail',
   asset: 'Asset',
   assetDetail: 'Asset Detail',
   deviceMgr: 'Device Management',

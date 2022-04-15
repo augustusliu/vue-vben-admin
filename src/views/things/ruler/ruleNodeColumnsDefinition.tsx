@@ -1,6 +1,7 @@
 /*用于定于规则链弹框节点属性的所有定义*/
 
 import {FormSchema} from "/@/components/Form";
+import { ref } from 'vue';
 import {listDeviceWithPageApi} from "/@/api/things/device/deviceApi";
 import {listEntityGroupByPager} from "/@/api/things/entityGroup/entityGroupApi";
 import {listTemplateWithPager} from "/@/api/things/asset/templateApi";
@@ -9,6 +10,11 @@ export interface RuleNodeDefinitionFormSchema {
   ruleNodeFixId: string;
   schemas: FormSchema[];
 }
+
+// 选择的控制方式
+export const autoControlMethod:any = ref(null);
+// 选择控制方式对应的id
+export const autoControlEntityId :any = ref(null);
 
 // 定义所有规则链节点的定义及交互关系，绑定时，基于节点的参数信息进行筛选绑定,
 // 与rule.node.menu.json中节点对应，采用规则进行绑定匹配不同节点中的不同属性
@@ -19,11 +25,11 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
     ruleNodeFixId: '100',
     schemas:[
     {
-      label: "节点名称",
+      label: "手工输入别名",
       field: "inputNodeName",
       component: "Input",
       defaultValue: "手工输入",
-      colProps: {"span": 22},
+      colProps: {span: 22},
       componentProps: {
         placeholder: "定义一个节点的业务名称"
       }
@@ -33,7 +39,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
       field: "scheduleType",
       component: "Select",
       required: true,
-      colProps: {"span": 11},
+      colProps: {span: 11},
       componentProps: {
         style: { width: "90%" },
         options: [
@@ -47,7 +53,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
       field: "delay",
       component: "Select",
       required: true,
-      colProps: {"span": 11},
+      colProps: {span: 11},
       componentProps:{
         options: [
           { label: "1", value: 1 },
@@ -64,7 +70,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
       field: "inputContent",
       component: "CodeEditor",
       helpMessage: "请输入字符串或者JSON格式对象",
-      colProps: {"span": 24},
+      colProps: {span: 24},
       componentProps: {
         mode: "application/json",
         lineNumbers: false,
@@ -79,7 +85,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
       label: "",
       field: "optTips",
       component: "OperationTips",
-      colProps: {"span": 20},
+      colProps: {span: 20},
       componentProps: {
         header: "操作提示:",
         dataSource: [
@@ -93,10 +99,10 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
     ruleNodeFixId: '101',
     schemas: [
       {
-        label: "节点名称",
+        label: "调试节点别名",
         field: "debugNodeName",
         component: "Input",
-        colProps: {"span": 22},
+        colProps: {span: 22},
         defaultValue: "调试",
         componentProps: {
           placeholder: "定义一个节点的业务名称"
@@ -107,7 +113,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         field: "outType",
         component: "Select",
         required: true,
-        colProps: {"span": 10},
+        colProps: {span: 10},
         componentProps: {
           options: [
             { label: "全部", value: "All" },
@@ -119,7 +125,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
       {
         field: "dividerLine",
         component: "Divider",
-        colProps: {"span": 22},
+        colProps: {span: 22},
         label: "",
         componentProps: {
         }
@@ -128,7 +134,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         label: "控制台",
         field: "console",
         component: "InputTextArea",
-        colProps: {"span": 22},
+        colProps: {span: 22},
         componentProps: {
           placeholder: "定义一个节点的业务名称",
           style: { disabled: true},
@@ -142,7 +148,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         label: "",
         field: "optTips",
         component: "OperationTips",
-        colProps: {"span": 20},
+        colProps: {span: 20},
         componentProps: {
           header: "操作提示:",
           dataSource: [
@@ -156,7 +162,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
     ruleNodeFixId: '102',
     schemas: [
       {
-        label: "节点名称",
+        label: "脚本节点别名",
         field: "scriptNodeName",
         component: "Input",
         defaultValue: "脚本处理",
@@ -171,7 +177,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         field: "scriptBody",
         component: "CodeEditor",
         helpMessage: "请输入Javascript脚本处理数据",
-        colProps: {"span": 24},
+        colProps: {span: 24},
         componentProps: {
           mode: "javascript",
           lineNumbers: true,
@@ -186,7 +192,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         label: "",
         field: "optTips",
         component: "OperationTips",
-        colProps: {"span": 20},
+        colProps: {span: 20},
         componentProps: {
           header: "操作提示:",
           dataSource: [
@@ -203,11 +209,11 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
     ruleNodeFixId: '300',
     schemas: [
       {
-        label: "节点名称：",
+        label: "HTTP节点别名：",
         field: "httpNodeName",
         component: "Input",
         defaultValue: "HTTP请求",
-        colProps: {"span": 24},
+        colProps: {span: 24},
         componentProps: {
           placeholder: "定义一个节点的业务名称"
         }
@@ -217,7 +223,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         field: "endpoint",
         component: "Input",
         required: true,
-        colProps: {"span": 24},
+        colProps: {span: 24},
         componentProps: {
         }
       },
@@ -226,7 +232,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         field: "method",
         required: true,
         component: "Select",
-        colProps: {"span": 10},
+        colProps: {span: 10},
         componentProps: {
           options: [
             {
@@ -255,7 +261,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         component: "Select",
         required: true,
         defaultValue: "JSON",
-        colProps: {"span": 10, "offset": 2},
+        colProps: {span: 10, offset: 2},
         componentProps: {
           options: [
             {
@@ -274,7 +280,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         field: "headers",
         subLabel: "(application/json)",
         component: "CodeEditor",
-        colProps: {"span": 24},
+        colProps: {span: 24},
         componentProps: {
           mode: "application/json",
           lineNumbers: false,
@@ -291,7 +297,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         field: "payload",
         component: "CodeEditor",
         helpMessage: "请输入JSON格式参数",
-        colProps: {"span": 24},
+        colProps: {span: 24},
         componentProps: {
           mode: "application/json",
           lineNumbers: false,
@@ -303,10 +309,19 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         }
       },
       {
+        label: "响应结果填充:",
+        field: "httpRespAutoAdd",
+        component: "Switch",
+        defaultValue: false,
+        colProps: {span: 24},
+        componentProps: {
+        }
+      },
+      {
         label: "",
         field: "optTips",
         component: "OperationTips",
-        colProps: {"span": 20},
+        colProps: {span: 20},
         componentProps: {
           header: "操作提示:",
           dataSource: [
@@ -323,7 +338,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
     ruleNodeFixId: '302',
     schemas: [
       {
-        label: "节点名称：",
+        label: "Kafak消费节点别名：",
         field: "kafkaConsumeNodeName",
         component: "Input",
         defaultValue: "Kafka消费",
@@ -431,7 +446,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
     ruleNodeFixId: '303',
     schemas: [
       {
-        label: "节点名称：",
+        label: "Kafka生产节点别名：",
         field: "kafkaProducerNodeName",
         component: "Input",
         defaultValue: "Kafka生产",
@@ -545,7 +560,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
     ruleNodeFixId: '400',
     schemas: [
       {
-        label: "节点名称：",
+        label: "设备接入节点别名：",
         field: "assetInNodeName",
         component: "Input",
         defaultValue: "设备接入",
@@ -564,25 +579,19 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         }
       },
       {
-        label: "接入类型：",
+        label: "接入方式：",
         field: "deviceProcessType",
-        component: "RadioButtonGroup",
-        colProps: {span: 22},
-        defaultValue: 'DEVICE',
+        component: "Select",
+        colProps: {span: 18},
         componentProps: {
-          placeholder: "按设备、分组、标签接入",
           options: [
             {
               label: "按设备接入",
               value: "DEVICE"
             },
             {
-              label: "按分组接入",
+              label: "按设备分组接入",
               value: "GROUP"
-            },
-            {
-              label: "按标签接入",
-              value: "LABEL"
             },
             {
               label: "按物模型接入",
@@ -595,7 +604,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         label: "选择设备：",
         field: "deviceId",
         component: "SingleSearchSelect",
-        colProps: {span: 12},
+        colProps: {span: 18},
         componentProps: {
           placeholder: "选择接入设备",
           api: listDeviceWithPageApi,
@@ -614,7 +623,7 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         label: "选择设备分组：",
         field: "deviceGroupId",
         component: "SingleSearchSelect",
-        colProps: {span: 12},
+        colProps: {span: 18},
         componentProps: {
           placeholder: "选择设备分组",
           api: listEntityGroupByPager,
@@ -630,20 +639,10 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         show:  ({ values }) => { return values.deviceProcessType === 'GROUP';},
       },
       {
-        label: "选择设备标签：",
-        field: "deviceLabel",
-        component: "SingleSearchSelect",
-        colProps: {span: 12},
-        componentProps: {
-          placeholder: "选择设备包含的标签"
-        },
-        show:  ({ values }) => { return values.deviceProcessType === 'LABEL';},
-      },
-      {
         label: "选择物模型：",
         field: "thingsId",
         component: "SingleSearchSelect",
-        colProps: {span: 12},
+        colProps: {span: 18},
         componentProps: {
           placeholder: "选择设备分组",
           api: listTemplateWithPager,
@@ -660,9 +659,356 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
       }]
   },{
     ruleNodeFixId: '401',
-    schemas:[]
+    schemas:[
+      {
+        label: "指令下发节点别名：",
+        field: "autoControlNodeName",
+        component: "Input",
+        defaultValue: "指令下发",
+        colProps: {span: 22},
+        componentProps: {
+          placeholder: "业务名称"
+        }
+      },
+      {
+        label: "When(满足的条件)",
+        subLabel: "(Javascript)",
+        field: "commandWhen",
+        component: "CodeEditor",
+        helpMessage: "采用JS编写满足指令下发的条件",
+        colProps: {span: 24},
+        defaultValue: "return true;",
+        componentProps: {
+          mode: "javascript",
+          lineNumbers: true,
+          lineWrapping: true,
+          style: {
+            width: "100%",
+            minHeight: "150px"
+          }
+        }
+      },
+      {
+        label: "控制方式：",
+        field: "autoControlMethod",
+        component: "Select",
+        colProps: {span: 11},
+        componentProps: {
+          options: [
+            {
+              label: "按设备下发",
+              value: "DEVICE"
+            },
+            {
+              label: "按设备分组下发",
+              value: "DEVICE_GROUP"
+            },
+            {
+              label: "按物模型下发",
+                value: "DEVICE_TEMPLATE"
+            }
+          ],
+          onChange: function (value) {
+            autoControlMethod.value = value;
+          }
+        },
+      },
+      {
+        label: "选择设备：",
+        field: "autoControlDeviceId",
+        component: "SingleSearchSelect",
+        colProps: {span: 10, offset: 1},
+        componentProps: {
+          placeholder: "选择接入设备",
+          api: listDeviceWithPageApi,
+          params: {
+            disabled: false,
+          },
+          resultField: 'items',
+          labelField: 'name',
+          valueField: 'id',
+          immediate: false,
+          showSearch: true,
+          onChange: function (value) {
+            autoControlEntityId.value = value;
+          }
+        },
+        show:  ({ values }) => { return values.autoControlMethod === 'DEVICE';},
+      },
+      {
+        label: "选择设备分组：",
+        field: "autoControlGroupId",
+        component: "SingleSearchSelect",
+        colProps: {span: 10, offset: 1},
+        componentProps: {
+          placeholder: "选择设备分组",
+          api: listEntityGroupByPager,
+          params: {
+            entityType: 'DEVICE',
+          },
+          resultField: 'items',
+          labelField: 'name',
+          valueField: 'id',
+          immediate: false,
+          showSearch: true,
+        },
+        show:  ({ values }) => { return values.autoControlMethod === 'DEVICE_GROUP';},
+      },
+      {
+        label: "选择物模型：",
+        field: "autoControlThingsId",
+        component: "SingleSearchSelect",
+        colProps: {span: 10, offset: 1},
+        componentProps: {
+          placeholder: "选择物模型",
+          api: listTemplateWithPager,
+          params: {
+            enabled: 'true',
+          },
+          resultField: 'items',
+          labelField: 'name',
+          valueField: 'id',
+          immediate: false,
+          showSearch: true,
+          onChange: function (value) {
+            autoControlEntityId.value = value;
+          }
+        },
+        show:  ({ values }) => { return values.autoControlMethod === 'DEVICE_TEMPLATE';},
+      },
+      {
+        label: "指令列表：",
+        field: "autoControlCommandList",
+        component: 'Input',
+        slot: "autoControlList",
+      },
+      {
+        label: "",
+        field: "optTips",
+        component: "OperationTips",
+        colProps: {span: 20},
+        componentProps: {
+          header: "操作提示:",
+          dataSource: [
+            "1. 只有当脚本执行结果返回True时，会执行指令的下发",
+            "2. 请确保返回的执行结果为True 或者 False",
+            "3. 脚本执行可以应用消息流中的数据， 例如 ",
+            "      var count = ${msg.payload.count} ",
+            "      return count > 5;"
+          ]
+        }
+      }
+    ]
   },{
-    ruleNodeFixId: '402',
-    schemas:[]
-  }
-  ]
+    ruleNodeFixId: '500',
+    schemas:[
+      {
+        label: "Postgres节点别名：",
+        field: "pgInNodeName",
+        component: "Input",
+        defaultValue: "Postgres",
+        colProps: {span: 22},
+        componentProps: {
+          placeholder: "节点业务名称"
+        }
+      },
+      {
+        label: "存储位置：",
+        field: "isDefaultPostgres",
+        component: "RadioButtonGroup",
+        colProps: {span: 22},
+        defaultValue: 'defaultThings',
+        componentProps: {
+          options: [
+            {
+              label: "默认存储",
+              value: "defaultThings"
+            },
+            {
+              label: "其他Postgres",
+              value: "third"
+            },
+          ]
+        }
+      },
+      {
+        label: "Ip地址：",
+        field: "pgHost",
+        component: "Input",
+        colProps: {span: 16},
+        componentProps: {
+          placeholder: "postgres连接地址"
+        },
+        show:  ({ values }) => { return values.isDefaultPostgres === 'third';},
+      },
+      {
+        label: "端口：",
+        field: "pgPort",
+        component: "Input",
+        colProps: {span: 4, offset: 2},
+        componentProps: {
+          placeholder: "postgres端口"
+        },
+        show:  ({ values }) => { return values.isDefaultPostgres === 'third';},
+      },
+      {
+        label: "用户名：",
+        field: "pgName",
+        component: "Input",
+        colProps: {span: 11},
+        componentProps: {
+          placeholder: "用户名"
+        },
+        show:  ({ values }) => { return values.isDefaultPostgres === 'third';},
+      },
+      {
+        label: "密码：",
+        field: "pgPwd",
+        component: "InputPassword",
+        colProps: { span: 10, offset: 1},
+        componentProps: {
+          placeholder: ""
+        },
+        show:  ({ values }) => { return values.isDefaultPostgres === 'third';},
+      },
+      {
+        label: "数据库：",
+        field: "pgDatabase",
+        component: "Input",
+        colProps: {span: 11},
+        componentProps: {
+          placeholder: "请数据数据存储的数据库名"
+        },
+        show:  ({ values }) => { return values.isDefaultPostgres === 'third';},
+      },
+      {
+        label: "表前缀：",
+        field: "tablePrefix",
+        component: "Input",
+        defaultValue: "iothings_",
+        colProps: {span: 10, offset: 1},
+        componentProps: {
+          placeholder: "表的前缀"
+        },
+        show:  ({ values }) => { return values.isDefaultPostgres === 'third';},
+      },
+      {
+        label: "",
+        field: "pgOptTips",
+        component: "OperationTips",
+        colProps: {span: 22},
+        componentProps: {
+          header: "操作提示:",
+          dataSource: [
+            "1. 数据格式：请确保msg.payload中的数据为标准的Json 对象",
+            "2. 存储格式：按照json对象进行KeyValue方式存储",
+          ]
+        }
+      }
+    ]
+  },
+  {
+    ruleNodeFixId: '501',
+    schemas:[
+      {
+        label: "Cassandra别名：",
+        field: "cassandraInNodeName",
+        component: "Input",
+        defaultValue: "cassandra",
+        colProps: {span: 22},
+        componentProps: {
+          placeholder: "业务名称"
+        }
+      },
+      {
+        label: "存储位置：",
+        field: "cassandraDefault",
+        component: "RadioButtonGroup",
+        colProps: {span: 22},
+        defaultValue: 'systemCassandra',
+        componentProps: {
+          options: [
+            {
+              label: "默认存储",
+              value: "systemCassandra"
+            },
+            {
+              label: "其他Cassandra",
+              value: "thirdCassandra"
+            },
+          ]
+        }
+      },
+      {
+        label: "连接地址：",
+        field: "cassandraContactPoints",
+        component: "Input",
+        colProps: {span: 16},
+        componentProps: {
+          placeholder: "cassandra连接地址"
+        },
+        show:  ({ values }) => { return values.cassandraDefault === 'thirdCassandra';},
+      },
+      {
+        label: "连接地址：",
+        field: "cassandraPort",
+        component: "Input",
+        colProps: {span: 4, offset: 2},
+        componentProps: {
+          placeholder: "cassandra 端口"
+        },
+        show:  ({ values }) => { return values.cassandraDefault === 'thirdCassandra';},
+      },
+      {
+        label: "用户名：",
+        field: "cassandraUsername",
+        component: "Input",
+        colProps: {span: 11},
+        componentProps: {
+          placeholder: "cassandra用户名"
+        },
+        show:  ({ values }) => { return values.cassandraDefault === 'thirdCassandra';},
+      },
+      {
+        label: "密码：",
+        field: "cassandraPassword",
+        component: "InputPassword",
+        colProps: { span: 10, offset: 1},
+        componentProps: {
+          placeholder: ""
+        },
+        show:  ({ values }) => { return values.cassandraDefault === 'thirdCassandra';},
+      },
+      {
+        label: "KeySpace：",
+        field: "cassandraKeySpace",
+        component: "Input",
+        colProps: {span: 11},
+        componentProps: {
+          placeholder: "连接的keySpace"
+        },
+        show:  ({ values }) => { return values.cassandraDefault === 'thirdCassandra';},
+      },
+      {
+        label: "数据中心：",
+        field: "cassandraDataCenter",
+        component: "Input",
+        colProps: { span: 10, offset: 1},
+        componentProps: {
+          placeholder: "连接的数据中心，不存在时会自动创建"
+        },
+        show:  ({ values }) => { return values.cassandraDefault === 'thirdCassandra';},
+      },
+      {
+        label: "副本数量：",
+        field: "cassandraReplicator",
+        component: "Input",
+        colProps: {span: 11},
+        componentProps: {
+          placeholder: "自动创建keySpace时使用"
+        },
+        show:  ({ values }) => { return values.cassandraDefault === 'thirdCassandra';},
+      },
+    ]
+  }]
+

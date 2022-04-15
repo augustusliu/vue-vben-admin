@@ -42,12 +42,11 @@ export const useRedo = (_router?: Router) => {
   }
   const { push, currentRoute } = _router || router;
   const { query, params } = currentRoute.value;
-
+  console.log('use redo', _router)
   function redo(): Promise<boolean> {
     return new Promise((resolve) => {
       push({
         path: unref(currentRoute).fullPath,
-        // path: unref(currentRoute).fullPath,
         query,
         params,
       }).then(() => resolve(true));

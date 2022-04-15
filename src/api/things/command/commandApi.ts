@@ -4,7 +4,7 @@ import {getToken} from "/@/utils/auth";
 import {
   CommandSearchParam,
   CommandListResult,
-  AddOrUpdateCommandParam
+  AddOrUpdateCommandParam, CommandListItem
 } from "/@/api/things/command/model/commandModel";
 
 const globSetting = useGlobSetting();
@@ -15,6 +15,8 @@ enum CommandApi {
   // 更新或者添加实体某个属性
   CommandAddOrUpdate = '/api/command/addOrUpdate',
   CommandDel = '/api/command/del/',
+  CommandListAllApi = '/api/command/list',
+
 
   CommandTelemetryListWithPager = '/api/command/telemetry',
   CommandTelemetryWsApi = '/api/ws/telemetry',
@@ -22,6 +24,17 @@ enum CommandApi {
 
 export const listCommand = (params: CommandSearchParam) =>
   defHttp.post<CommandListResult>({ url: CommandApi.CommandListPagerApi , params });
+
+export const listAllCommand = (params: CommandSearchParam) =>{
+  if(params.entityId){
+    return defHttp.post<CommandListItem[]>({ url: CommandApi.CommandListAllApi , params });
+  }else{
+    return new Promise<CommandListItem[]>(function (resolve) {
+        resolve([]);
+    })
+  }
+}
+
 
 export const addOrUpdateCommand = (params: AddOrUpdateCommandParam) =>
   defHttp.post<number>({ url: CommandApi.CommandAddOrUpdate , params });

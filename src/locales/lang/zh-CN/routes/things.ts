@@ -8,6 +8,8 @@ export default {
   sceneLink: '场景联动',
   rulers: '规则引擎',
   ruleDetail: '规则详情',
+  ruleTempleList: '规则模板',
+  ruleTempleDetail: '规则模板详情',
   asset: '资产管理',
   assetDetail: '资产详情',
   device: '设备列表',

@@ -57,7 +57,7 @@
         columns: tenantColumn,
         useSearchForm: true,
         formConfig: {
-          labelWidth: 200,
+          labelWidth: 90,
           schemas: searchFormSchema,
         },
         showTableSetting: true,
