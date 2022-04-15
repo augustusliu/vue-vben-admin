@@ -67,7 +67,6 @@
         const values = await formAction.validate();
         // 清空schema
         await formAction.setProps({schemas: []})
-        console.log('form', values);
         // 采用emit 将值传递给父组件
         emit('success', values);
       }

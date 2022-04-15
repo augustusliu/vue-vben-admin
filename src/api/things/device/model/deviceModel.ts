@@ -12,6 +12,16 @@ export type DeviceParams = BasicPageParams & {
   transportType?: string;
 };
 
+// 下发属性或者指令的查询查询
+export type DeviceIssueSearchParams = BasicPageParams & {
+  // ?表示参数可以为空，如果不为空的话为string类型
+  code?: number;
+  issueType?: string;
+  entityId?: number;
+  entityType?: string;
+};
+
+
 export interface DeviceItem {
   id: number;
   name: string;
@@ -42,6 +52,34 @@ export interface DeviceAddParam {
   deviceGroupId:number;
 }
 
+// 设备下发信息的创建
+export interface DeviceIssueCreateParam {
+  entityId: number | undefined;
+  entityType: string | undefined;
+  code: string;
+  value: string;
+  issueType: string;
+  remark: string;
+  issueSrc: string;
+}
+
+// 设备下发历史记录
+export interface DeviceIssueListItem {
+  id: number;
+  entityId: number;
+  entityType: string;
+  key: string;
+  value: string;
+  ts: number;
+  issueStatus: boolean;
+  issueType: string;
+  remark: string;
+  issueSrc: string;
+  reason: string;
+  creatorName: string;
+}
+
+
 // 资产kv列表实体
 export interface DeviceKVItem {
   id: number;
@@ -59,3 +97,5 @@ export interface DeviceCredentialsModel {
 export type DeviceListResultModel = BasicFetchResult<DeviceItem>;
 
 export type DeviceListAllResultModel = BasicFetchResult<DeviceKVItem>;
+
+export type DeviceListIssueResultModel = BasicFetchResult<DeviceIssueListItem>;

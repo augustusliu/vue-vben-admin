@@ -7,6 +7,9 @@ import {
   DeviceCredentialsModel,
   DeviceListResultModel,
   DeviceListAllResultModel,
+  DeviceIssueSearchParams,
+  DeviceListIssueResultModel,
+  DeviceIssueCreateParam,
 } from '/@/api/things/device/model/deviceModel';
 
 enum DeviceApi {
@@ -18,6 +21,11 @@ enum DeviceApi {
   DeviceCredentialsGetApi = '/api/device/credentials/get/',
   DeviceDeletedApi = '/api/device/del/',
   DeviceLabelsApi = '/api/device/labels',
+
+  // 设备下发数据
+  DeviceIssueListWithPagerApi = '/api/device/issue/list',
+  DeviceIssueCreateApi = '/api/device/issue/create',
+  DeviceIssueBatchCreateApi = '/api/device/batchIssue/create',
 }
 
 // 分页查询
@@ -42,3 +50,18 @@ export const delDeviceApi = (deviceId: string) =>
 
 export const listDeviceLabels = () =>
   defHttp.get<string>({ url: DeviceApi.DeviceLabelsApi });
+
+
+// 分页查询设备
+export const listIssuePagerApi = (params: DeviceIssueSearchParams) =>
+  defHttp.post<DeviceListIssueResultModel>({ url: DeviceApi.DeviceIssueListWithPagerApi, params });
+
+// 添加一条下发指令
+export const addIssueApi = (params: DeviceIssueCreateParam) =>
+  defHttp.post<number>({ url: DeviceApi.DeviceIssueCreateApi, params });
+
+// 批量下发指令
+export const batchAddIssueApi = (params: DeviceIssueCreateParam[]) =>
+  defHttp.post<number>({ url: DeviceApi.DeviceIssueBatchCreateApi, params });
+
+

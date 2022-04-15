@@ -21,12 +21,12 @@ export const tabListScheme = [
   },
   {
     key: '6',
-    name: '校准记录',
+    name: '属性校准日志',
     component: 'EntityAttributeAdjust',
   },
   {
     key: '7',
-    name: '指令下发记录',
+    name: '指令下发日志',
     component: 'EntityCommandDistribute',
   },
   {
