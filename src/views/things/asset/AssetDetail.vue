@@ -18,7 +18,7 @@
 
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue';
-  import { useRoute } from 'vue-router';
+  import {useRoute, useRouter} from 'vue-router';
   import { PageWrapper } from '/@/components/Page';
   import { useGo } from '/@/hooks/web/usePage';
   import { Tag, Tabs } from 'ant-design-vue';
@@ -35,6 +35,9 @@
   import EntityAlarm from '../common/entityTabs/EntityAlarm.vue';
   import EntityRelation from '../common/relation/index.vue';
   import EntityCommand from "../common/entityTabs/EntityCommand.vue";
+  import EntityAttributeAdjust from '../common/entityTabs/EntityAttributeAdjust.vue';
+  import EntityCommandDistribute from '../common/entityTabs/EntityCommandDistribute.vue';
+  import {useMultipleTabStore} from "/@/store/modules/multipleTab";
 
   // tab信息参考/page/account/setting配置
   export default defineComponent({
@@ -52,12 +55,16 @@
       EntityAlarm,
       EntityRelation,
       EntityCommand,
+      EntityAttributeAdjust,
+      EntityCommandDistribute
     },
     setup() {
       const route = useRoute();
+      const router = useRouter();
+      const tabStore = useMultipleTabStore();
       const go = useGo();
       // 此处可以得到设备
-      const assetId = ref(route.params?.id).value;
+      const assetId = ref(route.params?.id).value as number;
       const entityType = 'ASSET';
       const assetInfo: any = ref({});
       // 页面是否加载成功
@@ -72,6 +79,7 @@
           return;
         }
         assetInfo.value = res;
+        await tabStore.updateTabTitle('(资产)'+ res.name, router.currentRoute.value);
         isLoaded.value = true;
       }
 

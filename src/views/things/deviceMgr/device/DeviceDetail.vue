@@ -19,7 +19,7 @@
 
 <script lang="ts">
   import { defineComponent, onMounted, ref} from 'vue';
-  import { useRoute } from 'vue-router';
+  import {useRoute, useRouter} from 'vue-router';
   import { PageWrapper } from '/@/components/Page';
   import { Tag, Tabs } from 'ant-design-vue';
   import { Description, useDescription } from '/@/components/Description/index';
@@ -35,6 +35,7 @@
   import EntityCommand from "../../common/entityTabs/EntityCommand.vue";
   import EntityAttributeAdjust from '../../common/entityTabs/EntityAttributeAdjust.vue';
   import EntityCommandDistribute from '../../common/entityTabs/EntityCommandDistribute.vue';
+  import {useMultipleTabStore} from "/@/store/modules/multipleTab";
 
 
   // tab信息参考/page/account/setting配置
@@ -49,6 +50,8 @@
       EntityRelation, EntityCommand, EntityAttributeAdjust, EntityCommandDistribute },
     setup() {
       const route = useRoute();
+      const router = useRouter();
+      const tabStore = useMultipleTabStore();
       // 此处可以得到用户ID
       const entityId = ref(route.params?.id).value as string;
       const entityType = "DEVICE";
@@ -67,6 +70,7 @@
           return;
         }
         deviceInfo.value = res
+        await tabStore.updateTabTitle('(设备)'+ res.name, router.currentRoute.value);
         isLoaded.value = true;
       }
 

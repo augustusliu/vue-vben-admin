@@ -41,6 +41,7 @@
   export type SendIssue = {
     id: number,
     code: string,
+    name?: string,
     distributeValue: string,  // 下发指令值
   };
 
@@ -89,6 +90,7 @@
           unref(issueValues).push({
             id: item.id,
             code: item.code,
+            name: item.name,
             distributeValue: item.lastValue,
           })
         })

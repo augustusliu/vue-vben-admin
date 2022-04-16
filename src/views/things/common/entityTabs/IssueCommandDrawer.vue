@@ -3,14 +3,14 @@
     v-bind="$attrs"
     @register="registerDrawer"
     showFooter
-    title="选择矫正的属性"
+    title="选择下发的指令"
     width="500px"
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm">
       <template #menu="{ model, field }"></template>
-      <template #adjustAttributesSlot="{ model, field }">
-        <AttributeDownConditionSlot
+      <template #issueCommandListSlot="{ model, field }">
+        <CommandDownConditionSlot
           v-model:value="model[field]"
           :entityId="adjustEntityId"
           :entityType="adjustEntityType"/>
@@ -23,8 +23,8 @@
   import { defineComponent, ref, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import AttributeDownConditionSlot from './AttributeDownConditionSlot.vue';
-  import { addAdjustAttributeColumns } from './issue.data'
+  import CommandDownConditionSlot from '../../ruler/CommandDownConditionSlot.vue';
+  import { addCommandIssueFormItem } from './issue.data'
   import {useMessage} from "/@/hooks/web/useMessage";
   import {
     DeviceIssueCreateParam,
@@ -33,8 +33,8 @@
   import {batchAddIssueApi} from "/@/api/things/device/deviceApi";
 
   export default defineComponent({
-    name: 'AttributeAdjustDrawer',
-    components: { BasicDrawer, BasicForm, AttributeDownConditionSlot },
+    name: 'CommandIssueDrawer',
+    components: { BasicDrawer, BasicForm, CommandDownConditionSlot },
     props:["entityId", "entityType"],
     emits: ['success', 'register'],
     setup(props, { emit }) {
@@ -49,7 +49,7 @@
       const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
         layout: 'vertical',
         labelWidth: 120,
-        schemas: addAdjustAttributeColumns,
+        schemas: addCommandIssueFormItem,
         showActionButtonGroup: false,
       });
 
@@ -70,19 +70,21 @@
         try {
           unref(issueAttributes).splice(0, unref(issueAttributes).length) ;
           const values = await validate();
-          if(!values.adjustAttributes || values.adjustAttributes.lenght <=0){
-            createMessage.error('下发的属性不能为空');
+          console.log(values);
+          if(!values.issueCommandList || values.issueCommandList.lenght <=0){
+            createMessage.error('下发的指令不能为空');
             return;
           }
-          values.adjustAttributes.forEach(record => {
+          values.issueCommandList.forEach(record => {
             unref(issueAttributes).push({
               entityId: props.entityId,
               entityType: props.entityType,
               code: record.code,
               value: record.distributeValue,
-              issueType: IssueOrAttrType.ATTRIBUTE,
+              issueType: IssueOrAttrType.COMMAND,
               remark: values.remark,
               issueSrc: 'CREATED',
+              keyName: record.name,
             });
           })
           await batchAddIssueApi(unref(issueAttributes));

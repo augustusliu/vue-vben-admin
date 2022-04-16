@@ -61,6 +61,7 @@ export interface DeviceIssueCreateParam {
   issueType: string;
   remark: string;
   issueSrc: string;
+  keyName: string;
 }
 
 // 设备下发历史记录
@@ -77,6 +78,8 @@ export interface DeviceIssueListItem {
   issueSrc: string;
   reason: string;
   creatorName: string;
+  keyName: string;
+  entityName: string;
 }
 
 
