@@ -14,6 +14,7 @@ export default {
   assetDetail: '资产详情',
   device: '设备列表',
   deviceDetail: '设备详情',
+  alarmMgr: '报警管理',
   deviceMgr: '设备管理',
   dictionary: '数据字典',
   baseData: '基础数据',

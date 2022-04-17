@@ -5,6 +5,9 @@ import { ref } from 'vue';
 import {listDeviceWithPageApi} from "/@/api/things/device/deviceApi";
 import {listEntityGroupByPager} from "/@/api/things/entityGroup/entityGroupApi";
 import {listTemplateWithPager} from "/@/api/things/asset/templateApi";
+import {listUserApi} from "/@/api/things/userMgr/userMgrApi";
+import { listDictionaryByTypeWthParam,
+} from "/@/api/things/dictionary/dictionaryApi";
 
 export interface RuleNodeDefinitionFormSchema {
   ruleNodeFixId: string;
@@ -590,10 +593,6 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
               value: "DEVICE"
             },
             {
-              label: "按设备分组接入",
-              value: "GROUP"
-            },
-            {
               label: "按物模型接入",
               value: "THINGS"
             }
@@ -700,10 +699,6 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
               value: "DEVICE"
             },
             {
-              label: "按设备分组下发",
-              value: "DEVICE_GROUP"
-            },
-            {
               label: "按物模型下发",
                 value: "DEVICE_TEMPLATE"
             }
@@ -798,6 +793,91 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
           ]
         }
       }
+    ]
+  },{
+    ruleNodeFixId: '402',
+    schemas:[
+      {
+        label: "数据告警名称：",
+        field: "deviceAlarmNodeName",
+        component: "Input",
+        defaultValue: "告警信息",
+        colProps: {span: 22},
+        componentProps: {
+          placeholder: "业务名称"
+        }
+      },
+      {
+        label: "When(满足的条件)",
+        subLabel: "(Javascript)",
+        field: "alarmTriggerCondition",
+        component: "CodeEditor",
+        helpMessage: "采用JS编写触发告警的条件",
+        colProps: {span: 24},
+        required: true,
+        defaultValue: "return true;",
+        componentProps: {
+          mode: "javascript",
+          lineNumbers: true,
+          lineWrapping: true,
+          style: {
+            width: "100%",
+            minHeight: "150px"
+          }
+        }
+      },
+      {
+        label: "信息内容：",
+        field: "alarmMessageTemplate",
+        required: true,
+        component: "InputTextArea",
+        helpMessage: "编辑告警的信息模板，可采用占位符",
+        colProps: {span: 24},
+        componentProps: {
+          style: {
+            width: "100%",
+            minHeight: "150px"
+          }
+        }
+      },
+      {
+        label: "处理人：",
+        field: "sendToUserId",
+        component: "SingleSearchSelect",
+        required: false,
+        colProps: {span: 11},
+        componentProps: {
+          placeholder: "选择处理人",
+          api: listUserApi,
+          resultField: 'items',
+          labelField: 'realName',
+          valueField: 'id',
+          immediate: false,
+          showSearch: true
+        }
+      },
+      {
+        label: "报警类型：",
+        field: "alarmTypeId",
+        component: "ApiTreeSelect",
+        required: false,
+        colProps: {span: 11, offset: 1},
+        componentProps: {
+          placeholder: "报警类型",
+          params: {
+            dictionaryType: '报警类型',
+          },
+          api: listDictionaryByTypeWthParam,
+          resultField: 'items',
+          replaceFields: {
+            title: 'name',
+            children: 'children',
+            value: 'id',
+            key: 'code',
+          },
+          getPopupContainer: () => document.body,
+        }
+      },
     ]
   },{
     ruleNodeFixId: '500',

@@ -11,6 +11,7 @@ enum DictionaryApi {
   DictionaryListWithPagerApi = '/api/dictionary/list',
   DictionaryListAllByParentApi = '/api/dictionary/listByParentId/',
   DictionaryListAllByTypeApi = '/api/dictionary/listByDictionaryType/',
+  DictionaryListAllByTypeOneApi = '/api/dictionary/listByDictionaryTypeOne/',
   DictionaryListAllApi = '/api/dictionary/listAll',
   DictionaryTypesApi = '/api/dictionary/listTypes',
   DictionaryDeleteApi = '/api/dictionary/del/',
@@ -26,8 +27,11 @@ export const listDictionaryAll = () =>
 export const listDictionaryByParentId = (parentId: number) =>
   defHttp.get<DictionaryListResultModel>({ url: DictionaryApi.DictionaryListAllByParentApi + parentId });
 // 根据类型查询（）
-export const listDictionaryByType = (dictionaryType: number) =>
+export const listDictionaryByType = (dictionaryType: string) =>
   defHttp.get<Array<DictionaryItem>>({ url: DictionaryApi.DictionaryListAllByTypeApi + dictionaryType });
+// 获取第一条记录的值
+export const listDictionaryByTypeWthParam = (param: any) =>
+  defHttp.get<Array<DictionaryItem>>({ url: DictionaryApi.DictionaryListAllByTypeApi + param.dictionaryType });
 // 根据类型查询
 export const listDictionaryTypes = () =>
   defHttp.get<any>({ url: DictionaryApi.DictionaryTypesApi });

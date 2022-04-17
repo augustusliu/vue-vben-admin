@@ -28,6 +28,7 @@ export interface DictionaryItem {
   modifiedTime: number;
   parentId: number;
   hasChild: boolean;
+  isLeaf?: boolean;
   children: DictionaryItem[];
 }
 

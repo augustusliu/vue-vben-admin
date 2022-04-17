@@ -25,24 +25,28 @@ export const userColumn: BasicColumn[] = [
     dataIndex: 'username',
   },
   {
-    title: '所属租户',
-    dataIndex: 'tenantName',
-  },
-  {
-    title: '所属客户',
-    dataIndex: 'customerName',
+    title: '真实名称',
+    dataIndex: 'realName',
   },
   {
     title: '邮箱',
     dataIndex: 'email',
   },
   {
-    title: '真实名称',
-    dataIndex: 'realName',
-  },
-  {
     title: '描述',
     dataIndex: 'description',
+  },
+  {
+    title: '角色',
+    dataIndex: 'authorityName',
+  },
+  {
+    title: '所属租户',
+    dataIndex: 'tenantName',
+  },
+  {
+    title: '所属客户',
+    dataIndex: 'customerName',
   },
   {
     title: '创建时间',

@@ -14,6 +14,7 @@ export default {
   assetDetail: 'Asset Detail',
   deviceMgr: 'Device Management',
   device: 'Device',
+  alarmMgr: 'Alarm Management',
   deviceDetail: 'Device Detail',
   dictionary: 'Dictionary',
   baseData: 'Base Data',

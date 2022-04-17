@@ -189,8 +189,8 @@
         "type": "thingsNode",
         "properties": {
           "fixId": "402",
-          "clazz":"com.lau.things.rule.engine.device.DeviceInNode",
-          "drawTitle": "告警配置",
+          "clazz":"com.lau.things.rule.engine.alarm.AlarmNode",
+          "drawTitle": "告警信息配置",
           "degreeType": "INOUT",
           "description": "用于配置平台告警信息的产生及输出",
           "nodeType": "ALARM",
