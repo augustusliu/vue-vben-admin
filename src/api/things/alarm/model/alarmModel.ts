@@ -20,11 +20,7 @@ export interface AlarmListItem {
   alarmName: string;
   alarmContent: string;
   createdTime: number;
-  dealTime: number;
-  dealUserId: number;
-  dealUserName:number;
-  dealRemark: string;
-  dealStatus: boolean;
+  alarmStatus: boolean;
   alarmType: string;
   belongUserId: number;
   alarmTypeId: number;
@@ -32,8 +28,8 @@ export interface AlarmListItem {
 }
 
 export interface DealAlarmParams {
-  alarmId: number;
-  dealRemark: string;
+  id: number;
+  remark: string;
   status: boolean;
 }
 

@@ -18,23 +18,26 @@
         />
       </template>
     </BasicTable>
+    <AlarmConfirmModel @register="registerModel" @success="handleModelSuccess"/>
   </div>
 </template>
 
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  // 依赖接口
   import { listAlarmApi } from '/@/api/things/alarm/alarmApi';
   import { alarmSearchFormSchema, alarmUnDealColumn } from './alarm.data';
+  import AlarmConfirmModel from "./AlarmConfirmModel.vue";
+  import {useModal} from "/@/components/Modal";
 
   export default defineComponent({
     // 组件名称
     name: 'ThingsAlarmComponent',
     // 当前依赖的组件
-    components: { BasicTable, TableAction  },
+    components: { BasicTable, TableAction, AlarmConfirmModel },
     setup(){
 
+      const [registerModel, { openModal, closeModal }] = useModal();
       const [registerTable, { reload }] = useTable({
         title: '告警列表',
         api: listAlarmApi,
@@ -62,14 +65,19 @@
         },
       });
 
+      function handleModelSuccess(){
+        closeModal();
+        reload();
+      }
+
       function handleView() {
 
       }
-      function handleEdit() {
-
+      function handleEdit(record) {
+        openModal(true, record);
       }
 
-      return {registerTable, handleEdit, handleView};
+      return {registerTable, handleEdit, handleView, registerModel, handleModelSuccess};
     }
   })
 

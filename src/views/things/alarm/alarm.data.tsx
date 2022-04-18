@@ -3,6 +3,41 @@ import moment from "moment";
 import {Tag} from "ant-design-vue";
 import {listDictionaryByTypeWthParam} from "/@/api/things/dictionary/dictionaryApi";
 
+export const alarmDealFormSchema: FormSchema[] = [
+  {
+    field: 'id',
+    label: '告警id',
+    component: 'Input',
+    required: true,
+    dynamicDisabled: true,
+  },
+  {
+    field: 'alarmName',
+    label: '告警名称',
+    component: 'Input',
+    required: true,
+    dynamicDisabled: true,
+  },
+  {
+    field: 'alarmStatus',
+    label: '处理状态',
+    component: 'Select',
+    required: true,
+    componentProps: {
+      options: [
+        { label: '确认解决', value: true },
+        { label: '暂不解决', value: false },
+      ],
+    },
+  },
+  {
+    field: 'remark',
+    label: '备注说明',
+    required: true,
+    component: 'InputTextArea',
+  },
+]
+
 // 告警查询form
 export const alarmSearchFormSchema: FormSchema[] = [
   {
@@ -12,14 +47,14 @@ export const alarmSearchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
-    field: 'dealStatus',
+    field: 'alarmStatus',
     label: '当前状态',
     component: 'Select',
     colProps: { span: 6 },
     componentProps: {
       options: [
         { label: '已处理', value: true },
-        { label: '未处理', value: false },
+        { label: '待处理', value: false },
       ],
     },
   },
@@ -66,14 +101,18 @@ export const alarmUnDealColumn: BasicColumn[] = [
   },
   {
     title: '处理状态',
-    dataIndex: 'dealStatus',
+    dataIndex: 'alarmStatus',
     customRender: ({ record }) => {
-      return record.dealStatus ? <Tag color="cyan">已处理</Tag> : <Tag color="purple">未处理</Tag>;
+      return record.alarmStatus ? <Tag color="cyan">已处理</Tag> : <Tag color="purple">待处理</Tag>;
     },
   },
   {
     title: '指定处理人',
     dataIndex: 'belongUserName',
+  },
+  {
+    title: '告警内容',
+    dataIndex: 'alarmContent',
   },
   {
     title: '创建时间',
