@@ -2,6 +2,58 @@ import { BasicColumn, FormSchema } from '/@/components/Table';
 import moment from "moment";
 import {Tag} from "ant-design-vue";
 import {listDictionaryByTypeWthParam} from "/@/api/things/dictionary/dictionaryApi";
+import {DescItem} from "/@/components/Description";
+
+// 告警的详情信息
+export const alarmInfoScheme: DescItem[] = [
+  {
+    field: 'id',
+    label: '告警ID',
+  },
+  {
+    field: 'alarmName',
+    label: '告警名称',
+  },
+  {
+    field: 'alarmStatus',
+    label: '当前状态',
+    render: ( val ) => {
+      return val ? <Tag color="cyan">已处理</Tag> : <Tag color="purple">待处理</Tag>;
+    },
+  },
+
+  {
+    field: 'alarmType',
+    label: '告警类型',
+  },
+  {
+    field: 'entityType',
+    label: '告警发生源类型',
+  },
+  {
+    field: 'entityName',
+    label: '告警发生源',
+  },
+
+  {
+    field: 'belongUserName',
+    label: '指定处理人',
+  },
+  {
+    field: 'createdTime',
+    label: '产生时间',
+    render: ( val ) => {
+      return moment(Number(val)).format('YYYY-MM-DD HH:mm:ss');
+    },
+    span: 2
+  },
+
+  {
+    field: 'alarmContent',
+    label: '告警内容',
+    span: 3
+  },
+]
 
 export const alarmDealFormSchema: FormSchema[] = [
   {
@@ -83,6 +135,50 @@ export const alarmSearchFormSchema: FormSchema[] = [
 ]
 
 
+export const assetAlarmUnDealColumn: BasicColumn[] = [
+  {
+    title: '告警Id',
+    dataIndex: 'id',
+    width: 5,
+    defaultHidden: true,
+  },
+  {
+    title: '名称',
+    dataIndex: 'alarmName',
+  },
+  {
+    title: '设备名称',
+    dataIndex: 'entityName',
+  },
+  {
+    title: '告警类型',
+    dataIndex: 'alarmType',
+  },
+  {
+    title: '处理状态',
+    dataIndex: 'alarmStatus',
+    customRender: ({ record }) => {
+      return record.alarmStatus ? <Tag color="cyan">已处理</Tag> : <Tag color="purple">待处理</Tag>;
+    },
+  },
+  {
+    title: '指定处理人',
+    dataIndex: 'belongUserName',
+  },
+  {
+    title: '告警内容',
+    dataIndex: 'alarmContent',
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'createdTime',
+    width:180,
+    customRender: ({ record }) => {
+      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
+    },
+  }
+]
+
 // 未处理结果列表
 export const alarmUnDealColumn: BasicColumn[] = [
   {
@@ -133,27 +229,19 @@ export const alarmDealedColumn: BasicColumn[] = [
     defaultHidden: true,
   },
   {
-    title: '名称',
-    dataIndex: 'alarmName',
-  },
-  {
-    title: '告警类型',
-    dataIndex: 'alarmType',
+    title: '处理人',
+    dataIndex: 'dealUserName',
   },
   {
     title: '处理状态',
     dataIndex: 'dealStatus',
     customRender: ({ record }) => {
-      return record.dealStatus ? <Tag color="cyan">已处理</Tag> : <Tag color="purple">未处理</Tag>;
+      return record.dealStatus ? <Tag color="cyan">已解决</Tag> : <Tag color="purple">暂不解决</Tag>;
     },
   },
   {
-    title: '指定处理人',
-    dataIndex: 'belongUserId',
-  },
-  {
-    title: '实际处理人',
-    dataIndex: 'dealUserId',
+    title: '备注/描述',
+    dataIndex: 'remark',
   },
   {
     title: '处理时间',
@@ -162,12 +250,4 @@ export const alarmDealedColumn: BasicColumn[] = [
       return moment(Number(record.dealTime)).format('YYYY-MM-DD HH:mm:ss');
     },
   },
-  {
-    title: '创建时间',
-    dataIndex: 'createdTime',
-    width:180,
-    customRender: ({ record }) => {
-      return moment(Number(record.createdTime)).format('YYYY-MM-DD HH:mm:ss');
-    },
-  }
 ]

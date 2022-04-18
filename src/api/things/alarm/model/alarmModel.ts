@@ -16,6 +16,7 @@ export type AlarmParams = BasicPageParams & {
 export interface AlarmListItem {
   id: number;
   entityId: number;
+  entityName: string;
   entityType: number;
   alarmName: string;
   alarmContent: string;
@@ -33,6 +34,17 @@ export interface DealAlarmParams {
   status: boolean;
 }
 
+export interface AlarmLogItem {
+  id: number;
+  alarmId: number;
+  dealTime: number;
+  dealUserId: number;
+  dealUserName: string;
+  remark: string;
+  dealStatus: string;
+}
 
 export type AlarmListResultModel = BasicFetchResult<AlarmListItem>;
+
+export type AlarmLogsResultModel = BasicFetchResult<AlarmLogItem>;
 

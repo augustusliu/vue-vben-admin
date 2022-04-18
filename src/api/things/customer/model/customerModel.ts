@@ -32,6 +32,8 @@ export interface CustomerAddOrUpdateParams {
   areaCode: string[];
   industryCode: string[];
   zipcode: string;
+  enabled: boolean;
+  authorityId: number;
 }
 
 export type CustomerListResultModel = BasicFetchResult<CustomerListItem>;

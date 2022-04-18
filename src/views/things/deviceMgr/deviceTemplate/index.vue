@@ -44,7 +44,7 @@
             <EditOutlined style="color:#3076c6" :onClick="handleEdit.bind(null, record)"/>
           </Col>
           <Col :span="8" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
-            <SettingOutlined style="color:#3076c6" :onClick="handleView.bind(null, record)"/>
+            <InfoCircleOutlined style="color:#3076c6" :onClick="handleView.bind(null, record)"/>
           </Col>
           <Col :span="8" style="text-align: center; line-height: 30px">
             <DeleteOutlined style="color:#3076c6" :onClick="handleDelete.bind(null, record)"/>
@@ -59,7 +59,7 @@
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { Row, Col} from 'ant-design-vue';
-  import { EditOutlined, SettingOutlined,DeleteOutlined } from '@ant-design/icons-vue';
+  import { EditOutlined, InfoCircleOutlined,DeleteOutlined } from '@ant-design/icons-vue';
   import TemplateCardContentSlot from './TemplateCardContentSlot.vue';
   import { BasicTable, useTable, TableAction, CardsTable } from '/@/components/Table';
   import { listTemplateWithPager, delTemplate } from '/@/api/things/asset/templateApi';
@@ -70,7 +70,7 @@
 
   export default defineComponent({
     name: 'EntityGroupManagement',
-    components: { BasicTable, DeviceTemplateModel, TableAction, CardsTable, EditOutlined,SettingOutlined,DeleteOutlined,
+    components: { BasicTable, DeviceTemplateModel, TableAction, CardsTable, EditOutlined,InfoCircleOutlined,DeleteOutlined,
       TemplateCardContentSlot, Row, Col},
     setup() {
       const go = useGo();

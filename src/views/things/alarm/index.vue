@@ -13,6 +13,7 @@
             {
               icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
+              disabled: (record.alarmStatus && record.alarmStatus === true),
             },
           ]"
         />
@@ -29,6 +30,7 @@
   import { alarmSearchFormSchema, alarmUnDealColumn } from './alarm.data';
   import AlarmConfirmModel from "./AlarmConfirmModel.vue";
   import {useModal} from "/@/components/Modal";
+  import {useGo} from "/@/hooks/web/usePage";
 
   export default defineComponent({
     // 组件名称
@@ -36,7 +38,7 @@
     // 当前依赖的组件
     components: { BasicTable, TableAction, AlarmConfirmModel },
     setup(){
-
+      const go = useGo();
       const [registerModel, { openModal, closeModal }] = useModal();
       const [registerTable, { reload }] = useTable({
         title: '告警列表',
@@ -70,10 +72,10 @@
         reload();
       }
 
-      function handleView() {
-
+      function handleView(record:Recordable) {
+        go('/alarm_detail/' + record.id );
       }
-      function handleEdit(record) {
+      function handleEdit(record:Recordable) {
         openModal(true, record);
       }
 

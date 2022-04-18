@@ -10,6 +10,7 @@
             {
               icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
+              // disabled: (record.systemDefault && record.systemDefault === true),
             },
             {
               icon: 'ant-design:delete-outlined',
@@ -17,6 +18,7 @@
               popConfirm: {
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
+                // disabled: (record.systemDefault && record.systemDefault === true),
               },
             },
           ]"

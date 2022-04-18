@@ -1,5 +1,6 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import moment from "moment";
+import {listAuthorityWithPager} from "/@/api/things/roles/roleApi";
 
 export const userColumn: BasicColumn[] = [
   {
@@ -135,6 +136,42 @@ export const createOrUpdateFormSchema: FormSchema[] = [
     componentProps: {
       placeholder: '邮箱地址',
     },
+  },
+  {
+    field: 'enabled',
+    label: '用户状态',
+    component: 'Select',
+    componentProps: {
+      options: [
+        { label: '启用', value: true },
+        { label: '禁用', value: false },
+      ],
+    },
+    required: true,
+    colProps: { span: 11 },
+  },
+  {
+    field: 'authorityId',
+    label: '选择角色',
+    component: 'SingleSearchSelect',
+    colProps: { span: 11 },
+    required: true,
+    componentProps: {
+      api: listAuthorityWithPager,
+      placeholder: '搜索角色信息',
+      params: {
+        name: '',
+        enabled: true,
+      },
+      resultField: 'items',
+      // use name as label
+      labelField: 'name',
+      // use id as value
+      valueField: 'id',
+      immediate: false,
+      showSearch: true,
+    },
+
   },
   {
     field: 'description',

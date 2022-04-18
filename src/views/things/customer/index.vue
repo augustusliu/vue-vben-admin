@@ -52,7 +52,7 @@
         columns: customerColumn,
         useSearchForm: true,
         formConfig: {
-          labelWidth: 120,
+          labelWidth: 90,
           schemas: searchFormSchema,
         },
         showTableSetting: true,

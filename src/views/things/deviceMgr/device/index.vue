@@ -45,7 +45,7 @@
       <template #cardAction="{ record }">
         <Row style="height: 30px; border-top: 1px solid #f0f0f0">
           <Col :span="6" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
-            <SettingOutlined style="color:#3076c6" :onClick="handleView.bind(null, record)"/>
+            <InfoCircleOutlined style="color:#3076c6" :onClick="handleView.bind(null, record)"/>
           </Col>
 
           <Col :span="6" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
@@ -70,7 +70,7 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { EditOutlined, SettingOutlined,DeleteOutlined,LockOutlined } from '@ant-design/icons-vue';
+  import { EditOutlined, InfoCircleOutlined,DeleteOutlined,LockOutlined } from '@ant-design/icons-vue';
   import {BasicTable, CardsTable, TableAction, useTable} from '/@/components/Table';
   import { useGo } from '/@/hooks/web/usePage';
   import { useDrawer } from '/@/components/Drawer';
@@ -87,7 +87,7 @@
     name: 'DeviceComponent',
     // 当前依赖的组件
     components: { CardsTable,BasicTable, TableAction, DeviceDrawer, CredentialsModel, DeviceCardContentSlot, Row, Col,
-      EditOutlined, SettingOutlined,DeleteOutlined,LockOutlined},
+      EditOutlined, InfoCircleOutlined,DeleteOutlined,LockOutlined},
 
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
