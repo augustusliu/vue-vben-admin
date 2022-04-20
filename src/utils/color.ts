@@ -149,3 +149,49 @@ function subtractLight(color: string, amount: number) {
   const c = cc < 0 ? 0 : cc;
   return c.toString(16).length > 1 ? c.toString(16) : `0${c.toString(16)}`;
 }
+
+export interface CardColor {
+  fontColor: string,
+  cardColor: string,
+}
+// 统计卡片默认的颜色组
+const metricBaseColor: string[] = ['#F4A460', '#ADD8E6', '#D8BFD8', '#FA8072', '#FFE4B5', '#023157', '#095b7c', '#234ea3'];
+
+export function randomMetricFontColor() {
+  return metricBaseColor[Math.floor(Math.random() * metricBaseColor.length + 1)-1];
+}
+
+export function randomMetricCardColor() {
+  return metricCardColor[Math.floor(Math.random() * metricCardColor.length + 1)-1];
+}
+
+const metricCardColor: CardColor[] = [
+  {
+    fontColor: '#fff',
+    cardColor: '#5d4c89'
+  },
+  {
+    fontColor: '#fff',
+    cardColor: '#566fe6'
+  },
+  {
+    fontColor: '#fff',
+    cardColor: '#594093'
+  },
+  {
+    fontColor: '#fff',
+    cardColor: '#5e4888'
+  },
+  {
+    fontColor: '#fff',
+    cardColor: '#475f5e'
+  },
+  {
+    fontColor: '#fff',
+    cardColor: '#72464f'
+  },
+  {
+    fontColor: '#fff',
+    cardColor: '#75326f'
+  }
+]

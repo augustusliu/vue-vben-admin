@@ -4,12 +4,12 @@ import { createFakeUserList } from './user';
 
 // single
 const dashboardRoute = {
-  path: '/dashboard',
+  path: '/metrics',
   name: 'Dashboard',
   component: 'LAYOUT',
-  redirect: '/dashboard/analysis',
+  redirect: '/metrics/analysis',
   meta: {
-    title: 'routes.dashboard.dashboard',
+    title: 'routes.metrics.metrics',
     hideChildrenInMenu: true,
     icon: 'bx:bx-home',
   },
@@ -17,24 +17,24 @@ const dashboardRoute = {
     {
       path: 'analysis',
       name: 'Analysis',
-      component: '/dashboard/analysis/index',
+      component: '/metrics/analysis/index',
       meta: {
         hideMenu: true,
         hideBreadcrumb: true,
-        title: 'routes.dashboard.analysis',
-        currentActiveMenu: '/dashboard',
+        title: 'routes.metrics.analysis',
+        currentActiveMenu: '/metrics',
         icon: 'bx:bx-home',
       },
     },
     {
       path: 'workbench',
       name: 'Workbench',
-      component: '/dashboard/workbench/index',
+      component: '/metrics/workbench/index',
       meta: {
         hideMenu: true,
         hideBreadcrumb: true,
-        title: 'routes.dashboard.workbench',
-        currentActiveMenu: '/dashboard',
+        title: 'routes.metrics.workbench',
+        currentActiveMenu: '/metrics',
         icon: 'bx:bx-home',
       },
     },

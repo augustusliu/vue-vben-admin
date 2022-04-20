@@ -4,4 +4,5 @@ export default {
   workbench: '工作台',
   analysis: '分析页',
   tenant: '租户',
+  metrics: '统计看板',
 };

@@ -126,9 +126,9 @@
   .vben-basic-table .ant-table-wrapper{
     padding: 0px 0px;
   }
-  .ant-table{
-    font-size: 12px;
-  }
+  /*.ant-table{*/
+  /*  font-size: 14px;*/
+  /*}*/
   .ant-table-fixed, .ant-table-thead{
     height: 30px;
   }

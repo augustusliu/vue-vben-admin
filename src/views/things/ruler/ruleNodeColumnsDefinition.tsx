@@ -962,17 +962,6 @@ export const nodeFormSchema: RuleNodeDefinitionFormSchema[] = [
         show:  ({ values }) => { return values.isDefaultPostgres === 'third';},
       },
       {
-        label: "表前缀：",
-        field: "tablePrefix",
-        component: "Input",
-        defaultValue: "iothings_",
-        colProps: {span: 10, offset: 1},
-        componentProps: {
-          placeholder: "表的前缀"
-        },
-        show:  ({ values }) => { return values.isDefaultPostgres === 'third';},
-      },
-      {
         label: "",
         field: "pgOptTips",
         component: "OperationTips",

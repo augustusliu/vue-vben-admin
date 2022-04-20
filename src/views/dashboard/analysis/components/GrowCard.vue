@@ -13,6 +13,7 @@
           <Tag :color="item.color">{{ item.action }}</Tag>
         </template>
 
+        <!--   动态数字变化     -->
         <div class="py-4 px-4 flex justify-between">
           <CountTo prefix="$" :startVal="1" :endVal="item.value" class="text-2xl" />
           <Icon :icon="item.icon" :size="40" />
@@ -28,7 +29,6 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
-
   import { CountTo } from '/@/components/CountTo/index';
   import { Icon } from '/@/components/Icon';
   import { Tag, Card } from 'ant-design-vue';

@@ -11,7 +11,7 @@ const dashboard: AppRouteModule = {
   meta: {
     hideChildrenInMenu: true,
     icon: 'simple-icons:about-dot-me',
-    title: t('routes.dashboard.about'),
+    title: t('routes.metrics.about'),
     orderNo: 100000,
   },
   children: [
@@ -20,7 +20,7 @@ const dashboard: AppRouteModule = {
       name: 'AboutPage',
       component: () => import('/@/views/sys/about/index.vue'),
       meta: {
-        title: t('routes.dashboard.about'),
+        title: t('routes.metrics.about'),
         icon: 'simple-icons:about-dot-me',
         hideMenu: true,
       },
