@@ -167,31 +167,31 @@ export function randomMetricCardColor() {
 
 const metricCardColor: CardColor[] = [
   {
-    fontColor: '#fff',
-    cardColor: '#5d4c89'
+    fontColor: '#5d4c89',
+    cardColor: '#ffffff'
   },
   {
-    fontColor: '#fff',
-    cardColor: '#566fe6'
+    fontColor: '#566fe6',
+    cardColor: '#ffffff'
   },
   {
-    fontColor: '#fff',
-    cardColor: '#594093'
+    fontColor: '#594093',
+    cardColor: '#ffffff'
   },
   {
-    fontColor: '#fff',
-    cardColor: '#5e4888'
+    fontColor: '#5e4888',
+    cardColor: '#ffffff'
   },
   {
-    fontColor: '#fff',
-    cardColor: '#475f5e'
+    fontColor: '#475f5e',
+    cardColor: '#ffffff'
   },
   {
-    fontColor: '#fff',
-    cardColor: '#72464f'
+    fontColor: '#72464f',
+    cardColor: '#ffffff'
   },
   {
-    fontColor: '#fff',
-    cardColor: '#75326f'
+    fontColor: '#75326f',
+    cardColor: '#ffffff'
   }
 ]

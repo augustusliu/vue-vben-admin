@@ -1,8 +1,12 @@
 import { defHttp } from '/@/utils/http/axios';
-import {MetricItem} from "/@/api/things/metrics/model/metricModel";
+import {MetricItem, MetricPieItem} from "/@/api/things/metrics/model/metricModel";
 
 enum MetricApiEnum {
   ListFieldMetricApi = '/api/metric/fields',
+  AlarmTypePieApi = '/api/metric/alarmPie',
+  DeviceTransportPieApi = '/api/metric/device/transport',
+  DeviceLabelPieApi = '/api/metric/device/label',
+
 }
 
 // 获取统计页面卡片头部数据
@@ -14,3 +18,11 @@ export const getMetricCards = (metricTypes: string) =>{
   }
 }
 
+export const getAlarmTypePie = () =>
+  defHttp.get<MetricPieItem[]>({ url: MetricApiEnum.AlarmTypePieApi });
+
+export const getDeviceTransportPie = () =>
+  defHttp.get<MetricPieItem[]>({ url: MetricApiEnum.DeviceTransportPieApi });
+
+export const getDeviceLabelPie = () =>
+  defHttp.get<MetricPieItem[]>({ url: MetricApiEnum.DeviceLabelPieApi });
