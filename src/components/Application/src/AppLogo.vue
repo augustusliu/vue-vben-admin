@@ -4,7 +4,7 @@
 -->
 <template>
   <div class="anticon" :class="getAppLogoClass" @click="goHome">
-    <img src="../../../assets/images/logo.png" />
+<!--    <img src="../../../assets/images/logo.png" />-->
     <div class="ml-2 truncate md:opacity-100" :class="getTitleClass" v-show="showTitle">
       {{ title }}
     </div>
@@ -85,6 +85,7 @@
 
     &__title {
       font-size: 16px;
+      line-height: 2;
       font-weight: 700;
       transition: all 0.5s;
     }

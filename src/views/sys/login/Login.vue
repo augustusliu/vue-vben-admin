@@ -1,24 +1,23 @@
 <template>
   <div :class="prefixCls" class="relative w-full h-full px-4">
-    <AppLocalePicker
-      class="absolute text-white top-4 right-4 enter-x "
-      :showText="false"
-      v-if="!sessionTimeout && showLocale"
-    />
-<!--    <AppDarkModeToggle class="absolute top-3 right-7 enter-x" v-if="!sessionTimeout" />-->
-
-    <span class="-enter-x xl:hidden">
-      <AppLogo :alwaysShowTitle="true" />
-    </span>
-
-    <div class="container relative h-full py-2 mx-auto sm:px-10">
-      <div class="flex h-full w-full">
+    <div class="login-header">
+       <span class="-enter-x">
+          <AppLogo :alwaysShowTitle="true" />
+       </span>
+      <span class="-enter-x">
+         <AppLocalePicker
+           class="absolute text-white top-4 right-4 enter-x "
+           :showText="false"
+           v-if="!sessionTimeout && showLocale"
+         />
+      </span>
+    </div>
+    <div class="container h-full w-full ">
         <div class="three-container" ref="containerRef"></div>
-        <div class="flex w-full h-full py-5 xl:h-auto xl:py-0 xl:my-0 xl:w-6/12">
-          <div
-            :class="`${prefixCls}-form`"
-            class="
-              relative
+        <div class="login-desc" >
+          <p>专注物联网与数字孪生解决方案</p>
+        </div>
+        <div :class="`${prefixCls}-form`" class="
               w-full
               px-5
               py-8
@@ -32,13 +31,9 @@
               sm:w-3/4
               lg:w-2/4
               xl:w-auto
-              enter-x
-            "
-          >
-            <LoginForm />
-          </div>
+              enter-x"  style="position: absolute; top: 25%; left: 60%; z-index: 99;">
+          <LoginForm/>
         </div>
-      </div>
     </div>
   </div>
 </template>
@@ -73,7 +68,6 @@
       const title = computed(() => globSetting?.title ?? '');
 
       const logoModel = 'models/logo.glb';
-
       async function init() {
         await nextTick();
         if (!containerRef) {
@@ -110,7 +104,6 @@
       &-form {
         background: transparent !important;
       }
-
       .app-iconify {
         color: #fff;
       }
@@ -127,13 +120,9 @@
     min-height: 100%;
     overflow: hidden;
     background-color: #2942b3;
-    @media (max-width: @screen-xl) {
-      .@{prefix-cls}-form {
-        background-color: #fff;
-      }
-    }
     &-form {
       background-color: #fff;
+      z-index: 99;
     }
     &::before {
       position: absolute;
@@ -165,18 +154,10 @@
 
     .container {
       .@{logo-prefix-cls} {
-        display: flex;
-        width: 60%;
-        height: 80px;
-
-        &__title {
-          font-size: 24px;
-          color: #fff;
-        }
-
-        img {
-          width: 48px;
-        }
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top:60px;
       }
     }
 
@@ -221,14 +202,30 @@
       color: @text-color-secondary;
     }
     .three-container{
+      top: 15%;
       width: 50% !important;
-      height: 100% !important;
-      canvas{
-        width: 80% !important;
-        height: 30% !important;
-        opacity:1;
-        float: left;
+      height: 45% !important;
+      position: absolute;
+      z-index: 90;
+      canvas {
+        width: 100% !important;
+        height: 100% !important;
       }
+    }
+    .login-desc {
+      top: 65%;
+      position: absolute;
+      z-index: 90;
+      padding-left: 150px;
+      color: #fff;
+      font-size: 30px;
+    }
+    .login-form{
+      z-index: 99;
+    }
+    .login-header{
+      width:100%;
+      height: 50px;
     }
   }
 </style>

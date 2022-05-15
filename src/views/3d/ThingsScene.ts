@@ -17,9 +17,8 @@ let clock = new Clock();
 
 const renderAnimate = () => {
   requestAnimationFrame(renderAnimate);//请求再次执行渲染函数render
-  var time = clock.getDelta();
   if(animateMixer){
-    animateMixer.update(time);
+    animateMixer.update(clock.getDelta());
   }
   renderer.render(scene, camera);//执行渲染操作
 }
@@ -68,7 +67,7 @@ export class ThingsScene{
 
   private initCamera(){
     camera = new PerspectiveCamera(65, this.containerWidth / this.containerHeight, 0.1, 1000);
-    camera.position.set(0, 1, 2.8);  // x, z, y轴位置
+    camera.position.set(-1, 1, 3);  // x, z, y轴位置
     camera.lookAt(scene.position);
   }
 
@@ -92,7 +91,6 @@ export class ThingsScene{
     let axesHelper = new AxesHelper(10);
     scene.add(axesHelper);
   }
-
 
   // 加载gltf模型
   public loadGLTFModel(path:string){
