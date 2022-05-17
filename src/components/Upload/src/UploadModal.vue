@@ -45,15 +45,11 @@
   import { defineComponent, reactive, ref, toRefs, unref, computed, PropType } from 'vue';
   import { Upload, Alert } from 'ant-design-vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  //   import { BasicTable, useTable } from '/@/components/Table';
-  // hooks
   import { useUploadType } from './useUpload';
   import { useMessage } from '/@/hooks/web/useMessage';
-  //   types
   import { FileItem, UploadResultStatus } from './typing';
   import { basicProps } from './props';
   import { createTableColumns, createActionColumn } from './data';
-  // utils
   import { checkFileType, checkImgType, getBase64WithFile } from './helper';
   import { buildUUID } from '/@/utils/uuid';
   import { isFunction } from '/@/utils/is';
@@ -200,6 +196,7 @@
           return {
             success: true,
             error: null,
+            path: data.data,
           };
         } catch (e) {
           console.log(e);
@@ -240,19 +237,21 @@
       //   点击保存
       function handleOk() {
         const { maxNumber } = props;
-
         if (fileListRef.value.length > maxNumber) {
           return createMessage.warning(t('component.upload.maxNumber', [maxNumber]));
         }
         if (isUploadingRef.value) {
           return createMessage.warning(t('component.upload.saveWarn'));
         }
-        const fileList: string[] = [];
 
+        const fileList: any[] = [];
         for (const item of fileListRef.value) {
           const { status, responseData } = item;
           if (status === UploadResultStatus.SUCCESS && responseData) {
-            fileList.push(responseData.url);
+            fileList.push({
+              'name': item.file.name,
+              'path': responseData.result,
+            });
           }
         }
         // 存在一个上传成功的即可保存

@@ -27,4 +27,7 @@ export default {
   deviceGroup: 'Device Group',
   authority: 'Authority Management',
   systemSetting: 'System Setting',
+  models: 'Models List',
+
+  threeModel: '3D Dashboard',
 };

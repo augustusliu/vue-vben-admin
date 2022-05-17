@@ -36,4 +36,6 @@ export interface GetUserInfoModel {
   avatar: string;
   // 介绍
   desc?: string;
+  // 用户对应的3d模型
+  threeModelPath?: string;
 }

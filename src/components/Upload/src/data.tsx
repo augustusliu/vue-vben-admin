@@ -14,15 +14,15 @@ const { t } = useI18n();
 // 文件上传列表
 export function createTableColumns(): BasicColumn[] {
   return [
-    {
-      dataIndex: 'thumbUrl',
-      title: t('component.upload.legend'),
-      width: 100,
-      customRender: ({ record }) => {
-        const { thumbUrl } = (record as FileItem) || {};
-        return thumbUrl && <ThumbUrl fileUrl={thumbUrl} />;
-      },
-    },
+    // {
+    //   dataIndex: 'thumbUrl',
+    //   title: t('component.upload.legend'),
+    //   width: 100,
+    //   customRender: ({ record }) => {
+    //     const { thumbUrl } = (record as FileItem) || {};
+    //     return thumbUrl && <ThumbUrl fileUrl={thumbUrl} />;
+    //   },
+    // },
     {
       dataIndex: 'name',
       title: t('component.upload.fileName'),

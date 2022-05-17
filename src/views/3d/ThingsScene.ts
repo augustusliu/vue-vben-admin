@@ -7,38 +7,95 @@ import {
   SpotLight,
   Vector2,
   AnimationMixer,
-  Clock, LoopOnce
+  Clock, LoopOnce,
+  CubeTextureLoader
 } from 'three';
 import { OrbitControls } from "./extends/OrbitControls";
 import { GLTFLoader } from "./extends/GLTFLoader";
-import {ColorRepresentation} from "three/src/utils";
-let scene, renderer, controls, camera, spotLight, gltfLoader, animateMixer;
-let clock = new Clock();
+import { ColorRepresentation } from "three/src/utils";
+import { Ref } from "vue";
+import { useUserStore } from "/@/store/modules/user";
+
+// 变量
+export interface ThingsSceneOptions{
+  cameraX: number;
+  cameraY: number;
+  cameraZ: number;
+  cameraFov: number;
+  cameraNear: number;
+  cameraFar: number;
+
+  // 场景的背景颜色
+  sceneColor?: ColorRepresentation;
+  // 场景背景图片
+  sceneBackImages?: string [];
+  // 场景背景采用颜色还是纹理图片
+  enableSceneBackgroundColor: boolean;
+}
+
+export interface ThingsThreeContext{
+  scene?: any;
+  renderer?: any;
+  controls?: any;
+  camera?: any;
+  spotLight?: any;
+  gltfLoader?: any;
+  animateMixer?: any;
+  clock: Clock;
+  thingsThree?: ThingsScene;
+}
+
+
+// 请求的权限
+const userStore = useUserStore();
+
+// 定义一个全局的Threejs 环境
+export const defaultThreeContext: ThingsThreeContext = {
+  'clock': new Clock()
+}
 
 const renderAnimate = () => {
   requestAnimationFrame(renderAnimate);//请求再次执行渲染函数render
-  if(animateMixer){
-    animateMixer.update(clock.getDelta());
+  if(defaultThreeContext.animateMixer){
+    defaultThreeContext.animateMixer.update(defaultThreeContext.clock.getDelta());
   }
-  renderer.render(scene, camera);//执行渲染操作
+  defaultThreeContext.renderer.render(defaultThreeContext.scene, defaultThreeContext.camera);//执行渲染操作
 }
 
-// 定义things的场景
+// 定义things的场景--全局一个
 export class ThingsScene{
   private containerRef;
   private containerHeight;
   private containerWidth;
-  constructor(containerRef:any, bgColor: ColorRepresentation, openControls: boolean) {
+  private readonly options: ThingsSceneOptions | undefined;
+  constructor(containerRef: Ref<HTMLElement>, openControls: boolean, opts: ThingsSceneOptions) {
+    if(!containerRef.value || !opts){
+      return;
+    }
+    this.options = opts || {};
     this.containerRef = containerRef;
     this.containerHeight = containerRef.value.clientHeight | window.innerHeight;
     this.containerWidth = containerRef.value.clientWidth | window.innerWidth;
 
     // Scene
-    scene = new Scene();
-    scene.background = new Color(bgColor);
+    if(defaultThreeContext.scene){
+      defaultThreeContext.scene.dispose();
+    }else{
+      defaultThreeContext.scene = new Scene();
+    }
+
+    if(opts.enableSceneBackgroundColor){
+      defaultThreeContext.scene.background = new Color(opts.sceneColor);
+    }else{
+      // load bg texture
+      if(opts.sceneBackImages && opts.sceneBackImages.length > 0){
+        defaultThreeContext.scene.background = this.buildSceneTexture(opts.sceneBackImages);
+      }
+    }
+
     // renderer
     this.initRenderer();
-    this.containerRef.value.appendChild(renderer.domElement);
+    this.containerRef.value.appendChild(defaultThreeContext.renderer.domElement);
     // camera
     this.initCamera();
     // spot light
@@ -50,55 +107,70 @@ export class ThingsScene{
 
     this.onContainerResize();
     // gltf loader
-    gltfLoader = new GLTFLoader();
+    if(!defaultThreeContext.gltfLoader){
+      defaultThreeContext.gltfLoader = new GLTFLoader();
+      defaultThreeContext.gltfLoader.setRequestHeader({
+        'Authorization': 'Bearer ' + userStore.getToken
+      });
+    }
+
+    defaultThreeContext.thingsThree = this;
   }
 
   // init renderer
   private initRenderer(){
-    renderer = new WebGLRenderer({antialias: true, alpha :true});
-    renderer.setClearColor( 0xffffff, 1 );
-    renderer.setSize(this.containerWidth, this.containerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.setPixelRatio(window.devicePixelRatio);
+    defaultThreeContext.renderer = new WebGLRenderer({antialias: true, alpha :true});
+    defaultThreeContext.renderer.setClearColor( 0xffffff, 1 );
+    defaultThreeContext.renderer.setSize(this.containerWidth, this.containerHeight);
+    defaultThreeContext.renderer.shadowMap.enabled = true;
+    defaultThreeContext.renderer.setPixelRatio(window.devicePixelRatio);
     // 渲染器渲染sGRB纹理
-    renderer.gammaOutput = true;
-    renderer.gammaFactor = 2.2;
+    defaultThreeContext.renderer.gammaOutput = true;
+    defaultThreeContext.renderer.gammaFactor = 2.2;
   }
 
   private initCamera(){
-    camera = new PerspectiveCamera(65, this.containerWidth / this.containerHeight, 0.1, 1000);
-    camera.position.set(-1, 1, 3);  // x, z, y轴位置
-    camera.lookAt(scene.position);
+    if(this.options){
+      defaultThreeContext.camera = new PerspectiveCamera(this.options.cameraFov, this.containerWidth / this.containerHeight, this.options.cameraNear, this.options.cameraFar);
+      defaultThreeContext.camera.position.set(this.options.cameraX,this.options.cameraZ, this.options.cameraY);  // x, z, y轴位置
+      defaultThreeContext.camera.lookAt(defaultThreeContext.scene.position);
+    }
   }
 
   private initSpotLight(){
-    spotLight = new SpotLight(0xffffff);
-    spotLight.position.set(0, 1500, 1500);
-    spotLight.castShadow = true;  // 开启光源投影
-    spotLight.shadow.mapSize = new Vector2(1024,1024);
-    spotLight.shadow.camera.far = 1300;
-    spotLight.shadow.camera.near = 400;
-    scene.add(spotLight);
+    defaultThreeContext.spotLight = new SpotLight(0xffffff);
+    defaultThreeContext.spotLight.position.set(0, 1500, 1500);
+    defaultThreeContext.spotLight.castShadow = true;  // 开启光源投影
+    defaultThreeContext.spotLight.shadow.mapSize = new Vector2(1024,1024);
+    defaultThreeContext.spotLight.shadow.camera.far = 1300;
+    defaultThreeContext.spotLight.shadow.camera.near = 400;
+    defaultThreeContext.scene.add(defaultThreeContext.spotLight);
   }
 
   private initObjControl(){
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.addEventListener('change', renderAnimate);
+    defaultThreeContext.controls = new OrbitControls(defaultThreeContext.camera, defaultThreeContext.renderer.domElement);
+    defaultThreeContext.controls.addEventListener('change', renderAnimate);
+  }
+
+  private buildSceneTexture(images:string []){
+    const textureLoader = new CubeTextureLoader();
+    return textureLoader.load(images);
   }
 
   // 显示坐标轴
   public showAxes(){
     let axesHelper = new AxesHelper(10);
-    scene.add(axesHelper);
+    defaultThreeContext.scene.add(axesHelper);
   }
 
   // 加载gltf模型
   public loadGLTFModel(path:string){
     // load
-    gltfLoader.load(path,
+    console.log('loader', defaultThreeContext);
+    defaultThreeContext.gltfLoader.load(path,
       (model) => {
         this.doModelLoadSuccess(model);
-        scene.add(model.scene);
+        defaultThreeContext.scene.add(model.scene);
         renderAnimate();
       },
       function (progress){
@@ -114,9 +186,9 @@ export class ThingsScene{
       window.addEventListener('resize', () => {
           this.containerHeight = this.containerRef.value.clientHeight | window.innerHeight;
           this.containerWidth = this.containerRef.value.clientWidth | window.innerWidth;
-          camera.aspect = this.containerWidth / this.containerHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(this.containerWidth, this.containerHeight);
+          defaultThreeContext.camera.aspect = this.containerWidth / this.containerHeight;
+          defaultThreeContext.camera.updateProjectionMatrix();
+          defaultThreeContext.renderer.setSize(this.containerWidth, this.containerHeight);
         },
         false);
   }
@@ -139,8 +211,8 @@ export class ThingsScene{
     // 加载模型动画
     if(gltfModel.animations && gltfModel.animations.length > 0){
       // 加载模型动画
-      animateMixer = new AnimationMixer(gltfModel.scene);
-      let animate = animateMixer.clipAction(gltfModel.animations[0]).play();
+      defaultThreeContext.animateMixer = new AnimationMixer(gltfModel.scene);
+      let animate = defaultThreeContext.animateMixer.clipAction(gltfModel.animations[0]).play();
       animate.setLoop(LoopOnce, 1);
       animate.clampWhenFinished = true;
       animate.enabled = true;

@@ -40,8 +40,8 @@
             .map((item) => {
               return {
                 url: item,
-                type: item.split('.').pop() || '',
-                name: item.split('/').pop() || '',
+                type: item.path.split('.').pop() || '',
+                name: item.path.split('/').pop() || '',
               };
             });
         },
@@ -50,13 +50,13 @@
 
       // 删除
       function handleRemove(record: PreviewFileItem) {
-        const index = fileListRef.value.findIndex((item) => item.url === record.url);
+        const index = fileListRef.value.findIndex((item) => item.name === record.path);
         if (index !== -1) {
           const removed = fileListRef.value.splice(index, 1);
-          emit('delete', removed[0].url);
+          emit('delete', removed[0].name);
           emit(
             'list-change',
-            fileListRef.value.map((item) => item.url)
+            fileListRef.value.map((item) => item.path)
           );
         }
       }

@@ -1,7 +1,6 @@
 <template>
   <div class="p-4">
     <MetricCard class="enter-y" />
-
     <div class="md:flex enter-y" style="margin-top: 15px">
       <TransportMetricPie class="md:w-1/3 w-full"/>
       <DeviceLabelPie class="md:w-1/3 w-full"/>

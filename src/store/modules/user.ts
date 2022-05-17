@@ -107,7 +107,8 @@ export const useUserStore = defineStore({
             router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
             permissionStore.setDynamicAddedRoute(true);
           }
-          await router.replace(userInfo.homePath || PageEnum.BASE_HOME);
+          // await router.replace(userInfo.homePath || PageEnum.BASE_HOME);
+          await router.replace(userInfo.homePath || PageEnum.THREE_MODEL_DASHBOARD);
         }
         return userInfo;
       } catch (error) {

@@ -57,7 +57,7 @@
     components: {LoginForm, AppDarkModeToggle, AppLocalePicker, AppLogo},
     setup(){
       const threeSceneRef = ref(null) as Ref<ThingsScene | null>;
-      const containerRef = ref(null); //容器
+      const containerRef = ref() as Ref<HTMLElement>; //容器
 
 
       const globSetting = useGlobSetting();
@@ -70,11 +70,20 @@
       const logoModel = 'models/logo.glb';
       async function init() {
         await nextTick();
-        if (!containerRef) {
+        if (!containerRef.value) {
           return;
         }
         // 透明背景
-        threeSceneRef.value = new ThingsScene(containerRef, 0x2941b3, false);
+        threeSceneRef.value = new ThingsScene(containerRef, false, {
+          cameraX: -1,
+          cameraY: 3,
+          cameraZ: 1,
+          cameraFov: 65,
+          cameraNear: 0.1,
+          cameraFar: 1000,
+          enableSceneBackgroundColor: true,
+          sceneColor:0x2941b3
+        });
         threeSceneRef.value.loadGLTFModel(logoModel);
       }
 

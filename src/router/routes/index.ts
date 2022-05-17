@@ -35,12 +35,24 @@ export const LoginRoute: AppRouteRecordRaw = {
   },
 };
 
+// 企业3D看板
+export const ThreeModelRoute: AppRouteRecordRaw = {
+  path: '/three',
+  name: 'ThreeModel',
+  component: () => import('/@/views/dashboard/threeModel/ThreeModel.vue'),
+  meta: {
+    title: t('routes.things.threeModel'),
+  },
+};
+
 // Basic routing without permission
 export const basicRoutes = [
   // 登陆地址路由
   LoginRoute,
   // 根路由，用户首页
   RootRoute,
+  // 3D看板
+  ThreeModelRoute,
   // 位于主风格外的页面，用户构建两种风格的界面风格
   ...mainOutRoutes,
   // 跳转路由

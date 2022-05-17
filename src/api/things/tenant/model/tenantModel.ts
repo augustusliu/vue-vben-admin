@@ -37,6 +37,7 @@ export interface TenantAddOrUpdateParams {
   industryCode: string[];
   zipcode: string;
   tenantProfileId: number;
+  models: string[];
 }
 
 export type TenantListResultModel = BasicFetchResult<TenantListItem>;

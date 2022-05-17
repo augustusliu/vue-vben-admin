@@ -13,6 +13,7 @@ tests/server/static/upload
 .env.*.local
 .eslintcache
 
+public/models/*
 # Log files
 npm-debug.log*
 yarn-debug.log*

@@ -27,4 +27,7 @@ export default {
   deviceGroup: '设备分组',
   authority: '角色管理',
   systemSetting: '系统设置',
+  models: '模型列表',
+
+  threeModel: '3D看板',
 };

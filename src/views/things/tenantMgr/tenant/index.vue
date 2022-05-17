@@ -13,10 +13,6 @@
               onClick: handleEdit.bind(null, record),
             },
             {
-              icon: 'ant-design:unlock-outlined',
-              onClick: handleEdit.bind(null, record),
-            },
-            {
               icon: 'ant-design:delete-outlined',
               color: 'error',
               popConfirm: {
