@@ -38,7 +38,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, nextTick, computed, Ref, onMounted } from "vue";
+  import { defineComponent, ref, nextTick, computed, Ref, onMounted, onBeforeUnmount } from "vue";
   import { AppLogo } from '/@/components/Application';
   import { AppLocalePicker, AppDarkModeToggle } from '/@/components/Application';
   import LoginForm from './LoginForm.vue';
@@ -74,7 +74,7 @@
           return;
         }
         // 透明背景
-        threeSceneRef.value = new ThingsScene(containerRef, false, {
+        threeSceneRef.value = new ThingsScene(containerRef, {
           cameraX: -1,
           cameraY: 3,
           cameraZ: 1,
@@ -82,12 +82,19 @@
           cameraNear: 0.1,
           cameraFar: 1000,
           enableSceneBackgroundColor: true,
-          sceneColor:0x2941b3
-        });
+          sceneColor:0x2941b3,
+          canControls: false,
+        }, null, null);
         threeSceneRef.value.loadGLTFModel(logoModel);
       }
 
+      async function disposeModel(){
+        if(threeSceneRef.value){
+          await threeSceneRef.value.disposeSceneObjs();
+        }
+      }
       onMounted(init);
+      onBeforeUnmount(disposeModel);
       return {containerRef, prefixCls, showLocale, title, t};
     },
   });

@@ -60,6 +60,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "sortablejs": "^1.14.0",
     "three": "^0.140.2",
+    "three-nebula": "^10.0.3",
     "tinymce": "^5.8.2",
     "vditor": "^3.8.6",
     "vue": "3.2.31",
