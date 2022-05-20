@@ -5,23 +5,7 @@
   >
     <div
       :class="`${prefixCls}__unlock`"
-      class="
-        absolute
-        top-0
-        left-1/2
-        flex
-        pt-5
-        h-16
-        items-center
-        justify-center
-        sm:text-md
-        xl:text-xl
-        text-white
-        flex-col
-        cursor-pointer
-        transform
-        translate-x-1/2
-      "
+      class="absolute top-0 left-1/2 flex pt-5 h-16 items-center justify-center sm:text-md xl:text-xl text-white flex-col cursor-pointer transform translate-x-1/2"
       @click="handleShowForm(false)"
       v-show="showDate"
     >
@@ -88,7 +72,7 @@
       <div class="text-5xl mb-4 enter-x" v-show="!showDate">
         {{ hour }}:{{ minute }} <span class="text-3xl">{{ meridiem }}</span>
       </div>
-      <div class="text-2xl"> {{ year }}/{{ month }}/{{ day }} {{ week }} </div>
+      <div class="text-2xl">{{ year }}/{{ month }}/{{ day }} {{ week }}</div>
     </div>
   </div>
 </template>
@@ -102,26 +86,19 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { LockOutlined } from '@ant-design/icons-vue';
   import headerImg from '/@/assets/images/header.jpg';
-
   const InputPassword = Input.Password;
-
   const password = ref('');
   const loading = ref(false);
   const errMsg = ref(false);
   const showDate = ref(true);
-
   const { prefixCls } = useDesign('lock-page');
   const lockStore = useLockStore();
   const userStore = useUserStore();
-
   const { hour, month, minute, meridiem, year, day, week } = useNow(true);
-
   const { t } = useI18n();
-
   const userinfo = computed(() => {
     return userStore.getUserInfo || {};
   });
-
   /**
    * @description: unLock
    */
@@ -138,26 +115,21 @@
       loading.value = false;
     }
   }
-
   function goLogin() {
     userStore.logout(true);
     lockStore.resetLockInfo();
   }
-
   function handleShowForm(show = false) {
     showDate.value = show;
   }
 </script>
 <style lang="less" scoped>
   @prefix-cls: ~'@{namespace}-lock-page';
-
   .@{prefix-cls} {
     z-index: @lock-page-z-index;
-
     &__unlock {
       transform: translate(-50%, 0);
     }
-
     &__hour,
     &__minute {
       display: flex;
@@ -167,19 +139,16 @@
       border-radius: 30px;
       justify-content: center;
       align-items: center;
-
       @media screen and (max-width: @screen-md) {
         span:not(.meridiem) {
           font-size: 160px;
         }
       }
-
       @media screen and (min-width: @screen-md) {
         span:not(.meridiem) {
           font-size: 160px;
         }
       }
-
       @media screen and (max-width: @screen-sm) {
         span:not(.meridiem) {
           font-size: 90px;
@@ -190,7 +159,6 @@
           font-size: 220px;
         }
       }
-
       @media screen and (min-width: @screen-xl) {
         span:not(.meridiem) {
           font-size: 260px;
@@ -202,7 +170,6 @@
         }
       }
     }
-
     &-entry {
       position: absolute;
       top: 0;
@@ -210,37 +177,31 @@
       display: flex;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
+      background-color: rgb(0 0 0 / 50%);
       backdrop-filter: blur(8px);
       justify-content: center;
       align-items: center;
-
       &-content {
         width: 260px;
       }
-
       &__header {
         text-align: center;
-
         &-img {
           width: 70px;
           margin: 0 auto;
           border-radius: 50%;
         }
-
         &-name {
           margin-top: 5px;
           font-weight: 500;
           color: #bababa;
         }
       }
-
       &__err-msg {
         display: inline-block;
         margin-top: 10px;
         color: @error-color;
       }
-
       &__footer {
         display: flex;
         justify-content: space-between;

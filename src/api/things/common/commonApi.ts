@@ -1,7 +1,7 @@
 import { defHttp } from '/@/utils/http/axios';
 const globSetting = useGlobSetting();
 import {
-  AreasResult,
+  AreasResult, ImportAssetByModel,
   IndustryResult
 } from "/@/api/things/common/model/commonModel";
 import {UploadFileParams} from "/#/axios";
@@ -19,6 +19,8 @@ enum CommonApi {
   GetModelApi = '/api/file/model/get/',
   FileImageUploadApi = '/api/file/img/upload',
   GetImageApi = '/api/file/img/get/',
+
+  ImportAssetsByModelApi='/api/model/importAssets',
 }
 
 export const listAreas = () =>
@@ -49,5 +51,6 @@ export const uploadImageApi = (params: any) =>
 
 export const getModelApi = (fileId: any) =>
   defHttp.get<any>({ url: CommonApi.GetModelApi  + fileId });
-export const getImageApi = (fileId: any) =>
-  defHttp.get<any>({ url: CommonApi.GetImageApi  + fileId });
+
+export const importAssetsByModel = (params: ImportAssetByModel) =>
+  defHttp.post<number>({ url: CommonApi.ImportAssetsByModelApi  ,params });

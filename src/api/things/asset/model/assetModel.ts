@@ -29,12 +29,12 @@ export interface AssetListItem {
 }
 
 export interface AssetAddParam {
-  id: number;
+  id?: number;
   name: string;
   code: string;
   icon: string;
-  label: string;
-  description: string;
+  label: any;
+  description?: string;
   disabled: boolean;
 }
 

@@ -11,7 +11,11 @@ enum ModelApi {
   ModelChangeMainOrEnableApi = '/api/model/change',
   ModelDelApi = '/api/model/del',
   ModelUploadAddApi = '/api/model/add',
+  ModelGetApi = 'api/model/get',
 }
+
+export const getModelInfoApi = (modelId: number) =>
+  defHttp.get<ModelItem>({ url: ModelApi.ModelGetApi + '?modelId=' + modelId });
 
 export const addModelInfo = (params: any[]) =>
   defHttp.post<void>({ url: ModelApi.ModelUploadAddApi, params });

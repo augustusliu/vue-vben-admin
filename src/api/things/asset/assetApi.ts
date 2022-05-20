@@ -26,7 +26,9 @@ enum AssetApi {
   AssetLabelsApi = '/api/asset/labels',
   AssetListAllApi = '/api/asset/listAll',
   AssetListAllNamesApi = '/api/asset/listAllNames',
-  AssetListAllNamesByPagerApi = '/api/asset/listNamesByPager'
+  AssetListAllNamesByPagerApi = '/api/asset/listNamesByPager',
+
+  AssetDelApi = '/api/asset/del/',
 }
 
 // 分页查询对应的资产列表
@@ -36,6 +38,9 @@ export const listAssetApi = (params: AssetParams) =>
 // 分页查询对应的资产列表
 export const getAssetApi = (params: number) =>
   defHttp.get<AssetListItem>({ url: AssetApi.AssetGet + params });
+
+export const delAssetApi = (assetId: number) =>
+  defHttp.get<number>({ url: AssetApi.AssetDelApi + assetId });
 
 // 查询资产下属性列表
 export const listAttributeByAssetApi = (params: any) =>

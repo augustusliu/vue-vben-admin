@@ -1,9 +1,15 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import moment from "moment";
+import {Tag} from "ant-design-vue";
 
 
 // 模型列表
 export const modelsColumns: BasicColumn[] = [
+  {
+    title: '模型Id',
+    dataIndex: 'id',
+    defaultHidden: true,
+  },
   {
     title: '模型名称',
     dataIndex: 'modelName',
@@ -47,6 +53,13 @@ export const modelsColumns: BasicColumn[] = [
           value: false,
         },
       ],
+    },
+  },
+  {
+    title: '与资产同步',
+    dataIndex: 'boolean',
+    customRender: ({ record }) => {
+      return record.syncAsset ? <Tag color="lime">已同步</Tag> : <Tag color="cyan">未同步</Tag>;
     },
   },
   {

@@ -4,20 +4,6 @@
       <a-button type="primary" @click="openUploadModal" preIcon="carbon:cloud-upload">
         {{ t('component.upload.upload') }}
       </a-button>
-<!--      <Tooltip placement="bottom" v-if="showPreview">-->
-<!--        <template #title>-->
-<!--          {{ t('component.upload.uploaded') }}-->
-<!--          <template v-if="fileList.length">-->
-<!--            {{ fileList.length }}-->
-<!--          </template>-->
-<!--        </template>-->
-<!--        <a-button @click="openPreviewModal">-->
-<!--          <Icon icon="bi:eye" />-->
-<!--          <template v-if="fileList.length && showPreviewNumber">-->
-<!--            {{ fileList.length }}-->
-<!--          </template>-->
-<!--        </a-button>-->
-<!--      </Tooltip>-->
     </a-button-group>
 
     <UploadModal
@@ -27,19 +13,11 @@
       @change="handleChange"
       @delete="handleDelete"
     />
-
-<!--    <UploadPreviewModal-->
-<!--      :value="fileList"-->
-<!--      @register="registerPreviewModal"-->
-<!--      @list-change="handlePreviewChange"-->
-<!--      @delete="handlePreviewDelete"-->
-<!--    />-->
   </div>
 </template>
 <script lang="ts">
   import { defineComponent, ref, watch, unref, computed } from 'vue';
   import UploadModal from './UploadModal.vue';
-  // import UploadPreviewModal from './UploadPreviewModal.vue';
   import { Icon } from '/@/components/Icon';
   import { Tooltip } from 'ant-design-vue';
   import { useModal } from '/@/components/Modal';
@@ -87,22 +65,12 @@
         fileList.value = [...unref(fileList), ...(urls || [])];
         emit('update:value', fileList.value);
         emit('change', fileList.value);
+        fileList.value = [];
       }
-      //
-      // // 预览modal保存操作
-      // function handlePreviewChange(urls: string[]) {
-      //   fileList.value = [...(urls || [])];
-      //   emit('update:value', fileList.value);
-      //   emit('change', fileList.value);
-      // }
 
       function handleDelete(record: Recordable) {
         emit('delete', record);
       }
-
-      // function handlePreviewDelete(url: string) {
-      //   emit('preview-delete', url);
-      // }
 
       return {
         registerUploadModal,

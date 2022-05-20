@@ -8,15 +8,18 @@ import {Ref} from "vue";
 
 
 const electricModels = [
-  // 'models/electric/plant.glb',
+  'models/electric/plant.glb',
   'models/electric/byq.glb',
+  'models/electric/house.glb',
+  'models/electric/smoker.glb',
+  'models/electric/momei.glb',
+  'models/electric/gl.glb',
   'models/electric/coolpower.glb',
   'models/electric/gl.glb',
   'models/electric/house.glb',
   'models/electric/meichang.glb',
   'models/electric/momei.glb',
   'models/electric/smoker.glb',
-  'models/electric/store.glb',
 ]
 
 export class ElectricPowerPlant{
@@ -29,14 +32,15 @@ export class ElectricPowerPlant{
     // this.modelPath = modelPath;
     this.containerRef = containerRef;
     this.electricScene = new ThingsScene(this.containerRef, {
-      cameraX: 15,
-      cameraY: 180,
-      cameraZ: 80,
+      cameraX: -205,
+      cameraY: 185,
+      cameraZ: 60,
       cameraFov: 65,
       cameraNear: 0.1,
       cameraFar: 1000,
       canControls: true,
-      enableSceneBackgroundColor: false,
+      enableSky: true,
+      enableSceneBackgroundColor: true,
       sceneColor: 0x2d3152,
       sceneBackImages: [
         'resource/electricImg/远山_RT.jpg',

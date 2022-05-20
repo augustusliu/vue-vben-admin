@@ -305,7 +305,6 @@ class GLTFLoader extends Loader {
       }
 
     }
-
     const json = JSON.parse( content );
 
     if ( json.asset === undefined || json.asset.version[ 0 ] < 2 ) {

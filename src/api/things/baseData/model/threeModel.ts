@@ -15,6 +15,7 @@ export interface ModelItem {
   modelPath: string;
   isEnabled: boolean;
   isMain: boolean;
+  syncAsset: boolean;
   createTime: number;
 }
 

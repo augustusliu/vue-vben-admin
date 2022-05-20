@@ -43,7 +43,7 @@
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
-  import { listAssetApi } from '/@/api/things/asset/assetApi';
+  import {delAssetApi, listAssetApi} from '/@/api/things/asset/assetApi';
   import { assetColumn, searchFormSchema } from '/@/views/things/asset/asset.data';
   import { SvgIcon, Icon } from '/@/components/Icon';
   import { useGo } from '/@/hooks/web/usePage';
@@ -95,7 +95,10 @@
         });
       }
       // 删除操作
-      function handleDelete(record: Recordable) {}
+      async function handleDelete(record: Recordable) {
+        await delAssetApi(record.id);
+        reload();
+      }
       // 查看详情
       function handleView(record: Recordable) {
         go('/asset_detail/' + record.id);

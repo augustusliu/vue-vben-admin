@@ -16,6 +16,11 @@
         <TableAction
           :actions="[
             {
+              icon: 'ant-design:rotate-right-outlined',
+              tooltip: '资产同步',
+              onClick: handleConvertAsset.bind(null, record),
+            },
+            {
               icon: 'ant-design:delete-outlined',
               color: 'error',
               popConfirm: {
@@ -28,13 +33,15 @@
       </template>
     </BasicTable>
   </div>
+  <Loading :loading="loading" :absolute="false" tip="同步中..." />
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicUpload } from '/@/components/Upload';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { modelsColumns , searchFormSchema } from "/@/views/things/baseData/models/model.data";
+  import { Loading } from '/@/components/Loading';
   import {
     deleteModelApi,
     searchModelByPager,
@@ -43,13 +50,16 @@
   import {
     uploadModelApi
   } from "/@/api/things/common/commonApi";
-
+  import {Recordable} from "vite-plugin-mock/dist";
+  import {ModelSyncAssetRequest} from "/@/views/things/baseData/models/ModelSyncAssetRequest";
+  import { useMessage } from '/@/hooks/web/useMessage';
   export default defineComponent({
     name: 'ModelComponent',
-    components: {TableAction, BasicTable, BasicUpload},
+    components: {TableAction, BasicTable, BasicUpload, Loading},
     setup(){
-
       const acceptArray = ['glb', 'gltf'];
+      const loading = ref(false);
+      const modelSyncAssetRequest: ModelSyncAssetRequest = new ModelSyncAssetRequest();
       const [registerTable, { reload }] = useTable({
         title: '模型列表',
         api: searchModelByPager,
@@ -69,7 +79,7 @@
         bordered: true,
         showIndexColumn: true,
         actionColumn: {
-          width: 80,
+          width: 90,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -86,7 +96,7 @@
         if(!list || list.length <=0 ){
           return;
         }
-        const listModels: any[] = [];
+        let listModels: any[] = [];
         list.forEach(item => {
           listModels.push({
             'modelName': item.name,
@@ -94,6 +104,7 @@
           })
         })
         await addModelInfo(listModels);
+        listModels = [];
         await reload();
       }
 
@@ -110,7 +121,22 @@
         await changeModeMainOrEnableApi(param);
       }
 
-      return {registerTable, uploadModelApi, handleChange, acceptArray, handleDelete, handleEditEnd};
+      async function handleConvertAsset(record:Recordable){
+        loading.value = true;
+         if(!record.syncAsset){
+           await modelSyncAssetRequest.loadModel(record.id, closeLoading);
+           await reload();
+         }else{
+           useMessage().createMessage.error('该模型资产已同步');
+         }
+      }
+
+      const closeLoading = () => {
+        loading.value = false;
+      }
+
+      return {registerTable, uploadModelApi, handleChange, acceptArray,
+        handleDelete, handleEditEnd, handleConvertAsset, loading};
     },
   });
 </script>

@@ -40,7 +40,6 @@
       const progressLoadSuccess = ref(true);
       const currentTime = ref(); // 当前时间
 
-
       const go = useGo();
       const userStore = useUserStore();
       const threeMainModelPath = userStore.getUserInfo.threeModelPath as string;
@@ -48,7 +47,10 @@
         goHomePage();
       }
 
-      function goHomePage(){
+      function goHomePage(event?: Event){
+        if(event){
+          event.stopPropagation();
+        }
         go(PageEnum.BASE_HOME);
       }
 
@@ -84,7 +86,7 @@
           clearInterval(currentTimer);
         }
         if(electricPowerPlant.value){
-          await electricPowerPlant.value.dispose();
+          electricPowerPlant.value.dispose();
         }
       }
       onMounted(init);
@@ -112,9 +114,9 @@
     height: 45px;
     left: 0;
     top:0;
-    opacity: 0.4;
+    opacity: 0.7;
     position: absolute;
-    background-color: #4559ee;
+    background-color: #b4a2a1;
     line-height: 45px;
     h3{
       margin-left: 20px;
