@@ -42,6 +42,9 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { modelsColumns , searchFormSchema } from "/@/views/things/baseData/models/model.data";
   import { Loading } from '/@/components/Loading';
+  import {ModelSyncAssetRequest} from "/@/views/things/baseData/models/ModelSyncAssetRequest";
+  import { useMessage } from '/@/hooks/web/useMessage';
+
   import {
     deleteModelApi,
     searchModelByPager,
@@ -50,9 +53,7 @@
   import {
     uploadModelApi
   } from "/@/api/things/common/commonApi";
-  import {Recordable} from "vite-plugin-mock/dist";
-  import {ModelSyncAssetRequest} from "/@/views/things/baseData/models/ModelSyncAssetRequest";
-  import { useMessage } from '/@/hooks/web/useMessage';
+
   export default defineComponent({
     name: 'ModelComponent',
     components: {TableAction, BasicTable, BasicUpload, Loading},
@@ -121,7 +122,7 @@
         await changeModeMainOrEnableApi(param);
       }
 
-      async function handleConvertAsset(record:Recordable){
+      async function handleConvertAsset(record: Recordable){
         loading.value = true;
          if(!record.syncAsset){
            await modelSyncAssetRequest.loadModel(record.id, closeLoading);

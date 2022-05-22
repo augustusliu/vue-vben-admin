@@ -32,17 +32,17 @@
 
           <template #description>
             <div>
-              <div class="description" v-if="item.description">
-                <a-typography-paragraph
-                  style="width: 100%; margin-bottom: 0 !important"
-                  :ellipsis="
-                    $props.descRows && $props.descRows > 0
-                      ? { rows: $props.descRows, tooltip: !!item.description }
-                      : false
-                  "
-                  :content="item.description"
-                />
-              </div>
+<!--              <div class="description" v-if="item.description">-->
+<!--                <a-typography-paragraph-->
+<!--                  style="width: 100%; margin-bottom: 0 !important"-->
+<!--                  :ellipsis="-->
+<!--                    $props.descRows && $props.descRows > 0-->
+<!--                      ? { rows: $props.descRows, tooltip: !!item.description }-->
+<!--                      : false-->
+<!--                  "-->
+<!--                  :content="item.description"-->
+<!--                />-->
+<!--              </div>-->
               <div class="datetime">
                 {{ item.datetime }}
               </div>
@@ -148,6 +148,11 @@
       display: inline-block !important;
     }
 
+    .list-item{
+      min-width: 300px!important;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
     &-item {
       padding: 6px;
       overflow: hidden;
@@ -155,7 +160,7 @@
       transition: all 0.3s;
 
       .title {
-        margin-bottom: 8px;
+        margin-bottom: 4px;
         font-weight: normal;
 
         .extra {
@@ -175,13 +180,13 @@
 
         .description {
           font-size: 12px;
-          line-height: 18px;
+          line-height: 16px;
         }
 
         .datetime {
           margin-top: 4px;
-          font-size: 12px;
-          line-height: 18px;
+          font-size: 10px;
+          line-height: 12px;
         }
       }
     }

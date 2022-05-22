@@ -23,7 +23,7 @@ const setting: ProjectConfig = {
   // `Settings` button position
   settingButtonPosition: SettingButtonPositionEnum.AUTO,
 
-  // Permission mode
+  // Permission mode, back模式指从后台加载
   permissionMode: PermissionModeEnum.BACK,
 
   // Permission-related cache is stored in sessionStorage or localStorage
@@ -93,7 +93,7 @@ const setting: ProjectConfig = {
     // Whether to show dom
     hidden: false,
     // Menu width
-    menuWidth: 210,
+    menuWidth: 190,
     // Menu mode
     mode: MenuModeEnum.INLINE,
     // Menu type

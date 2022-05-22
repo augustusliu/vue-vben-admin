@@ -17,14 +17,13 @@ import { GLTFLoader } from "./extends/GLTFLoader";
 import { ColorRepresentation } from "three/src/utils";
 import { Ref} from "vue";
 import * as THREE from 'three';
-import { Sky } from './extends/Sky.js';
 
 import { useUserStore } from "/@/store/modules/user";
 
 // 请求的权限
 const userStore = useUserStore();
 // 加载nebula动画
-import SMOKEJSON from '/@/views/3d/animates/smoke.json';
+import smokeJson from '/@/views/3d/animates/smoke.json';
 
 // 变量
 export interface ThingsSceneOptions{
@@ -35,6 +34,7 @@ export interface ThingsSceneOptions{
   cameraNear: number;
   cameraFar: number;
 
+  sceneBackTransport: boolean;
   // 场景的背景颜色
   sceneColor?: ColorRepresentation;
   // 场景背景图片
@@ -43,7 +43,6 @@ export interface ThingsSceneOptions{
   enableSceneBackgroundColor: boolean;
   showGrid?: boolean;
   canControls: boolean;
-  enableSky: boolean;
 }
 
 // 全局上线文缓存
@@ -65,6 +64,7 @@ export interface ThingsThreeContext{
   // 模型全局事件
   progressCallback?: any;
   clickCallback?: any;
+  animateId?: any;
 }
 
 // 全局Threejs的定义
@@ -76,13 +76,18 @@ export const defaultThreeContext: ThingsThreeContext = {
 
 const renderAnimate = (nebulaParticle?:any) => {
   if(defaultThreeContext.scene){
-    requestAnimationFrame(() => renderAnimate(nebulaParticle)); //请求再次执行渲染函数render
+    defaultThreeContext.animateId = requestAnimationFrame(() => renderAnimate(nebulaParticle)); //请求再次执行渲染函数render
     if(defaultThreeContext.animateMixer){
       defaultThreeContext.animateMixer.update(defaultThreeContext.clock.getDelta());
     }
     if(nebulaParticle && nebulaParticle.update){
       nebulaParticle.update();
     }
+    // 场景自转
+    // if(defaultThreeContext.controls){
+    //   defaultThreeContext.controls.update();
+    // }
+
     if(defaultThreeContext.renderer){
       defaultThreeContext.renderer.render(defaultThreeContext.scene, defaultThreeContext.camera);//执行渲染操作
     }
@@ -130,14 +135,11 @@ export class ThingsScene{
     }
     this.containerRef.value.appendChild(defaultThreeContext.renderer.domElement);
 
-
     // camera
     this.initCamera();
     this.initSpotLight();
 
-    if(opts.enableSky){
-      this.__initSky();
-    }else{
+    if(!opts.sceneBackTransport){
       if(opts.enableSceneBackgroundColor){
         defaultThreeContext.scene.background = new Color(opts.sceneColor);
       }else{
@@ -146,6 +148,8 @@ export class ThingsScene{
           defaultThreeContext.scene.background = this.__buildSceneTexture(opts.sceneBackImages);
         }
       }
+    }else{
+      defaultThreeContext.scene.background = null;
     }
 
     // controls
@@ -170,7 +174,11 @@ export class ThingsScene{
   // init renderer
   private initRenderer(){
     defaultThreeContext.renderer = new WebGLRenderer({antialias: true, alpha :true});
-    defaultThreeContext.renderer.setClearColor( 0xffffff, 1 );
+    if(this.options?.sceneBackTransport){
+      defaultThreeContext.renderer.setClearAlpha(0.0);
+    }else{
+      defaultThreeContext.renderer.setClearColor( 0xffffff, 1 );
+    }
     defaultThreeContext.renderer.setSize(this.containerWidth, this.containerHeight);
     defaultThreeContext.renderer.shadowMap.enabled = true;
     defaultThreeContext.renderer.setPixelRatio(window.devicePixelRatio);
@@ -199,6 +207,7 @@ export class ThingsScene{
 
   private initObjControl(){
     defaultThreeContext.controls = new OrbitControls(defaultThreeContext.camera, defaultThreeContext.renderer.domElement);
+    defaultThreeContext.controls.autoRotate = true;
     // defaultThreeContext.controls.maxPolarAngle = 0;
     // defaultThreeContext.controls.addEventListener('change', renderAnimate);
   }
@@ -263,14 +272,18 @@ export class ThingsScene{
 
   // 浏览器变化更新
   public onContainerResize(){
-      window.addEventListener('resize', () => {
+
+    window.addEventListener('resize', () => {
+        if(this.containerRef.value && this.containerRef.value.clientHeight){
           this.containerHeight = this.containerRef.value.clientHeight | window.innerHeight;
           this.containerWidth = this.containerRef.value.clientWidth | window.innerWidth;
           defaultThreeContext.camera.aspect = this.containerWidth / this.containerHeight;
           defaultThreeContext.camera.updateProjectionMatrix();
           defaultThreeContext.renderer.setSize(this.containerWidth, this.containerHeight);
-        },
-        false);
+        }
+      },
+      false);
+
   }
 
   // 模型加成成功后的处理
@@ -297,7 +310,7 @@ export class ThingsScene{
           }
         }
         if(child.userData.smoker){
-          let smoker = SMOKEJSON;
+          let smoker = smokeJson;
           smoker.particleSystemState.emitters[0].position.x = child.position.x;
           smoker.particleSystemState.emitters[0].position.y = child.position.y;
           smoker.particleSystemState.emitters[0].position.z = child.position.z;
@@ -323,11 +336,11 @@ export class ThingsScene{
   private __makeTextLabelSprite(message, parameters) {
     if ( parameters === undefined ) parameters = {};
     let fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "Arial";
-    let fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 30;
+    let fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 50;
     let borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 8;
-    let borderColor = parameters.hasOwnProperty("borderColor") ?parameters["borderColor"] : { r:0, g:0, b:0, a:0.5 };
-    let backgroundColor = parameters.hasOwnProperty("backgroundColor") ?parameters["backgroundColor"] : { r:255, g:255, b:255, a:0.5 };
-    let textColor = parameters.hasOwnProperty("textColor") ?parameters["textColor"] : { r:0, g:0, b:0, a:0.5 };
+    let borderColor = parameters.hasOwnProperty("borderColor") ?parameters["borderColor"] : { r:244, g:210, b:10, a:0.9 };
+    let backgroundColor = parameters.hasOwnProperty("backgroundColor") ?parameters["backgroundColor"] : { r:1, g:23, b:92, a:0.2 };
+    let textColor = parameters.hasOwnProperty("textColor") ?parameters["textColor"] : { r:244, g:210, b:10, a:0.9 };
 
     let canvas = document.createElement('canvas');
     let context = canvas.getContext('2d');
@@ -408,41 +421,9 @@ export class ThingsScene{
     });
   }
 
-
-
-  private __initSky(){
-    const sky = new Sky();
-    sky.scale.setScalar( 450000 );
-    if(defaultThreeContext.scene){
-      defaultThreeContext.scene.add( sky );
-    }else{
-      return ;
+  public stopAnimate(){
+    if(defaultThreeContext.animateId){
+      cancelAnimationFrame(defaultThreeContext.animateId);
     }
-
-    let sun = new THREE.Vector3();
-    const effectController = {
-      turbidity: 0,
-      rayleigh: 3,
-      mieCoefficient: 0.005,
-      mieDirectionalG: 0.7,
-      elevation: 2,
-      azimuth: 180,
-    };
-
-    const guiChanged = () => {
-      const uniforms = sky.material.uniforms;
-      uniforms[ 'turbidity' ].value = effectController.turbidity;
-      uniforms[ 'rayleigh' ].value = effectController.rayleigh;
-      uniforms[ 'mieCoefficient' ].value = effectController.mieCoefficient;
-      uniforms[ 'mieDirectionalG' ].value = effectController.mieDirectionalG;
-      const phi = THREE.MathUtils.degToRad( 90 - effectController.elevation );
-      const theta = THREE.MathUtils.degToRad( effectController.azimuth );
-      sun.setFromSphericalCoords( 1, phi, theta );
-      uniforms[ 'sunPosition' ].value.copy( sun );
-      defaultThreeContext.renderer.render( defaultThreeContext.scene, defaultThreeContext.camera );
-    }
-    guiChanged();
-
   }
-
 }

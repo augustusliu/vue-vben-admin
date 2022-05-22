@@ -1,5 +1,5 @@
 <template>
-  <div ref="tmContainerRef" style="margin: 0 0; padding: 0 0; width: 100%;height: 100%"></div>
+  <div ref="tmContainerRef" class="threeModelContainer"></div>
   <div class="loadProgressContainer" v-show="progressLoadSuccess">
       <Progress :showInfo="true" :step ="10" :percent="modelProgressPercentRef" v-show="progressLoadSuccess"
                 style="margin-top: 20%; width:50%; margin-left:20%"/>
@@ -9,10 +9,10 @@
       <Col span="8">
         <h3>电厂数字孪生平台</h3>
       </Col>
-      <Col span="8">
+      <Col span="10">
 
       </Col>
-      <Col span="6">
+      <Col span="4">
         <span> {{ currentTime }} </span>
       </Col>
       <Col span="2">
@@ -20,6 +20,46 @@
       </Col>
     </Row>
   </div>
+
+  <div class="leftContentContainer">
+    <div class="leftCard">
+      <div class="cardTitle">接入统计</div>
+    </div>
+
+    <div class="leftCard">
+      <div class="cardTitle">告警统计</div>
+    </div>
+
+    <div class="leftCard">
+      <div class="cardTitle">在线活跃</div>
+    </div>
+  </div>
+  <div class="rightContentContainer">
+      <div class="leftCard">
+        <div class="cardTitle">运行时长</div>
+        <div class="">
+
+        </div>
+      </div>
+
+      <div class="leftCard">
+        <div class="cardTitle">消息总量</div>
+        <div class="">
+
+        </div>
+      </div>
+
+      <div class="leftCard">
+        <div class="cardTitle">厂房数据</div>
+        <div class="">
+
+        </div>
+      </div>
+  </div>
+  <div class="bottomContentContainer">
+    <div class="cardTitle">实时遥测</div>
+  </div>
+
 </template>
 
 <script lang="ts">
@@ -51,9 +91,11 @@
         if(event){
           event.stopPropagation();
         }
+        if(electricPowerPlant.value){
+          electricPowerPlant.value.cancelAnimate();
+        }
         go(PageEnum.BASE_HOME);
       }
-
 
       // 进度条回告
       const progressCallback = (progress) => {
@@ -85,7 +127,9 @@
         if(currentTimer){
           clearInterval(currentTimer);
         }
+
         if(electricPowerPlant.value){
+          electricPowerPlant.value.cancelAnimate();
           electricPowerPlant.value.dispose();
         }
       }
@@ -96,6 +140,16 @@
   });
 </script>
 <style lang="less">
+  .threeModelContainer{
+    margin: 0 0;
+    padding: 0 0;
+    width: 100%;
+    height: 100%;
+    canvas{
+      background-image: linear-gradient(rgb(1,15,65), rgb(1,23,92));
+    }
+  }
+
   .loadProgressContainer{
     margin: 0 0;
     padding: 0 0;
@@ -114,9 +168,9 @@
     height: 45px;
     left: 0;
     top:0;
-    opacity: 0.7;
     position: absolute;
-    background-color: #b4a2a1;
+    background-color: rgb(1,23,92);
+    opacity: 0.3;
     line-height: 45px;
     h3{
       margin-left: 20px;
@@ -136,5 +190,57 @@
       color: #fff;
       font-size: 14px;
     }
+  }
+  .leftContentContainer{
+    margin: 0 0;
+    padding: 0 0;
+    z-index: 9;
+    position: absolute;
+    left: 10px;
+    top:65px;
+    width: 25%;
+  }
+  .rightContentContainer{
+    margin: 0 0;
+    padding: 0 0;
+    z-index: 9;
+    position: absolute;
+    right: 10px;
+    top:65px;
+    width: 25%;
+  }
+
+  .bottomContentContainer{
+    margin: 0 0;
+    padding: 0 0;
+    z-index: 9;
+    position: absolute;
+    left:26%;
+    bottom: 10px;
+    background-color: rgb(1,23,92);
+    opacity: 0.3;
+    border-radius: 5px;
+    height: 228px;
+    width: 48%;
+  }
+
+  .leftCard{
+    width: 100%;
+    height: 200px;
+    background-color: rgb(1,23,92);
+    opacity: 0.3;
+    border-radius: 5px;
+    margin-bottom: 30px;
+  }
+  .cardTitle{
+    width: 100%;
+    height: 30px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 30px;
+    padding-left: 15px;
+    vertical-align: center;
+    border-left: 3px solid #80ff00;
   }
 </style>

@@ -14,10 +14,8 @@ export function initAffixTabs(): string[] {
   const tabStore = useMultipleTabStore();
   // 获取路由对象
   const router = useRouter();
-  /**
-   * @description: Filter all fixed routes
-   */
-  function filterAffixTabs(routes: RouteLocationNormalized[]) {
+
+  const filterAffixTabs = (routes: RouteLocationNormalized[]) => {
     const tabs: RouteLocationNormalized[] = [];
     routes &&
       routes.forEach((route) => {
@@ -28,10 +26,8 @@ export function initAffixTabs(): string[] {
     return tabs;
   }
 
-  /**
-   * @description: Set fixed tabs
-   */
-  function addAffixTabs(): void {
+  const addAffixTabs = () => {
+    console.log('init affix tab', router.getRoutes());
     const affixTabs = filterAffixTabs(router.getRoutes() as unknown as RouteLocationNormalized[]);
     affixList.value = affixTabs;
     for (const tab of affixTabs) {
@@ -44,7 +40,6 @@ export function initAffixTabs(): string[] {
   }
 
   let isAddAffix = false;
-
   if (!isAddAffix) {
     addAffixTabs();
     isAddAffix = true;

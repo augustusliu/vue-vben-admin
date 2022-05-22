@@ -27,27 +27,21 @@
   </div>
 </template>
 <script lang="ts">
-  import type { RouteLocationNormalized } from 'vue-router';
-
   import { defineComponent, computed, unref, ref } from 'vue';
 
   import { Tabs } from 'ant-design-vue';
   import TabContent from './components/TabContent.vue';
   import FoldButton from './components/FoldButton.vue';
   import TabRedo from './components/TabRedo.vue';
-
   import { useGo } from '/@/hooks/web/usePage';
-
   import { useMultipleTabStore } from '/@/store/modules/multipleTab';
-  import { useUserStore } from '/@/store/modules/user';
-
   import { initAffixTabs, useTabsDrag } from './useMultipleTabs';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useMultipleTabSetting } from '/@/hooks/setting/useMultipleTabSetting';
-
-  import { REDIRECT_NAME } from '/@/router/constant';
-  import { listenerRouteChange } from '/@/logics/mitt/routeChange';
-
+  import {RouteLocationNormalized, RouteMeta} from 'vue-router';
+  import {REDIRECT_NAME} from "/@/router/constant";
+  import {listenerRouteChange} from "/@/logics/mitt/routeChange";
+  import {useUserStore} from "/@/store/modules/user";
   import { useRouter } from 'vue-router';
 
   export default defineComponent({
@@ -67,17 +61,13 @@
       const tabStore = useMultipleTabStore();
       const userStore = useUserStore();
       const router = useRouter();
-
-      const { prefixCls } = useDesign('multiple-tabs');
       const go = useGo();
+      const { prefixCls } = useDesign('multiple-tabs');
       const { getShowQuick, getShowRedo, getShowFold } = useMultipleTabSetting();
-
       const getTabsState = computed(() => {
         return tabStore.getTabList.filter((item) => !item.meta?.hideTab);
       });
-
       const unClose = computed(() => unref(getTabsState).length === 1);
-
       const getWrapClass = computed(() => {
         return [
           prefixCls,
@@ -92,15 +82,13 @@
         if (name === REDIRECT_NAME || !route || !userStore.getToken) {
           return;
         }
-
         const { path, fullPath, meta = {} } = route;
-        const { currentActiveMenu, hideTab } = meta;
+        const { currentActiveMenu, hideTab } = meta as RouteMeta;
         const isHide = !hideTab ? null : currentActiveMenu;
         const p = isHide || fullPath || path;
         if (activeKeyRef.value !== p) {
           activeKeyRef.value = p as string;
         }
-
         if (isHide) {
           const findParentRoute = router
             .getRoutes()
@@ -114,7 +102,6 @@
 
       function handleChange(activeKey: any) {
         activeKeyRef.value = activeKey;
-        console.log('fixedTabActive', activeKey);
         go(activeKey, false);
       }
 
@@ -124,7 +111,6 @@
         if (unref(unClose)) {
           return;
         }
-
         tabStore.closeTabByKey(targetKey, router);
       }
       return {

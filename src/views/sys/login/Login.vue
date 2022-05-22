@@ -84,7 +84,7 @@
           enableSceneBackgroundColor: true,
           sceneColor:0x2941b3,
           canControls: false,
-          enableSky: false,
+          sceneBackTransport:false,
         }, null, null);
         threeSceneRef.value.loadGLTFModel(logoModel);
       }

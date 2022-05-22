@@ -13,7 +13,6 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
 import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
-import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 // 用户缓存
 interface UserState {
@@ -104,7 +103,7 @@ export const useUserStore = defineStore({
             routes.forEach((route) => {
               router.addRoute(route as unknown as RouteRecordRaw);
             });
-            router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
+            console.log(routes);
             permissionStore.setDynamicAddedRoute(true);
           }
           // await router.replace(userInfo.homePath || PageEnum.BASE_HOME);

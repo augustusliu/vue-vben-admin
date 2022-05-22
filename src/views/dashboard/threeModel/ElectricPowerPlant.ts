@@ -32,15 +32,15 @@ export class ElectricPowerPlant{
     // this.modelPath = modelPath;
     this.containerRef = containerRef;
     this.electricScene = new ThingsScene(this.containerRef, {
-      cameraX: -205,
-      cameraY: 185,
-      cameraZ: 60,
+      cameraX: -20,
+      cameraY: 280,
+      cameraZ: 45,
       cameraFov: 65,
       cameraNear: 0.1,
       cameraFar: 1000,
       canControls: true,
-      enableSky: true,
-      enableSceneBackgroundColor: true,
+      sceneBackTransport:true,
+      enableSceneBackgroundColor: false,
       sceneColor: 0x2d3152,
       sceneBackImages: [
         'resource/electricImg/远山_RT.jpg',
@@ -71,5 +71,11 @@ export class ElectricPowerPlant{
 
   public dispose(){
     this.electricScene.disposeSceneObjs();
+  }
+
+  public cancelAnimate(){
+    if(this.electricScene){
+      this.electricScene.stopAnimate();
+    }
   }
 }

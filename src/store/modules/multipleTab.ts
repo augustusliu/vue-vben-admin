@@ -3,15 +3,12 @@ import type { RouteLocationNormalized, RouteLocationRaw, Router } from 'vue-rout
 import { toRaw, unref } from 'vue';
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
-
 import { useGo, useRedo } from '/@/hooks/web/usePage';
 import { Persistent } from '/@/utils/cache/persistent';
-
 import { PageEnum } from '/@/enums/pageEnum';
 import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from '/@/router/routes/basic';
 import { getRawRoute } from '/@/utils';
 import { MULTIPLE_TABS_KEY } from '/@/enums/cacheEnum';
-
 import projectSetting from '/@/settings/projectSetting';
 import { useUserStore } from '/@/store/modules/user';
 
@@ -26,6 +23,7 @@ function handleGotoPage(router: Router) {
   const go = useGo(router);
   go(unref(router.currentRoute).path, true);
 }
+
 const getToTarget = (tabItem: RouteLocationNormalized) => {
   const { params, path, query } = tabItem;
   return {

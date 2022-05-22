@@ -9,12 +9,12 @@
 </template>
 
 <script lang="ts">
-  import {defineComponent, ref, unref, watchEffect} from 'vue';
+  import {defineComponent, ref, onMounted, onUnmounted} from 'vue';
   import {BasicTable, useTable, TableAction } from '/@/components/Table';
   import { Switch } from 'ant-design-vue';
-  import { useWebSocket } from '@vueuse/core';
+  import {thingsWebSocket, WebResponse} from '/@/layouts/default/header/ws/ThingsWebSocket';
   import { EntityTypeEnum } from "/@/enums/entityEnum";
-  import { listEntityTelemetry, getAttributeTelemetryWsApi } from '/@/api/things/attribute/attrApi';
+  import { listEntityTelemetry } from '/@/api/things/attribute/attrApi';
   import { telemetryAttributeColumns, telemetryAttributeColumnsWithDevice } from './telemetryAttribute.data';
 
   export default defineComponent({
@@ -27,22 +27,6 @@
       const entityId = props.entityId;
       const entityType = props.entityType;
       const autoTelemetry = ref(false);
-      // 配置web socket
-      const wsUrl = getAttributeTelemetryWsApi(entityId);
-      // 定义一个ws的对象，保存ws的连接地址
-      const wsState = ref({
-        server: wsUrl,
-        sendValue: '',
-        receiveRecord: [] as { nodeId: number; nodeName: string; message: string }[],
-      });
-      // 注册ws对象
-      const {data, close, open } = useWebSocket(unref(wsState).server, {
-        autoReconnect: false,
-        heartbeat: true,
-        immediate: false,
-        autoClose: false,
-      });
-
       // 基于不同的类型，显示不同的列
       const tableColumns = entityType === EntityTypeEnum.ASSET ? telemetryAttributeColumnsWithDevice: telemetryAttributeColumns;
       const [registerTable, { reload }] = useTable({
@@ -61,32 +45,39 @@
         beforeFetch: (record) => { record.entityId = entityId; record.entityType = entityType; return record},
       });
 
-      const autoTelemetryChange = (checked: boolean) => {
-        autoTelemetry.value = checked;
-        if(checked){
-          open();
-        }else{
-          close();
+      const attributeRealDataCallback = (data: WebResponse) => {
+        if(autoTelemetry.value){
+          if(entityType === EntityTypeEnum.DEVICE && entityId === data.entityId){
+            reload();
+          }
+
+          if(entityType === EntityTypeEnum.ASSET && data.assetId &&  entityId === data.assetId){
+            reload();
+          }
         }
       }
-     // web socket 数据监听, 如果监听到属性变化事件，则更新
-      watchEffect(() => {
-        if (data.value) {
-          try {
-            const res = JSON.parse(data.value);
-            // 清空ws 流中的数据，否则会死循环调用
-            data.value = null;
-            if(res && res.telemetryType === 'ATTRIBUTE'){
-              reload();
-            }
-          } catch (error) {
-            console.log('ws parse error', error)
-          }
-          return;
+
+      const autoTelemetryChange = (checked: boolean) => {
+        autoTelemetry.value = checked;
+      }
+
+      function init(){
+        thingsWebSocket.updateCallback({
+          deviceAttributeCallbackFunc: attributeRealDataCallback
+        })
+        if(!thingsWebSocket.isConnected()){
+          thingsWebSocket.reOpen();
         }
-      });
+      }
 
+      function cleanWS(){
+        thingsWebSocket.updateCallback({
+          deviceAttributeCallbackFunc: null,
+        })
+      }
 
+      onMounted(init);
+      onUnmounted(cleanWS);
       return {
         entityId,
         entityType,

@@ -31,8 +31,6 @@
   import {defineComponent} from 'vue';
   import {BasicTable, useTable, TableAction } from '/@/components/Table';
   import { EntityTypeEnum } from "/@/enums/entityEnum";
-
-  // 依赖接口
   import { listInheritAttribute, delAttribute } from '/@/api/things/attribute/attrApi';
   import { attributeColumn, attributeColumnWidthDevice } from './attribute.data';
   import { useDrawer } from '/@/components/Drawer';

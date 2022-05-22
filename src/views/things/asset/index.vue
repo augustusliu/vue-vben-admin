@@ -13,9 +13,14 @@
               tooltip: '查看资产详情',
               onClick: handleView.bind(null, record),
             },
+            // {
+            //   icon: 'ant-design:node-index-outlined',
+            //   tooltip: '资产关系图',
+            //   onClick: handleRelation.bind(null, record),
+            // },
             {
-              icon: 'ant-design:node-index-outlined',
-              tooltip: '资产关系图',
+              icon: 'ant-design:dot-chart-outlined',
+              tooltip: '实时监控',
               onClick: handleRelation.bind(null, record),
             },
             {
@@ -70,9 +75,18 @@
           labelWidth: 80,
           schemas: searchFormSchema,
         },
+        pagination: true,
+        striped: false,
         showTableSetting: true,
+        tableSetting: {
+          redo: true,
+          size: false,
+          setting: false,
+          fullScreen: false,
+        },
         bordered: true,
-        showIndexColumn: true,
+        showIndexColumn: false,
+        canResize: false,
         actionColumn: {
           width: 150,
           title: '操作',
