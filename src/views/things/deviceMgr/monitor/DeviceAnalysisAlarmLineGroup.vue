@@ -53,7 +53,6 @@
             });
           })
         }
-        console.log(alarmPieDataRef.value);
         // 设置参数
         alarmChart.setOptions({
           tooltip: {

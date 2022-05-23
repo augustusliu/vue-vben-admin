@@ -47,19 +47,27 @@
   } from "/@/api/things/metrics/model/metricModel";
   import {getDeviceHistoryData} from "/@/api/things/metrics/metricApi";
   import moment from "moment";
+  import {thingsWebSocket, WebResponse} from '/@/layouts/default/header/ws/ThingsWebSocket';
 
+
+  // 最大的数据条数
+  const maxItems = 50;
   export default defineComponent({
     name: 'DeviceAnalysisComponent',
     components: {PageWrapper, Row, Col, RangePicker, Select, RadioGroup, RadioButton},
     props: ['deviceId'],
     setup(props) {
       const deviceId = props.deviceId;
+
       // 缓存设备对应的属性列表
       const deviceAttrs = ref<AttributeListItem[]>([]);
       const chartLineRef = ref<HTMLDivElement | null>(null);
       const chartPieRef = ref<HTMLDivElement | null>(null);
       const lineChart = useECharts(chartLineRef as Ref<HTMLDivElement>);
+      const lineChartOptionsRef = ref();
       const pieChart = useECharts(chartPieRef as Ref<HTMLDivElement>);
+      const linePieOptionsRef = ref();
+
       // 下拉框数据
       const fieldSelectOptions = ref();
       // 当前选择的时间显示周期
@@ -93,16 +101,19 @@
           if(attrsList && attrsList.length > 0){
             deviceAttrs.value = attrsList.filter(item => (item.valueType === 'LONG_V' || item.valueType === 'DOUBLE_V'));
             if(deviceAttrs.value){
+              let count = 0;
               deviceAttrs.value.forEach(item => {
-                deviceAttributeCode.value.push(item.code);
-                deviceAttrNames.set(item.code, item.name);
-                fieldSelectOptions.value.push({
-                  label: item.name,
-                  value: item.code
-                });
+                if(count < maxItems){
+                  deviceAttributeCode.value.push(item.code);
+                  deviceAttrNames.set(item.code, item.name);
+                  fieldSelectOptions.value.push({
+                    label: item.name,
+                    value: item.code
+                  });
+                  count ++;
+                }
               })
             }
-            // 拉取数据
           }
           // 加载数据
           loadData();
@@ -126,9 +137,7 @@
         // 缓存
         formatHistoryData(originData);
 
-        // 设置曲线图
-        lineChart.setOptions({
-          animationDuration: 3000,
+        lineChartOptionsRef.value = {
           title: {
             text: ''
           },
@@ -153,6 +162,12 @@
             type: 'value'
           },
           series: historyDataValue.value
+        };
+        // 设置曲线图
+        lineChart.setOptions(lineChartOptionsRef.value);
+        // 开启ws
+        thingsWebSocket.updateCallback({
+          deviceAttributeCallbackFunc: deviceAttributeRealTimeCallback
         });
       }
 
@@ -162,28 +177,32 @@
           dataAttributeLabels.value = [];
           historyDataValue.value = [];
           dataTimes.value = [];
+          let count = 0;
           historyData.forEach(item => {
-            // 获取全部无重复名称
-            dataAttributeLabels.value.push(deviceAttrNames.get(item.key));
-            let recordValues: number[] = [];
-            if(item.items && item.items.length > 0){
-              item.items.forEach(record => {
-                dateTimeTemp.add(moment(Number(record.ts)).format('YYYY-MM-DD HH:mm:ss'));
-                recordValues.push(record.value);
-              })
+            if(count <= maxItems){
+              // 获取全部无重复名称
+              dataAttributeLabels.value.push(deviceAttrNames.get(item.key));
+              let recordValues: number[] = [];
+              if(item.items && item.items.length > 0){
+                item.items.forEach(record => {
+                  dateTimeTemp.add(moment(Number(record.ts)).format('YYYY-MM-DD HH:mm:ss'));
+                  recordValues.push(record.value);
+                })
+              }
+              if(recordValues.length > 0){
+                historyDataValue.value.push({
+                  smooth: true,
+                  name: deviceAttrNames.get(item.key),
+                  type: 'line',
+                  stack: 'Total',
+                  data: recordValues
+                });
+              }
             }
-            if(recordValues.length > 0){
-              historyDataValue.value.push({
-                smooth: true,
-                name: deviceAttrNames.get(item.key),
-                type: 'line',
-                stack: 'Total',
-                data: recordValues
-              });
-            }
-            renderPie();
+            count ++;
         })
 
+        renderPie();
         dateTimeTemp.forEach(time => {
           dataTimes.value.push(time);
         })
@@ -200,7 +219,7 @@
           })
         }
 
-        pieChart.setOptions({
+        linePieOptionsRef.value = {
           tooltip: {
             trigger: 'item'
           },
@@ -223,7 +242,9 @@
               }
             }
           ]
-        });
+        }
+        pieChart.getInstance()?.clear();
+        pieChart.getInstance()?.setOption(linePieOptionsRef.value);
       }
 
       function fieldsOnChange(fields: any){
@@ -242,6 +263,30 @@
           startTimeRef.value = currentTime - 1000 * 60 * 60 * 24;
         }
         loadData();
+      }
+
+      // 设备遥测属性的实时信息
+      function deviceAttributeRealTimeCallback(wsResp: WebResponse){
+        let wsEntityId = wsResp.entityId;
+        if(wsEntityId === deviceId && wsResp.data){
+          let ts = wsResp.data.ts;
+          let key = wsResp.data.entry.key;
+          let value = wsResp.data.entry.valueAsString;
+
+          if(dataTimes.value.length < maxItems){
+            dataTimes.value.push(moment(Number(ts)).format('YYYY-MM-DD HH:mm:ss'));
+            historyDataValue.value.forEach(record => {
+              if(record.name === deviceAttrNames.get(key)){
+                record.data.push(value+'');
+              }
+            })
+          }
+          lineChartOptionsRef.value.xAxis.data = dataTimes.value;
+          lineChartOptionsRef.value.series = historyDataValue.value;
+          lineChart.getInstance()?.clear();
+          lineChart.getInstance()?.setOption(lineChartOptionsRef.value);
+          renderPie();
+        }
       }
 
       onMounted(init);

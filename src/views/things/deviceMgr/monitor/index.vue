@@ -1,13 +1,13 @@
 <template>
   <div class="h-full w-full" style="margin-top: 15px">
-    <div style="height: 48%; width: 100%;">
+    <div style="height: 320px; width: 100%;">
       <DeviceAnalysisTelemetryLine :deviceId="deviceId" style="width: 100%; height: 100%"/>
     </div>
 
-    <div style="height:46%; margin-top: 15px; width: 33%; float: left">
+    <div style="height:46%; min-height:310px; margin-top: 15px; width: 33%; float: left">
       <DeviceAnalysisAlarmLineGroup :deviceId="deviceId" style="width: 100%; height: 100%; float: left"/>
     </div>
-    <div style="height:46%; margin-top: 15px; width: 66%; float: left">
+    <div style="height:46%; min-height:310px; margin-top: 15px; width: 66%; float: left">
       <DeviceCommandHistoryList :entityId="deviceId" :entityType="entityType"/>
     </div>
   </div>

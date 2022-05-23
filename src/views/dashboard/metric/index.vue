@@ -22,10 +22,6 @@
     },
     setup() {
       const loading = ref(true);
-      // setTimeout(() => {
-      //   loading.value = false;
-      // }, 1500);
-
       return { loading };
     },
   });

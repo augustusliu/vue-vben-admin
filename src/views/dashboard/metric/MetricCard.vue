@@ -5,7 +5,7 @@
         size="small"
         :loading="loading"
         :title="item.metricName"
-        class="md:w-1/5 w-full !md:mt-0 !mt-5"
+        class="md:w-1/5 w-full !md:mt-0 !mt-5 card-border"
         :class="[index + 1 < 5 && '!md:mr-5']"
         :canExpan="false">
 
@@ -79,3 +79,8 @@
     },
   });
 </script>
+<style lang="less">
+  .card-border{
+    border-radius: 3px ;
+  }
+</style>

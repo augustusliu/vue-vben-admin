@@ -141,7 +141,7 @@ export const issueDeviceCommandColumn: BasicColumn[] = [
     defaultHidden: true,
   },
   {
-    title: '属性名称',
+    title: '指令名称',
     dataIndex: 'keyName',
   },
   {
@@ -209,7 +209,7 @@ export const issueAssetCommandColumn: BasicColumn[] = [
     dataIndex: 'entityName',
   },
   {
-    title: '属性名称',
+    title: '指令名称',
     dataIndex: 'keyName',
   },
   {

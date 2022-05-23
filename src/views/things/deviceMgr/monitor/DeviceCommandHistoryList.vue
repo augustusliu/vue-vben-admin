@@ -1,9 +1,9 @@
 <template>
   <div class="h-full w-full alarmAnalysisListContainer">
-    <div class="h-full w-full" style="background-color: #fff">
+    <div class="h-full w-full" style="background-color: #fff;height: 100%; min-height: 300px">
       <Row>
         <Col span="24" class="h-full">
-          <BasicTable @register="registerTable" style="height: 100%;">
+          <BasicTable @register="registerTable">
             <template #toolbar >
               <a-button type="primary" @click="handleCreate" v-if="createBtnShow"> 远程控制 </a-button>
             </template>
