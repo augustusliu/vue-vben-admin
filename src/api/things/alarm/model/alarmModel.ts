@@ -17,7 +17,7 @@ export interface AlarmListItem {
   id: number;
   entityId: number;
   entityName: string;
-  entityType: number;
+  entityType: string;
   alarmName: string;
   alarmContent: string;
   createdTime: number;

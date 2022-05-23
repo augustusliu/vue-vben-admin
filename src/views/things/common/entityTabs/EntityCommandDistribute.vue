@@ -2,10 +2,10 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar >
-        <a-button type="primary" @click="handleCreate" v-if="createBtnShow"> 指令下发 </a-button>
+        <a-button type="primary" @click="handleCreate" v-if="createBtnShow"> 远程控制 </a-button>
       </template>
     </BasicTable>
-    <CommandIssueDrawer @register="registerDrawer" @success="handleSuccess" :entityId="entityId" :entityType="entityType" />
+    <IssueCommandDrawer @register="registerDrawer" @success="handleSuccess" :entityId="entityId" :entityType="entityType" />
   </div>
 </template>
 
@@ -13,7 +13,7 @@
   import {defineComponent} from 'vue';
   import {BasicTable, useTable, TableAction } from '/@/components/Table';
   import {IssueOrAttrType} from '/@/enums/IssueOrAttrTypeEnum';
-  import CommandIssueDrawer from './IssueCommandDrawer.vue';
+  import IssueCommandDrawer from './IssueCommandDrawer.vue';
   // 依赖接口
   import {
     issueDeviceCommandColumn,
@@ -27,7 +27,7 @@
     // 组件名称
     name: 'EntityCommandDistribute',
     // 当前依赖的组件
-    components: { BasicTable, TableAction, CommandIssueDrawer },
+    components: { BasicTable, TableAction, IssueCommandDrawer },
     props:["entityId", "entityType"],
     setup(props) {
       const entityId = props.entityId;
@@ -39,7 +39,7 @@
       const [registerTable, { reload }] = useTable({
         api: listIssuePagerApi,
         columns: tableColumns,
-        showTableSetting: true,
+        showTableSetting: false,
         tableSetting: {
           redo: true,
           size: false,

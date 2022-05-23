@@ -33,7 +33,7 @@
   import {batchAddIssueApi} from "/@/api/things/device/deviceApi";
 
   export default defineComponent({
-    name: 'CommandIssueDrawer',
+    name: 'IssueCommandDrawer',
     components: { BasicDrawer, BasicForm, CommandDownConditionSlot },
     props:["entityId", "entityType"],
     emits: ['success', 'register'],

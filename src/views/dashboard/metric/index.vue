@@ -1,10 +1,10 @@
 <template>
   <div class="p-4">
     <MetricCard class="enter-y" />
-    <div class="md:flex enter-y" style="margin-top: 15px">
-      <TransportMetricPie class="md:w-1/3 w-full"/>
-      <DeviceLabelPie class="md:w-1/3 w-full"/>
-      <AlarmTypeMetricPie class="md:w-1/3 w-full"/>
+    <div class="md:flex enter-y things-metric-chart-container">
+      <TransportMetricPie height="240px" class="md:w-1/3 w-full things-mr"/>
+      <DeviceLabelPie height="240px" class="md:w-1/3 w-full things-mr things-ml" />
+      <AlarmTypeMetricPie height="240px" class="md:w-1/3 w-full things-ml" />
     </div>
   </div>
 </template>
@@ -30,3 +30,19 @@
     },
   });
 </script>
+
+<style lang="less">
+
+  .things-metric-chart-container{
+    margin-top: 15px;
+    .ant-card-head{
+      font-size: 14px;
+    }
+  }
+  .things-mr{
+    margin-right: 10px;
+  }
+  .things-ml{
+    margin-left: 10px;
+  }
+</style>

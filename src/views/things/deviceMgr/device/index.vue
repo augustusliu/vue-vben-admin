@@ -12,6 +12,11 @@
               tooltip: '查看设备详情',
               onClick: handleView.bind(null, record),
             },
+             {
+              icon: 'ant-design:dot-chart-outlined',
+              tooltip: '实时监控',
+              onClick: handleMonitor.bind(null, record),
+            },
             {
               icon: 'ant-design:lock-outlined',
               tooltip: '查看设备秘钥',
@@ -114,7 +119,7 @@
         showIndexColumn: true,
         canResize: true,
         actionColumn: {
-          width: 150,
+          width: 200,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -148,6 +153,10 @@
       function handleView(record: Recordable){
         go('/device_detail/' + record.id );
       }
+
+      function handleMonitor(record: Recordable){
+        go('/device_monitor/' + record.id );
+      }
       function handleSuccess() {
         reload()
       }
@@ -163,6 +172,7 @@
         openModal,
         showCredentials,
         handleSuccess,
+        handleMonitor,
       };
     },
   });

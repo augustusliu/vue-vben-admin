@@ -28,6 +28,7 @@ export default {
   authority: 'Authority Management',
   systemSetting: 'System Setting',
   models: 'Models List',
+  deviceRealtime: 'Device Realtime',
 
   threeModel: '3D Dashboard',
 };
