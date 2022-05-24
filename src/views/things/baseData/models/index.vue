@@ -1,39 +1,41 @@
 <template>
-  <div>
-    <BasicTable @register="registerTable" @edit-end="handleEditEnd">
-      <template #toolbar>
-        <BasicUpload
-          :maxSize="512"
-          :maxNumber="5"
-          :accept="acceptArray"
-          @change="handleChange"
-          :api="uploadModelApi"
-          :emptyHidePreview="false"
-          class="my-5"
-        />
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'ant-design:rotate-right-outlined',
-              tooltip: '资产同步',
-              onClick: handleConvertAsset.bind(null, record),
-            },
-            {
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              popConfirm: {
-                title: '是否确认删除',
-                confirm: handleDelete.bind(null, record),
+  <PageWrapper class="h-full w-full">
+    <div>
+      <BasicTable @register="registerTable" @edit-end="handleEditEnd">
+        <template #toolbar>
+          <BasicUpload
+            :maxSize="512"
+            :maxNumber="5"
+            :accept="acceptArray"
+            @change="handleChange"
+            :api="uploadModelApi"
+            :emptyHidePreview="false"
+            class="my-5"
+          />
+        </template>
+        <template #action="{ record }">
+          <TableAction
+            :actions="[
+              {
+                icon: 'ant-design:rotate-right-outlined',
+                tooltip: '资产同步',
+                onClick: handleConvertAsset.bind(null, record),
               },
-            },
-          ]"
-        />
-      </template>
-    </BasicTable>
-  </div>
-  <Loading :loading="loading" :absolute="false" tip="同步中..." />
+              {
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                popConfirm: {
+                  title: '是否确认删除',
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
+      </BasicTable>
+    </div>
+    <Loading :loading="loading" :absolute="false" tip="同步中..." />
+  </PageWrapper>
 </template>
 
 <script lang="ts">
@@ -53,10 +55,11 @@
   import {
     uploadModelApi
   } from "/@/api/things/common/commonApi";
+  import {PageWrapper} from "/@/components/Page";
 
   export default defineComponent({
     name: 'ModelComponent',
-    components: {TableAction, BasicTable, BasicUpload, Loading},
+    components: {TableAction, BasicTable, BasicUpload, Loading, PageWrapper},
     setup(){
       const acceptArray = ['glb', 'gltf'];
       const loading = ref(false);

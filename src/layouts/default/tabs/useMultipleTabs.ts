@@ -27,7 +27,6 @@ export function initAffixTabs(): string[] {
   }
 
   const addAffixTabs = () => {
-    console.log('init affix tab', router.getRoutes());
     const affixTabs = filterAffixTabs(router.getRoutes() as unknown as RouteLocationNormalized[]);
     affixList.value = affixTabs;
     for (const tab of affixTabs) {

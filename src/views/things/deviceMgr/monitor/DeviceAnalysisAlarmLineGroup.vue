@@ -59,8 +59,9 @@
             trigger: 'item'
           },
           legend: {
-            top: '5%',
-            left: 'center'
+            left: 'auto',
+            top: 'bottom',
+            bottom:'15'
           },
           series: [
             {

@@ -29,3 +29,5 @@ export const listAlarmLogsApi = (alarmId: number) =>
 // 处理告警api
 export const getAlarmInfoApi = (alarmId: any) =>
   defHttp.get<AlarmListItem>({ url: AlarmApi.AlarmInfoGetApi + "?alarmId=" + alarmId });
+
+

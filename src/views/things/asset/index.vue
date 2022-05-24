@@ -21,7 +21,7 @@
             {
               icon: 'ant-design:dot-chart-outlined',
               tooltip: '实时监控',
-              onClick: handleRelation.bind(null, record),
+              onClick: handleMonitor.bind(null, record),
             },
             {
               icon: 'clarity:note-edit-line',
@@ -125,6 +125,9 @@
         reload();
       }
 
+      function handleMonitor(record: Recordable){
+        go('/asset_monitor/' + record.id);
+      }
 
       return {
         registerDrawer,
@@ -135,6 +138,7 @@
         handleDelete,
         handleRelation,
         handleSuccess,
+        handleMonitor,
       };
     },
   });

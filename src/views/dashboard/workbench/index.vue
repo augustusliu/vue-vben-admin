@@ -2,7 +2,7 @@
   <PageWrapper>
     <template #headerContent> <WorkbenchHeader /> </template>
     <div class="lg:flex">
-      <div class="lg:w-7/10 w-full !mr-4 enter-y">
+      <div class="lg:w-7/10 w-full !mr-4 enter-y" >
         <ProjectCard :loading="loading" class="enter-y" />
         <DynamicInfo :loading="loading" class="!my-4 enter-y" />
       </div>

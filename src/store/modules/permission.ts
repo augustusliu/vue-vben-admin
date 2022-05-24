@@ -182,6 +182,7 @@ export const usePermissionStore = defineStore({
             }
           } catch (error) {
             console.error(error);
+            await userStore.logout(true);
           }
 
           // Dynamically introduce components

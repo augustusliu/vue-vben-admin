@@ -29,5 +29,6 @@ export default {
   systemSetting: '系统设置',
   models: '模型列表',
   deviceRealtime: '设备实时监控',
+  assetRealtime: '资产实时监控',
   threeModel: '3D看板',
 };

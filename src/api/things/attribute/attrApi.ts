@@ -6,7 +6,7 @@ const globSetting = useGlobSetting();
 import {
   AttributeSearchParam,
   AttributeListResult,
-  AddOrUpdateAttributeParam,
+  AddOrUpdateAttributeParam, AttributeListItem,
 } from '/@/api/things/attribute/model/attributeModel';
 
 

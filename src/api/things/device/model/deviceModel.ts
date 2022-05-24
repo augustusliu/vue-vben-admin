@@ -16,7 +16,7 @@ export type DeviceParams = BasicPageParams & {
 export type DeviceIssueSearchParams = BasicPageParams & {
   // ?表示参数可以为空，如果不为空的话为string类型
   code?: number;
-  issueType?: string;
+  issueType?: any;
   entityId?: number;
   entityType?: string;
 };

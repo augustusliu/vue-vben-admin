@@ -3,12 +3,12 @@
     <div class="h-full w-full" style="background-color: #fff;height: 100%; min-height: 300px">
       <Row>
         <Col span="24" class="h-full">
-          <BasicTable @register="registerTable">
+          <BasicTable @register="registerIssueCommandTable">
             <template #toolbar >
-              <a-button type="primary" @click="handleCreate" v-if="createBtnShow"> 远程控制 </a-button>
+              <a-button type="primary" @click="handleIssueCommandCreate"> 远程控制 </a-button>
             </template>
           </BasicTable>
-          <IssueCommandDrawer @register="registerDrawer" @success="handleSuccess" :entityId="entityId" :entityType="entityType" />
+          <IssueCommandDrawer @register="registerIssueCommandDrawer" @success="handleIssueCommandSuccess" :entityId="entityId" :entityType="entityType" />
         </Col>
       </Row>
     </div>
@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { Row, Col,} from 'ant-design-vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import {EntityTypeEnum} from "/@/enums/entityEnum";
@@ -36,25 +36,25 @@
     components: { BasicTable, Row, Col, IssueCommandDrawer },
     props:["entityId", "entityType"],
     setup(props) {
-      const entityId = props.entityId;
-      const entityType = props.entityType;
-      const [registerDrawer, {openDrawer}] = useDrawer();
-      const createBtnShow = (entityType === EntityTypeEnum.DEVICE);
+      const entityId = props.entityId as number;
+      const entityType = props.entityType as string;
+      const [registerIssueCommandDrawer, issueCommandDrawerMethod] = useDrawer();
       const tableColumns = entityType === EntityTypeEnum.ASSET ? issueAssetCommandColumn : issueDeviceCommandColumn;
       // 用户控制是否可以添加属性，只有设备才可以添加属性，资产的属性是采用的设备的属性
-      const [registerTable, {reload}] = useTable({
+      const [registerIssueCommandTable, issueCommandMethods] = useTable({
         title: '控制列表',
         api: listIssuePagerApi,
         columns: tableColumns,
-        showTableSetting: false,
+        striped: false,
+        showTableSetting: true,
         tableSetting: {
-          redo: true,
+          redo: false,
           size: false,
           setting: false,
           fullScreen: false,
         },
-        pagination: false,
-        bordered: true,
+        pagination: true,
+        bordered: false,
         showIndexColumn: true,
         canResize: true, // 调整表格自动高度
         beforeFetch: (record) => {
@@ -65,24 +65,23 @@
         },
       });
 
-      function handleCreate() {
-        openDrawer(true, {
+      function handleIssueCommandCreate() {
+        issueCommandDrawerMethod.openDrawer(true, {
           isUpdate: false,
         });
       }
 
-      function handleSuccess() {
-        reload();
+      function handleIssueCommandSuccess() {
+        issueCommandMethods.reload();
       }
 
       return {
         entityId,
         entityType,
-        registerDrawer,
-        registerTable,
-        handleCreate,
-        handleSuccess,
-        createBtnShow
+        registerIssueCommandDrawer,
+        registerIssueCommandTable,
+        handleIssueCommandCreate,
+        handleIssueCommandSuccess,
       };
     }
   })

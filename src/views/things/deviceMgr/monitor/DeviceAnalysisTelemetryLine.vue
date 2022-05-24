@@ -145,7 +145,8 @@
             trigger: 'axis'
           },
           legend: {
-            data: dataAttributeLabels.value
+            data: dataAttributeLabels.value,
+            left: '15',
           },
           grid: {
             left: '3%',
@@ -165,10 +166,6 @@
         };
         // 设置曲线图
         lineChart.setOptions(lineChartOptionsRef.value);
-        // 开启ws
-        thingsWebSocket.updateCallback({
-          deviceAttributeCallbackFunc: deviceAttributeRealTimeCallback
-        });
       }
 
       // 处理数据
@@ -265,6 +262,10 @@
         loadData();
       }
 
+      // 开启ws
+      thingsWebSocket.updateCallback({
+        deviceAttributeCallbackFunc: deviceAttributeRealTimeCallback
+      });
       // 设备遥测属性的实时信息
       function deviceAttributeRealTimeCallback(wsResp: WebResponse){
         let wsEntityId = wsResp.entityId;

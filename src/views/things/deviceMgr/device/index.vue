@@ -12,7 +12,7 @@
               tooltip: '查看设备详情',
               onClick: handleView.bind(null, record),
             },
-             {
+            {
               icon: 'ant-design:dot-chart-outlined',
               tooltip: '实时监控',
               onClick: handleMonitor.bind(null, record),
@@ -49,18 +49,20 @@
       <!--   4、为CardList定义事件插槽  ， # 是v-slot的简写, 子组件传递的参数都会放入到data中 -->
       <template #cardAction="{ record }">
         <Row style="height: 30px; border-top: 1px solid #f0f0f0">
-          <Col :span="6" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
+          <Col :span="5" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
             <InfoCircleOutlined style="color:#3076c6" :onClick="handleView.bind(null, record)"/>
           </Col>
-
-          <Col :span="6" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
+          <Col :span="5" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
+            <DotChartOutlined style="color:#3076c6" :onClick="handleMonitor.bind(null, record)"/>
+          </Col>
+          <Col :span="5" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
             <LockOutlined style="color:#3076c6" :onClick="showCredentials.bind(null, record)"/>
           </Col>
 
-          <Col :span="6" style="text-align: center;line-height: 30px; border-right: 1px solid #f0f0f0;">
+          <Col :span="5" style="text-align: center;line-height: 30px; border-right: 1px solid #f0f0f0;">
             <EditOutlined style="color:#3076c6" :onClick="handleEdit.bind(null, record)"/>
           </Col>
-          <Col :span="6" style="text-align: center; line-height: 30px">
+          <Col :span="4" style="text-align: center; line-height: 30px">
             <DeleteOutlined style="color:#3076c6" :onClick="handleDelete.bind(null, record)"/>
           </Col>
         </Row>
@@ -75,7 +77,7 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { EditOutlined, InfoCircleOutlined,DeleteOutlined,LockOutlined } from '@ant-design/icons-vue';
+  import { EditOutlined, InfoCircleOutlined,DeleteOutlined,LockOutlined, DotChartOutlined } from '@ant-design/icons-vue';
   import {BasicTable, CardsTable, TableAction, useTable} from '/@/components/Table';
   import { useGo } from '/@/hooks/web/usePage';
   import { useDrawer } from '/@/components/Drawer';
@@ -92,7 +94,7 @@
     name: 'DeviceComponent',
     // 当前依赖的组件
     components: { CardsTable,BasicTable, TableAction, DeviceDrawer, CredentialsModel, DeviceCardContentSlot, Row, Col,
-      EditOutlined, InfoCircleOutlined,DeleteOutlined,LockOutlined},
+      EditOutlined, InfoCircleOutlined,DeleteOutlined,LockOutlined, DotChartOutlined},
 
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
