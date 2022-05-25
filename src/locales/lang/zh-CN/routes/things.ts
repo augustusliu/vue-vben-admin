@@ -30,5 +30,4 @@ export default {
   models: '模型列表',
   deviceRealtime: '设备实时监控',
   assetRealtime: '资产实时监控',
-  threeModel: '3D看板',
 };

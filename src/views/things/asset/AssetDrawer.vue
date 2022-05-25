@@ -17,8 +17,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { createOrUpdateFormSchema } from './asset.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-
-  import { addOrUpdateAsset, listAssetLabels } from '/@/api/things/asset/assetApi';
+  import { addOrUpdateAsset } from '/@/api/things/asset/assetApi';
 
   export default defineComponent({
     name: 'AssetAddOrUpdateDrawer',
@@ -26,6 +25,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
+
       const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
         labelWidth: 90,
         schemas: createOrUpdateFormSchema,
@@ -36,21 +36,11 @@
         setDrawerProps({ loading: true});
         await resetFields();
         isUpdate.value = !!data?.isUpdate;
-
         if (unref(isUpdate)) {
           await setFieldsValue({
             ...data.record,
           });
         }
-
-        let labelsData = await listAssetLabels();
-        await updateSchema({
-          field: 'label',
-          componentProps: {
-            dropdownStyle: { maxHeight: 270, overflow: 'auto'},
-            options: preProcessData(labelsData),
-          },
-        });
         setDrawerProps({ loading: false, confirmLoading: false });
       });
 
@@ -59,6 +49,13 @@
       async function handleSubmit() {
         try {
           const values = await validate();
+          let labelIds:any[] = [];
+          if(values.label && values.label.length > 0){
+            values.label.forEach(record => {
+              labelIds.push(record)
+            })
+          }
+          values.label = labelIds;
           setDrawerProps({ confirmLoading: true });
           await addOrUpdateAsset(values);
           closeDrawer();
@@ -66,16 +63,6 @@
         } finally {
           setDrawerProps({ confirmLoading: false });
         }
-      }
-
-      function preProcessData(nodes){
-        let options:Array<any> = new Array<any>();
-        nodes.forEach(item => options.push({
-          label: item,
-          key: item,
-          value: item,
-        }));
-        return options;
       }
 
       return {

@@ -40,17 +40,38 @@
           });
         }
         setOptions({
-          xAxis: {
-            type: 'category',
-            data: labelNames,
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
           },
-          yAxis: {
-            type: 'value'
-          },
+          xAxis: [
+            {
+              type: 'category',
+              data: labelNames,
+              axisTick: {
+                alignWithLabel: true
+              },
+              axisLabel:{
+                show: true,
+                interval: 0,
+                rotate: -30,
+                margin: 5,
+              }
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value'
+            }
+          ],
           series: [
             {
-              data: labelValue,
-              type: 'bar'
+              name: '数量',
+              type: 'bar',
+              barWidth: '60%',
+              data: labelValue
             }
           ]
         });

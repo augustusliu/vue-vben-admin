@@ -5,6 +5,7 @@ import moment from 'moment';
 import { SvgIcon } from '/@/components/Icon';
 import { h } from 'vue';
 import { indexColor } from '../common/constant/ColorRandom';
+import {listDictionaryAssetLabels} from "/@/api/things/dictionary/dictionaryApi";
 
 export const assetColumn: BasicColumn[] = [
   {
@@ -32,7 +33,7 @@ export const assetColumn: BasicColumn[] = [
   {
     title: '资产标签',
     dataIndex: 'label',
-    customRender: ({ record }) => formatLabel(record),
+    customRender: ({ record }) => formatLabels(record.assetLabels),
   },
   {
     title: '描述',
@@ -57,6 +58,7 @@ export const assetColumn: BasicColumn[] = [
 ];
 
 // 用于资产详情页信息展示
+// @ts-ignore
 // @ts-ignore
 // @ts-ignore
 export const assetInfoScheme: DescItem[] = [
@@ -85,10 +87,10 @@ export const assetInfoScheme: DescItem[] = [
     label: '所属客户',
   },
   {
-    field: 'label',
+    field: 'assetLabels',
     label: '资产标签',
     render: ( val ) => {
-      return formatLabelv1(val) ;
+      return formatLabels(val) ;
     },
   },
   {
@@ -171,14 +173,23 @@ export const createOrUpdateFormSchema: FormSchema[] = [
   {
     field: 'label',
     label: '资产标签',
-    component: 'Select',
+    component: 'ApiTreeSelect',
     colProps: { span: 20 },
     componentProps: {
-      mode: 'tags',
-      placeholder: '请输入资产标签',
+      api: listDictionaryAssetLabels,
+      multiple: 'tag',
+      maxTagCount: 3,
+      treeCheckable: true,
+      treeDefaultExpandAll: true,
+      dropdownStyle: { maxHeight: 270, overflow: 'auto' },
+      replaceFields: {
+        title: 'name',
+        key: 'id',
+        value: 'id',
+      },
+      getPopupContainer: () => document.body,
     },
   },
-
   {
     field: 'description',
     label: '资产描述',
@@ -187,29 +198,15 @@ export const createOrUpdateFormSchema: FormSchema[] = [
   },
 ];
 
-const formatLabel = ( record ) => {
-  let re = [];
-  if (record.label != null && record.label.length > 0) {
-    // @ts-ignore
-    record.label.forEach((label, index) => {
-      // @ts-ignore
-      re.push(<Tag color={indexColor(index)} style={'margin-right:3px'}>
-          {label}
-        </Tag>
-      );
-    });
-  }
-  return re;
-}
 
-const formatLabelv1 = ( label ) => {
+const formatLabels = ( assetLabels ) => {
   let re = [];
-  if (label != null && label.length > 0) {
+  if (assetLabels != null && assetLabels.length > 0) {
     // @ts-ignore
-    label.forEach((label, index) => {
+    assetLabels.forEach((label, index) => {
       // @ts-ignore
       re.push(<Tag color={indexColor(index)} style={'margin-right:3px'}>
-          {label}
+          {label.labelName}
         </Tag>
       );
     });

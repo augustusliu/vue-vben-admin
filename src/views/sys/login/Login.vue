@@ -81,7 +81,6 @@
           cameraFov: 65,
           cameraNear: 0.1,
           cameraFar: 1000,
-          enableSceneBackgroundColor: true,
           sceneColor:0x2941b3,
           canControls: false,
           sceneBackTransport:false,

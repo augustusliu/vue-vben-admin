@@ -103,7 +103,6 @@ export const useUserStore = defineStore({
             routes.forEach((route) => {
               router.addRoute(route as unknown as RouteRecordRaw);
             });
-            console.log(routes);
             permissionStore.setDynamicAddedRoute(true);
           }
           // await router.replace(userInfo.homePath || PageEnum.BASE_HOME);

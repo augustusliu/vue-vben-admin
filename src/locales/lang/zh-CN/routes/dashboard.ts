@@ -5,5 +5,5 @@ export default {
   analysis: '分析页',
   tenant: '租户',
   metrics: '统计看板',
-
+  digitalTwin: '数字孪生',
 };

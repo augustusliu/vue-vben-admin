@@ -26,6 +26,7 @@ export interface AssetListItem {
   tenantName: string;
   modifiedTime: string;
   createdTime: string;
+  assetLabels: any[];
 }
 
 export interface AssetAddParam {

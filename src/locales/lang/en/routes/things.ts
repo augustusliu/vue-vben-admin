@@ -30,6 +30,4 @@ export default {
   models: 'Models List',
   deviceRealtime: 'Device Realtime',
   assetRealtime: 'Asset Realtime',
-
-  threeModel: '3D Dashboard',
 };

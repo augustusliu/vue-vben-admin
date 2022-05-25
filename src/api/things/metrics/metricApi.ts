@@ -23,6 +23,8 @@ enum MetricApiEnum {
   AlarmsGroupByTypeApi = '/api/alarm/alarmsGroupByType',
   // 按照时间和类型进行分组
   AlarmGroupByTimeAndTypeApi = '/api/alarm/alarmsMetricV1',
+
+  EntityLabelMetricApi = '/api/entity/labelMetric',
 }
 
 // 获取统计页面卡片头部数据
@@ -64,3 +66,8 @@ export const getAlarmsGroupByTypeApi = (params: AlarmMetricSearchParams) =>
 // 获取设备资产告警的按类型分组数据
 export const getAlarmMetricByTypeAndTimeApi = (params: AlarmMetricSearchParams) =>
   defHttp.post<any>({ url: MetricApiEnum.AlarmGroupByTimeAndTypeApi, params});
+
+
+// 获取设备资产告警的按类型分组数据
+export const getEntityLabelPieApi = (entityId: number, entityType: string) =>
+  defHttp.get<MetricPieItem[]>({ url: MetricApiEnum.EntityLabelMetricApi + "?entityId=" + entityId + "&entityType=" + entityType});

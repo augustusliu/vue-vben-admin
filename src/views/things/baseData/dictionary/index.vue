@@ -1,4 +1,5 @@
 <template>
+  <PageWrapper class="h-full w-full">
   <div>
     <BasicTable @register="registerTable"
                 @fetch-success="onFetchSuccess"
@@ -27,6 +28,7 @@
     </BasicTable>
     <DictionaryDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
+  </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent, nextTick } from 'vue';
@@ -37,10 +39,11 @@
   import { useDrawer } from '/@/components/Drawer';
   import DictionaryDrawer from './DictionaryDrawer.vue';
   import { dictionaryColumn, dictionarySearchFormSchema } from './dictionary.data';
+  import {PageWrapper} from "/@/components/Page";
 
   export default defineComponent({
     name: 'DictionaryManagement',
-    components: { BasicTable, DictionaryDrawer, TableAction },
+    components: { BasicTable, DictionaryDrawer, TableAction ,PageWrapper},
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload, collapseAll }] = useTable({
@@ -60,7 +63,7 @@
         showIndexColumn: false,
         canResize: true, // 调整表格自动高度
         actionColumn: {
-          width: 80,
+          width: 120,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },

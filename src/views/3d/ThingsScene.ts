@@ -8,7 +8,8 @@ import {
   Vector2,
   AnimationMixer,
   Clock, LoopOnce,
-  CubeTextureLoader, GridHelper, Raycaster
+  GridHelper,
+  Raycaster
 } from 'three';
 
 import Nebula, { SpriteRenderer } from "three-nebula";
@@ -34,13 +35,11 @@ export interface ThingsSceneOptions{
   cameraNear: number;
   cameraFar: number;
 
+  // 场景透明
   sceneBackTransport: boolean;
   // 场景的背景颜色
   sceneColor?: ColorRepresentation;
-  // 场景背景图片
-  sceneBackImages?: string [];
-  // 场景背景采用颜色还是纹理图片
-  enableSceneBackgroundColor: boolean;
+
   showGrid?: boolean;
   canControls: boolean;
 }
@@ -100,15 +99,12 @@ export class ThingsScene{
   private containerHeight;
   private containerWidth;
   private readonly options: ThingsSceneOptions | undefined;
+
+
   constructor(containerRef: Ref<HTMLElement>, opts: ThingsSceneOptions,
               progressCallback: any, clickCallback: any) {
     if(!containerRef.value || !opts){
       return;
-    }
-
-    // 如果背景是纹理，则废弃掉，放置内存溢出
-    if(this.options && !this.options.enableSceneBackgroundColor){
-      defaultThreeContext.scene.background.dispose();
     }
 
     this.options = opts || {};
@@ -140,14 +136,7 @@ export class ThingsScene{
     this.initSpotLight();
 
     if(!opts.sceneBackTransport){
-      if(opts.enableSceneBackgroundColor){
-        defaultThreeContext.scene.background = new Color(opts.sceneColor);
-      }else{
-        // load bg texture
-        if(opts.sceneBackImages && opts.sceneBackImages.length > 0){
-          defaultThreeContext.scene.background = this.__buildSceneTexture(opts.sceneBackImages);
-        }
-      }
+      defaultThreeContext.scene.background = new Color(opts.sceneColor);
     }else{
       defaultThreeContext.scene.background = null;
     }
@@ -179,6 +168,7 @@ export class ThingsScene{
     }else{
       defaultThreeContext.renderer.setClearColor( 0xffffff, 1 );
     }
+
     defaultThreeContext.renderer.setSize(this.containerWidth, this.containerHeight);
     defaultThreeContext.renderer.shadowMap.enabled = true;
     defaultThreeContext.renderer.setPixelRatio(window.devicePixelRatio);
@@ -212,11 +202,6 @@ export class ThingsScene{
     // defaultThreeContext.controls.addEventListener('change', renderAnimate);
   }
 
-  private __buildSceneTexture(images:string []){
-    let skyBoxCubeMap = new CubeTextureLoader().load(images);
-    skyBoxCubeMap.format = THREE.RGBFormat;
-    return skyBoxCubeMap;
-  }
 
   // 显示坐标轴
   public showAxes(){

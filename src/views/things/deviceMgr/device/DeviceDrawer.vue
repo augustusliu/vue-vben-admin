@@ -35,15 +35,6 @@
         setDrawerProps({ confirmLoading: false, loading: true });
         await resetFields();
         isUpdate.value = !!data?.isUpdate;
-        // 获取设备标签
-        let labelsData = await listDeviceLabels();
-        await updateSchema({
-          field: 'label',
-          componentProps: {
-            dropdownStyle: { maxHeight: 270, overflow: 'auto'},
-            options: preProcessData(labelsData),
-          },
-        });
 
         if (unref(isUpdate)) {
           await recallSelectValue(data.record);
@@ -60,6 +51,13 @@
       async function handleSubmit() {
         try {
           const values = await validate();
+          let labelIds:any[] = [];
+          if(values.label && values.label.length > 0){
+            values.label.forEach(record => {
+              labelIds.push(record)
+            })
+          }
+          values.label = labelIds;
           setDrawerProps({ confirmLoading: true });
           await addOrUpdateDeviceApi(values);
           closeDrawer();

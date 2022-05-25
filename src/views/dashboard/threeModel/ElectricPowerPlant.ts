@@ -40,22 +40,7 @@ export class ElectricPowerPlant{
       cameraFar: 1000,
       canControls: true,
       sceneBackTransport:true,
-      enableSceneBackgroundColor: false,
       sceneColor: 0x2d3152,
-      sceneBackImages: [
-        'resource/electricImg/远山_RT.jpg',
-        'resource/electricImg/远山_LF.jpg',
-        'resource/electricImg/远山_UP.jpg',
-        'resource/electricImg/远山_DN.jpg',
-        'resource/electricImg/远山_BK.jpg',
-        'resource/electricImg/远山_FR.jpg',
-        // 'resource/electricImg/nx.jpg',
-        // 'resource/electricImg/px.jpg',
-        // 'resource/electricImg/ny.jpg',
-        // 'resource/electricImg/py.jpg',
-        // 'resource/electricImg/nz.jpg',
-        // 'resource/electricImg/pz.jpg',
-      ]
     }, progressCallback, clickCallback);
   }
 

@@ -36,11 +36,6 @@
         await resetFields();
         isUpdate.value = !!data?.isUpdate;
 
-        if (unref(isUpdate)) {
-          await setFieldsValue({
-            ...data.record,
-          });
-        }
         // 加载初始节点(这里是懒加载，但是懒加载会导致编辑时的回显问题，所以这里应该是需要全量加载)
         // let treeData = await listDictionaryByParentId(0);
         let treeData = await listDictionaryAll(0);
@@ -51,10 +46,15 @@
             treeDataSimpleMode: true,
             treeData: preProcessData(treeData),
             dropdownStyle: { maxHeight: 270, overflow: 'auto' },
-            // // 异步加载子节点
-            // loadData: loadChildData,
           },
         });
+
+        if (unref(isUpdate)) {
+          await setFieldsValue({
+            ...data.record,
+          });
+        }
+
         setDrawerProps({ confirmLoading: false,loading: false });
       });
 

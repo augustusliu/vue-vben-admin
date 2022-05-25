@@ -7,9 +7,18 @@
           <AssetRealtimeLine :entityId="assetId" class="enter-y"/>
         </div>
         <div class="lg:w-3/10 w-full !mr-4 enter-y">
-          <AssetAlarmHistogramMetric :entityId="assetId" entityType="ASSET" class="enter-y"/>
+          <LabelEntityPieMetric :entityId="assetId" entityType="ASSET" class="enter-y"/>
         </div>
       </div>
+
+    <div class="lg:flex md:flex" style="min-height: 310px; max-height:340px; margin-top: 10px;">
+      <div class="lg:w-4/10 w-full !mr-4 enter-y">
+        <AssetAlarmHistogramMetric :entityId="assetId" entityType="ASSET" class="enter-y"/>
+      </div>
+      <div class="lg:w-6/10 w-full !mr-4 enter-y" style="min-height: 310px">
+        <DeviceCommandHistoryList :entityId="assetId" entityType="ASSET" class="enter-y"/>
+      </div>
+    </div>
     </PageWrapper>
 </template>
 <script lang="ts">
@@ -18,10 +27,13 @@
   import AssetAlarmHistogramMetric from "/@/views/things/asset/monitor/rt/AssetAlarmHistogramMetric.vue";
   import {useRoute} from "vue-router";
   import {PageWrapper} from "/@/components/Page";
+  import DeviceCommandHistoryList
+    from "/@/views/things/deviceMgr/monitor/DeviceCommandHistoryList.vue";
+  import LabelEntityPieMetric from "/@/views/things/asset/monitor/rt/LabelEntityPieMetric.vue";
 
   export default defineComponent({
     name: 'AssetRealtime',
-    components: {AssetRealtimeLine, AssetAlarmHistogramMetric, PageWrapper},
+    components: {AssetRealtimeLine, AssetAlarmHistogramMetric, PageWrapper, DeviceCommandHistoryList, LabelEntityPieMetric},
     setup(){
       const route = useRoute();
       // 此处可以得到用户ID

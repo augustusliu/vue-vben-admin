@@ -4,4 +4,5 @@ export default {
   workbench: 'Workbench',
   analysis: 'Analysis',
   metrics: 'Analysis Metric',
+  digitalTwin: 'Digital Twin',
 };

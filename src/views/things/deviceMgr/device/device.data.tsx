@@ -9,6 +9,7 @@ import {indexColor} from "/@/views/things/common/constant/ColorRandom";
 import {listTemplateWithPager} from "/@/api/things/asset/templateApi";
 import {listEntityGroupByPager} from "/@/api/things/entityGroup/entityGroupApi";
 import {listAssetNamesByPager} from "/@/api/things/asset/assetApi";
+import {listDictionaryDeviceLabels} from "/@/api/things/dictionary/dictionaryApi";
 
 export const deviceTableColumn: BasicColumn[] = [
   {
@@ -53,18 +54,7 @@ export const deviceTableColumn: BasicColumn[] = [
   {
     title: '标签',
     dataIndex: 'label',
-    customRender: ({ record }) => {
-      if(record.label != null && record.label.length > 0){
-        let re = [];
-        // @ts-ignore
-        record.label.forEach((label, index) => {
-          // @ts-ignore
-          re.push(<Tag color={indexColor(index)} style={"margin-right:3px"}> {label} </Tag>);
-        });
-        return re;
-      }
-      return null;
-    },
+    customRender: ({ record }) => formatLabels(record.deviceLabels),
   },
   {
     title: '描述',
@@ -177,11 +167,21 @@ export const createOrUpdateFormSchema: FormSchema[] = [
   {
     field: 'label',
     label: '设备标签',
-    component: 'Select',
+    component: 'ApiTreeSelect',
     colProps: { span: 24 },
     componentProps: {
-      mode: 'tags',
-      placeholder: '请输入设备标签',
+      api: listDictionaryDeviceLabels,
+      multiple: 'tag',
+      maxTagCount: 3,
+      treeCheckable: true,
+      // treeDefaultExpandAll: true,
+      dropdownStyle: { maxHeight: 270, overflow: 'auto' },
+      replaceFields: {
+        title: 'name',
+        key: 'id',
+        value: 'id',
+      },
+      getPopupContainer: () => document.body,
     },
   },
   {
@@ -344,17 +344,11 @@ export const deviceDetailInfoScheme: DescItem[] = [
     },
   },
   {
-    field: 'label',
+    field: 'deviceLabels',
     label: '设备标签',
-    render: ( label ) => {
-      if(label != null && label.length > 0){
-        let re = [];
-        // @ts-ignore
-        label.forEach(item => re.push(<Tag color="#87d068" style={"margin-right:3px"}> { item } </Tag>));
-        return re;
-      }
-      return null;
-    },
+    render: ( val ) => {
+      return formatLabels(val);
+    }
   },
   {
     field: 'modifiedTime',
@@ -375,3 +369,18 @@ export const deviceDetailInfoScheme: DescItem[] = [
     label: '设备描述',
   },
 ]
+
+const formatLabels = ( deviceLabels ) => {
+  let re = [];
+  if (deviceLabels != null && deviceLabels.length > 0) {
+    // @ts-ignore
+    deviceLabels.forEach((label, index) => {
+      // @ts-ignore
+      re.push(<Tag color={indexColor(index)} style={'margin-right:3px'}>
+          {label.labelName}
+        </Tag>
+      );
+    });
+  }
+  return re;
+}

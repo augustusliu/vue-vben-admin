@@ -42,10 +42,11 @@
       const tableColumns = entityType === EntityTypeEnum.ASSET ? issueAssetCommandColumn : issueDeviceCommandColumn;
       // 用户控制是否可以添加属性，只有设备才可以添加属性，资产的属性是采用的设备的属性
       const [registerIssueCommandTable, issueCommandMethods] = useTable({
-        title: '控制列表',
+        title: '遥控日志',
         api: listIssuePagerApi,
         columns: tableColumns,
         striped: false,
+        size: 'small',
         showTableSetting: true,
         tableSetting: {
           redo: false,
@@ -53,9 +54,9 @@
           setting: false,
           fullScreen: false,
         },
-        pagination: true,
+        pagination: false,
         bordered: false,
-        showIndexColumn: true,
+        showIndexColumn: false,
         canResize: true, // 调整表格自动高度
         beforeFetch: (record) => {
           record.entityId = entityId;
@@ -89,8 +90,8 @@
 </script>
 <style lang="less">
   .alarmAnalysisListContainer{
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
   }
   .alarmListTableContainer{
     width: 100%;

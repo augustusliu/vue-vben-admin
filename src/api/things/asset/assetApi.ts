@@ -23,11 +23,9 @@ enum AssetApi {
   AssetAddOneAttribute = '/api/asset/attr/one/',
   // 添加编辑资产
   AssetAddOrUpdateApi = '/api/asset/addOrUpdate',
-  AssetLabelsApi = '/api/asset/labels',
   AssetListAllApi = '/api/asset/listAll',
   AssetListAllNamesApi = '/api/asset/listAllNames',
   AssetListAllNamesByPagerApi = '/api/asset/listNamesByPager',
-
   AssetDelApi = '/api/asset/del/',
 }
 
@@ -53,9 +51,6 @@ export const addOneAttributeApi = (_assetId: number, params: AddOrUpdateAttribut
 // 添加编辑资产
 export const addOrUpdateAsset = (params: AssetAddParam) =>
   defHttp.post<AttributeListResult>({ url: AssetApi.AssetAddOrUpdateApi, params });
-
-// 分页查询对应的资产列表
-export const listAssetLabels = () => defHttp.get<string>({ url: AssetApi.AssetLabelsApi });
 
 // 查询全部资产
 export const listAssetAll = () =>

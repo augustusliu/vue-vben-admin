@@ -17,6 +17,6 @@ export const randomColor = () => {
   return TAG_BG_COLOR[ran];
 }
 
-export const indexColor = (index) => {
+export const indexColor = (index: number) => {
   return TAG_BG_COLOR[index];
 }

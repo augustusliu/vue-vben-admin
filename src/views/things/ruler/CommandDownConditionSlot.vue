@@ -66,6 +66,7 @@
         canResize: false,
         pagination: false,
         maxHeight: 400,
+        size: 'small',
         rowSelection: { type: 'checkbox' },
         beforeFetch: (params) => {
           params.entityId = refEntityId.value;
