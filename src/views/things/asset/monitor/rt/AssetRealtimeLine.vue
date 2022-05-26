@@ -246,6 +246,9 @@
           legend: {
             data: rtServiceRef.value.getFieldNamesByDevice(currentDeviceValue.value),
             left: '15',
+            textStyle: {
+              color: '#989292',
+            }
           },
           grid: {
             left: '3%',
@@ -259,7 +262,11 @@
             data: deviceHistoryDataTimeRef.value
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            interval: 200,
+            splitLine:{
+              show: false
+            }
           },
           series: deviceHistoryDataRef.value
         };

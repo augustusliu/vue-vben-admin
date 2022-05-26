@@ -40,7 +40,10 @@
             trigger: 'item'
           },
           legend: {
-            top: 'top'
+            top: 'top',
+            textStyle: {
+              color: '#989292',
+            }
           },
           series: [
             {

@@ -10,8 +10,7 @@ import {
   Raycaster,
   Clock
 } from 'three';
-
-import Nebula, { SpriteRenderer } from "three-nebula";
+import Nebula, { SpriteRenderer , System} from "three-nebula";
 import { OrbitControls } from "./extends/OrbitControls";
 import { GLTFLoader } from "./extends/GLTFLoader";
 import { ColorRepresentation } from "three/src/utils";
@@ -41,6 +40,7 @@ export interface ThingsSceneOptions{
   animateInterval?: number;
 }
 
+
 // 定义things的场景--全局一个
 export class ThingsScene{
   private containerRef: any;
@@ -64,13 +64,24 @@ export class ThingsScene{
   private labelObjects: any[];
 
   private clock: any;
-  private animateId: any;
-  private nebulaParticle:any[];
+  // 当前动画的关键帧
+  public animateFrameId: any;
+  // // 模型自带的动画AnimationAction
+  private animationActions: any[];
+
+  // 粒子系统动画渲染器
+  private nebulasSystem: System[];
+
+  // 停止动画的flag，停止动画必须采用这种方式
+  public animateRunningEnd: boolean;
+
 
   constructor() {
     this.objs = [];
     this.labelObjects = [];
-    this.nebulaParticle = [];
+    this.nebulasSystem = [];
+    this.animationActions = [];
+    this.animateRunningEnd = true;
   }
 
   // 初始化
@@ -85,7 +96,9 @@ export class ThingsScene{
     this.containerWidth = containerRef.clientWidth | window.innerWidth;
     this.objs = [];
     this.labelObjects = [];
-    this.nebulaParticle = [];
+    this.nebulasSystem = [];
+    this.animationActions = [];
+    this.animateRunningEnd = true;
     // settings
     this.options = opts || {};
 
@@ -204,7 +217,7 @@ export class ThingsScene{
         this.onContainerResize();
         // 只能容器绑定对应的点击事件
         this.containerRef.addEventListener( 'click', this.__mouseClick, false );
-        this.startAnimate(); // 开启动画
+        // this.startAnimate(); // 开启动画
       },
       (progress) => {
         if(this.progressCallback){
@@ -215,12 +228,14 @@ export class ThingsScene{
       console.log('load model error', err)
       },
     );
+
+    this.startAnimate();
   }
 
   public disposeSceneObjs(){
     // 优先停止动画
+    this.animateRunningEnd = true;
     this.stopAnimate();
-
     if(this.objs && this.objs.length > 0){
       this.objs.forEach(item => {
         this.scene.remove(item);
@@ -232,9 +247,10 @@ export class ThingsScene{
 
     this.objs = [];
     this.labelObjects = [];
-    this.nebulaParticle = [];
-
+    this.nebulasSystem = [];
+    this.animationActions = [];
     if(this.animateMixer){
+      this.animateMixer.stopAllAction();
       this.animateMixer = null;
     }
 
@@ -259,6 +275,8 @@ export class ThingsScene{
         if(this.containerRef && this.containerRef.clientHeight){
           this.containerHeight = this.containerRef.clientHeight | window.innerHeight;
           this.containerWidth = this.containerRef.clientWidth | window.innerWidth;
+          console.log('width', this.containerWidth, 'height', this.containerHeight)
+
           this.camera.aspect = this.containerWidth / this.containerHeight;
           this.camera.updateProjectionMatrix();
           this.renderer.setSize(this.containerWidth, this.containerHeight);
@@ -307,9 +325,10 @@ export class ThingsScene{
     if(gltfModel.animations && gltfModel.animations.length > 0){
       // 加载模型动画
       this.animateMixer = new AnimationMixer(gltfModel.scene);
-      let animate = this.animateMixer.clipAction(gltfModel.animations[0]).play();
+      let animate = this.animateMixer.clipAction(gltfModel.animations[0]);
       animate.clampWhenFinished = true;
       animate.enabled = true;
+      this.animationActions.push(animate);
     }
   }
 
@@ -397,33 +416,59 @@ export class ThingsScene{
 
   private __loadNebulaAnimate(nebulaJsons: any){
     Nebula.fromJSONAsync(nebulaJsons.particleSystemState, THREE).then(loaded => {
-      const nebulaRenderer = new SpriteRenderer(this.scene, THREE);
-      this.nebulaParticle.push(loaded.addRenderer(nebulaRenderer));
+      let nebulaRenderer = new SpriteRenderer(this.scene, THREE);
+      loaded.addRenderer(nebulaRenderer);
+      const nebula = loaded.addRenderer(nebulaRenderer);
+      this.nebulasSystem.push(nebula);
     });
   }
 
+  // 停止动画
   public stopAnimate(){
-    if(this.animateId){
-      cancelAnimationFrame(this.animateId);
+    this.animateRunningEnd = true;
+    if(this.animateFrameId){
+      cancelAnimationFrame(this.animateFrameId);
+    }
+    if(this.animationActions && this.animationActions.length > 0){
+      this.animationActions.forEach(item => item.stop());
+    }
+    if(this.nebulasSystem){
+      this.nebulasSystem.forEach(item => {
+        item.canUpdate = false;
+      });
     }
   }
 
+  // 开始动画
   public startAnimate(){
+    this.animateRunningEnd = false;
+    if(this.animationActions && this.animationActions.length > 0){
+      this.animationActions.forEach(item => item.play());
+    }
+    this.nebulasSystem.forEach(item => {
+      item.canUpdate = true;
+    });
     this.renderSceneAnimation();
   }
 
   public renderSceneAnimation(){
+
+    if(this.animateRunningEnd === true){
+      cancelAnimationFrame(this.animateFrameId);
+    }
+
     if(this.scene && this.camera){
       if(this.animateMixer){
         this.animateMixer.update(this.clock.getDelta());
       }
-      if(this.nebulaParticle && this.nebulaParticle.length > 0){
-        this.nebulaParticle.forEach(item => {
-          if(item.update()){
-            item.update()
+      if(this.nebulasSystem){
+        this.nebulasSystem.forEach(item => {
+          if(item.update){
+            item.update();
           }
-        })
+        });
       }
+
       // 场景自转
       // if(defaultThreeContext.controls){
       //   defaultThreeContext.controls.update();
@@ -432,11 +477,11 @@ export class ThingsScene{
       if(this.renderer){
         this.renderer.render(this.scene, this.camera);//执行渲染操作
       }
-      // console.log(this.animateId);
-      this.animateId = requestAnimationFrame(() => this.renderSceneAnimation()); //请求再次执行渲染函数render
+      this.animateFrameId = requestAnimationFrame(() => this.renderSceneAnimation()); //请求再次执行渲染函数render
     }
   }
 }
+
 
 // 全局场景
 export const digitalTwinScene = new ThingsScene();

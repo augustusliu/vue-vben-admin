@@ -1,29 +1,37 @@
 <template>
-  <PageWrapper class="h-full w-full counterContainer">
+  <div class="h-full w-full counterContainer">
     <Row class="counterHeader">
       <Col>
         <span>接入统计</span>
       </Col>
     </Row>
-    <Row gutter="[1,1]" class="w-full h-full counterGrid">
-      <Col span="12" class="right-border right-bottom">
-        <div class="counterNumber">{{assetCount}}</div>
-        <div class="counterNumberTitle">资产总数</div>
+    <Row gutter="[1,1]" class="w-full counterGrid">
+      <Col span="12" class="right-border bottom-border">
+        <div class="circle-grid">
+          <div class="counterNumber">{{assetCount}}</div>
+          <div class="counterNumberTitle">资产总数</div>
+        </div>
       </Col>
-      <Col span="12" class="right-bottom">
-        <div class="counterNumber">{{assetCount}}</div>
-        <div class="counterNumberTitle">报警待处理</div>
+      <Col span="12" class="bottom-border">
+        <div class="circle-grid">
+          <div class="counterNumber">{{waitingAlarmCounter}}</div>
+          <div class="counterNumberTitle">报警待处理</div>
+        </div>
       </Col>
       <Col span="12" class="right-border">
-        <div class="counterNumber">{{assetCount}}</div>
-        <div class="counterNumberTitle">设备总量</div>
+        <div class="circle-grid">
+          <div class="counterNumber">{{deviceCount}}</div>
+          <div class="counterNumberTitle">设备总量</div>
+        </div>
       </Col>
       <Col span="12">
-        <div class="counterNumber">{{assetCount}}</div>
-        <div class="counterNumberTitle">设备在线</div>
+        <div class="circle-grid">
+          <div class="counterNumber">{{onlineDeviceCount}}</div>
+          <div class="counterNumberTitle">设备在线</div>
+        </div>
       </Col>
     </Row>
-  </PageWrapper>
+  </div>
 </template>
 
 <script lang="ts">
@@ -34,11 +42,11 @@
     name: 'Things3DModelCounterComponent',
     components: { PageWrapper, Row, Col },
     setup(){
-      const assetCount = ref(0);
-      const deviceCount = ref(0);
-      const waitingAlarmCounter = ref(0);
-
-      return { assetCount, deviceCount, waitingAlarmCounter };
+      const assetCount = ref(32);
+      const deviceCount = ref(143);
+      const onlineDeviceCount = ref(45);
+      const waitingAlarmCounter = ref(4);
+      return { assetCount, deviceCount, waitingAlarmCounter, onlineDeviceCount };
     }
   });
 </script>
@@ -59,33 +67,36 @@
     height: 100%;
   }
   .counterHeader{
-    color: #f3f3f3;
+    color: #989292;
     width: 100%;
-    max-height: 28px;
     height: 10%;
+    max-height: 28px;
+    line-height: 28px;
     font-size: 14px;
     font-weight: bold;
-    line-height: 28px;
     vertical-align: center;
     padding-left: 15px;
     border-left: 3px solid #80ff00;
   }
   .counterGrid{
     width: 100%;
-    height: 90%;
+    min-height: 140px;
+    height: 90% !important;
+    margin-top: -8px;
   }
+
   .right-border{
-    border-right: 1px solid #7c8087;
+    border-right: 1px solid #1e345d;
   }
-  .right-bottom{
-    border-bottom: 1px solid #7c8087;
+  .bottom-border{
+    border-bottom: 1px solid #1e345d;
   }
   .counterNumber{
-    max-height: 44px;
+    height: 40px;
     text-align: center;
-    line-height: 44px;
+    line-height: 40px;
     font-size: 28px;
-    color: #fff;
+    color: #989292;
     width: 100%;
   }
   .counterNumberTitle{
@@ -93,7 +104,19 @@
     text-align: center;
     line-height: 20px;
     font-size: 10px;
-    color: #fff;
+    color: #989292;
     width: 100%;
+  }
+  .circle-grid{
+    position: absolute;
+    top: 45px;
+    left: 45px;
+    height: 90px;
+    width: 90px;
+    margin: -40px 0 0 0;
+    border-radius: 50%;
+    padding-top: 15px;
+    background: -webkit-radial-gradient( circle closest-side, #071b40 96%, #fff 50%);
+    opacity: 0.7;
   }
 </style>

@@ -96,6 +96,9 @@
           legend: {
             data: alarmsData.labels,
             left: '15',
+            textStyle: {
+              color: '#989292',
+            }
           },
           xAxis: [
             {
@@ -106,7 +109,12 @@
           ],
           yAxis: [
             {
-              type: 'value'
+              type: 'value',
+              interval: 30,
+              show: true,
+              splitLine:{
+                show: false
+              }
             }
           ],
           series: seriesObj

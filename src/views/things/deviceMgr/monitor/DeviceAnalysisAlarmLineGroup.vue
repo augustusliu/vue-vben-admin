@@ -61,7 +61,10 @@
           legend: {
             left: 'auto',
             top: 'bottom',
-            bottom:'15'
+            bottom:'15',
+            textStyle: {
+              color: '#989292',
+            }
           },
           series: [
             {

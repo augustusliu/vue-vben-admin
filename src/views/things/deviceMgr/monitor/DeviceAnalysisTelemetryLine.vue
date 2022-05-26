@@ -147,6 +147,9 @@
           legend: {
             data: dataAttributeLabels.value,
             left: '15',
+            textStyle: {
+              color: '#989292',
+            }
           },
           grid: {
             left: '3%',

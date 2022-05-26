@@ -30,13 +30,12 @@
     <AssetRealtimeLine entityId="1527710747740426241" entityType="ASSET"/>
   </div>
 
-
 </template>
 
 <script lang="ts">
   import { PageEnum } from '/@/enums/pageEnum';
   import {Progress, Row, Col, Button} from 'ant-design-vue';
-  import {defineComponent, nextTick, onBeforeUnmount, onMounted, Ref, ref} from 'vue';
+  import {defineComponent, nextTick, onBeforeUnmount, onMounted, Ref, ref, watchEffect} from 'vue';
   import {useUserStore} from "/@/store/modules/user";
   import {useGo} from "/@/hooks/web/usePage";
   import {TimeUtil} from "/@/views/dashboard/threeModel/TimeUtil";
@@ -71,7 +70,6 @@
       const modelProgressPercentRef = ref(0);
       const progressLoadSuccess = ref(true);
       const currentTime = ref(); // 当前时间
-
       const go = useGo();
       const userStore = useUserStore();
       const threeMainModelPath = userStore.getUserInfo.threeModelPath as string;
@@ -80,9 +78,18 @@
       }
 
       function goHomePage(){
-        console.log('aa btn')
+        if(digitalTwinScene){
+          digitalTwinScene.stopAnimate();
+        }
         go(PageEnum.BASE_HOME);
       }
+
+      // // 实时监听，以方便停止动画
+      // watchEffect(() => {
+      //   if (digitalTwinScene.animateRunningEnd && digitalTwinScene.animateFrameId) {
+      //     cancelAnimationFrame(digitalTwinScene.animateFrameId);
+      //   }
+      // })
 
       // 进度条回告
       const progressCallback = (progress) => {
@@ -126,6 +133,7 @@
         electricModels.forEach(item => {
           digitalTwinScene.loadGLTFModel(item);
         });
+
       }
 
       async function destroyComponent(){
@@ -149,9 +157,9 @@
     padding: 0 0;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(rgb(1,15,65), rgb(1,23,92));
+    background-image: linear-gradient(rgb(0 0 0), rgb(1,23,92));
     canvas{
-      background-image: linear-gradient(rgb(1,15,65), rgb(1,23,92));
+      background-image: linear-gradient(rgb(0 0 0), rgb(1,23,92));
     }
   }
 
@@ -177,7 +185,7 @@
     top:0;
     position: fixed;
     background-color: rgb(1,15,65);
-    opacity: 0.3;
+    opacity: 0.6;
     line-height: 50px;
     h3{
       color: #fff;
@@ -203,18 +211,19 @@
     top:60px;
     width: 25%;
     height: 90%;
+    color: #989292;
   }
   .bottomContentContainer{
     margin: 0 0;
     padding: 0 0;
     position: fixed;
     left:26%;
-    bottom: 22px;
+    bottom: 2px;
     border-radius: 5px;
-    height: 30%;
+    height: 32%;
     width: 73%;
     background-color: #0a1f49;
-    opacity: 0.8;
+    opacity: 0.9;
   }
   .rightContentContainer{
     margin: 0 0;
@@ -230,7 +239,7 @@
     background-color: #0a1f49;
     width: 100%;
     height: 33%;
-    opacity: 0.8;
+    opacity: 0.9;
     border-radius: 5px;
     margin-bottom: 15px;
   }
