@@ -4,7 +4,7 @@
       <Row class="entityLabelPieHeader">
         <Col span="24"><span class="deviceLabelTitle"> 设备统计 </span></Col>
       </Row>
-      <Row style="min-height: 200px; height:85%; margin-top: 30px;">
+      <Row style="min-height: 160px; height:90%; margin-top: 10px;">
         <Col span="24">
           <div ref="deviceLabelPieChartContainerRef" style="width: 100%; height: 100%"></div>
         </Col>
@@ -58,7 +58,7 @@
               emphasis: {
                 label: {
                   show: true,
-                  fontSize: '18',
+                  fontSize: '14',
                   fontWeight: 'bold'
                 }
               },
@@ -91,18 +91,15 @@
   .entityLabelMetricContainer{
     width: 100%;
     height: 100%;
-    padding-left: 5px;
-    padding-right: 5px;
     .entityLabelPieContainer{
-      background-color: #fff;
       width: 100%;
       height: 100%;
-
       .entityLabelPieHeader{
-        height:15%;
-        max-height: 32px;
-        line-height: 32px;
-        border-bottom: 1px solid #e8ebf3;
+        height:10%;
+        max-height: 28px;
+        line-height: 28px;
+        border-left: 3px solid #80ff00;
+        /*border-bottom: 1px solid #e8ebf3;*/
       }
     }
   }
@@ -113,7 +110,7 @@
   .deviceLabelTitle{
     float: left;
     font-size: 14px;
-    line-height: 32px;
+    line-height: 28px;
     font-weight: bolder;
     margin-left: 20px;
     color: #989292;

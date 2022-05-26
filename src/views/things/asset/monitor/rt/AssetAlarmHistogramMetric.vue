@@ -1,12 +1,12 @@
 <template>
   <div class="h-full w-full assetAlarmContainer">
     <div class="h-full w-full assetAlarmHistogramContainer">
-      <Row style="height:15% ;max-height: 32px">
+      <Row class="assetAlarmRealTimeHeader">
         <Col span="24">
           <Row>
             <Col span="8"><span class="assetRtTitle"> 告警统计 </span></Col>
             <Col span="16">
-              <RadioGroup size="default" :value="currentTimeTag" :onChange="timeTagOnChange" style="float: right;padding-right: 15px">
+              <RadioGroup size="default" :value="currentTimeTag" :onChange="timeTagOnChange" style="float: right;padding-right: 10px; opacity: 0.7">
                 <RadioButton value="day">天</RadioButton>
                 <RadioButton value="month">月</RadioButton>
               </RadioGroup>
@@ -14,7 +14,7 @@
           </Row>
         </Col>
       </Row>
-      <Row style="min-height: 200px; height:85%; margin-top: 30px;">
+      <Row style="min-height: 160px; height:90%; margin-top: 10px;">
         <Col span="24">
           <div ref="assetAlarmChartRef" style="width: 100%; height: 100%"></div>
         </Col>
@@ -38,7 +38,6 @@
       const entityType = props.entityType;
       const assetAlarmChartRef = ref<HTMLDivElement | null>(null);
       const assetHistogramChart = useECharts(assetAlarmChartRef as Ref<HTMLDivElement>);
-
 
       const currentTimeTag = ref('day');
       // 当前时间
@@ -134,18 +133,14 @@
   .assetAlarmContainer{
     width: 100%;
     height: 100%;
-    padding-left: 5px;
-    padding-right: 5px;
     .assetAlarmHistogramContainer{
-      background-color: #fff;
+      /*background-color: #fff;*/
       width: 100%;
       height: 100%;
-
-      .assetRealTimeHeader{
-        height: 32px;
-        line-height: 32px;
-        background-color: #fff;
-        border-bottom: 1px solid #e8ebf3;
+      .assetAlarmRealTimeHeader{
+        height: 28px;
+        line-height: 28px;
+        border-left: 3px solid #80ff00;
       }
     }
   }
@@ -156,7 +151,7 @@
   .assetRtTitle{
     float: left;
     font-size: 14px;
-    line-height: 32px;
+    line-height: 28px;
     font-weight: bolder;
     margin-left: 20px;
     color: #989292;

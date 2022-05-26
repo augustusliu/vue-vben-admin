@@ -1,22 +1,20 @@
 import {
   Scene,
   Color,
-  AxesHelper,
   WebGLRenderer,
   PerspectiveCamera,
   SpotLight,
   Vector2,
   AnimationMixer,
-  Clock, LoopOnce,
   GridHelper,
-  Raycaster
+  Raycaster,
+  Clock
 } from 'three';
 
 import Nebula, { SpriteRenderer } from "three-nebula";
 import { OrbitControls } from "./extends/OrbitControls";
 import { GLTFLoader } from "./extends/GLTFLoader";
 import { ColorRepresentation } from "three/src/utils";
-import { Ref} from "vue";
 import * as THREE from 'three';
 
 import { useUserStore } from "/@/store/modules/user";
@@ -34,193 +32,183 @@ export interface ThingsSceneOptions{
   cameraFov: number;
   cameraNear: number;
   cameraFar: number;
-
   // 场景透明
   sceneBackTransport: boolean;
   // 场景的背景颜色
   sceneColor?: ColorRepresentation;
-
   showGrid?: boolean;
   canControls: boolean;
-}
-
-// 全局上线文缓存
-export interface ThingsThreeContext{
-  scene?: any;
-  renderer?: any;
-  controls?: any;
-  camera?: any;
-  spotLight?: any;
-  gltfLoader?: any;
-  animateMixer?: any;
-  clock: Clock;
-  thingsThree?: ThingsScene;
-  objsIdSet: Set<string>;
-  objs?: any[];
-  labelObjects: any[];
-  raycaster?: Raycaster;
-  mouse?: Vector2;
-  // 模型全局事件
-  progressCallback?: any;
-  clickCallback?: any;
-  animateId?: any;
-}
-
-// 全局Threejs的定义
-export const defaultThreeContext: ThingsThreeContext = {
-  'clock': new Clock(),
-  'objsIdSet': new Set(),
-  'labelObjects': []
-}
-
-const renderAnimate = (nebulaParticle?:any) => {
-  if(defaultThreeContext.scene){
-    defaultThreeContext.animateId = requestAnimationFrame(() => renderAnimate(nebulaParticle)); //请求再次执行渲染函数render
-    if(defaultThreeContext.animateMixer){
-      defaultThreeContext.animateMixer.update(defaultThreeContext.clock.getDelta());
-    }
-    if(nebulaParticle && nebulaParticle.update){
-      nebulaParticle.update();
-    }
-    // 场景自转
-    // if(defaultThreeContext.controls){
-    //   defaultThreeContext.controls.update();
-    // }
-
-    if(defaultThreeContext.renderer){
-      defaultThreeContext.renderer.render(defaultThreeContext.scene, defaultThreeContext.camera);//执行渲染操作
-    }
-  }
+  animateInterval?: number;
 }
 
 // 定义things的场景--全局一个
 export class ThingsScene{
-  private containerRef;
+  private containerRef: any;
   private containerHeight;
   private containerWidth;
-  private readonly options: ThingsSceneOptions | undefined;
+  private options: ThingsSceneOptions | undefined;
 
+  private scene: any;
+  private renderer: any;
+  private controls: any;
+  private camera: any;
+  private spotLight: any;
+  private gltfLoader: any;
+  private raycaster: any;
+  private mouse: any;
+  private progressCallback: any;
+  private clickCallback: any;
+  private animateMixer: any;
 
-  constructor(containerRef: Ref<HTMLElement>, opts: ThingsSceneOptions,
+  private objs: any[];
+  private labelObjects: any[];
+
+  private clock: any;
+  private animateId: any;
+  private nebulaParticle:any[];
+
+  constructor() {
+    this.objs = [];
+    this.labelObjects = [];
+    this.nebulaParticle = [];
+  }
+
+  // 初始化
+  init(containerRef: HTMLElement|null, opts: ThingsSceneOptions,
               progressCallback: any, clickCallback: any) {
-    if(!containerRef.value || !opts){
+
+    if(!containerRef){
       return;
     }
-
-    this.options = opts || {};
     this.containerRef = containerRef;
-    this.containerHeight = containerRef.value.clientHeight | window.innerHeight;
-    this.containerWidth = containerRef.value.clientWidth | window.innerWidth;
+    this.containerHeight = containerRef.clientHeight | window.innerHeight;
+    this.containerWidth = containerRef.clientWidth | window.innerWidth;
+    this.objs = [];
+    this.labelObjects = [];
+    this.nebulaParticle = [];
+    // settings
+    this.options = opts || {};
 
-    if(opts.showGrid){
-      this.__showGrid();
-    }
-    defaultThreeContext.raycaster = new Raycaster();
-    defaultThreeContext.mouse = new Vector2();
-    // 事件
-    defaultThreeContext.progressCallback = progressCallback;
-    defaultThreeContext.clickCallback = clickCallback;
     // Scene
-    if(!defaultThreeContext.scene){
-      defaultThreeContext.scene = new Scene();
+    if(!this.scene){
+      this.scene = new Scene();
+    }
+    if(!opts.sceneBackTransport){
+      this.scene.background = new Color(opts.sceneColor);
+    }else{
+      this.scene.background = null;
     }
 
     // renderer
-    if(!defaultThreeContext.renderer){
+    if(!this.renderer){
       this.initRenderer();
     }
-    this.containerRef.value.appendChild(defaultThreeContext.renderer.domElement);
+    this.containerRef.appendChild(this.renderer.domElement);
 
     // camera
     this.initCamera();
     this.initSpotLight();
 
-    if(!opts.sceneBackTransport){
-      defaultThreeContext.scene.background = new Color(opts.sceneColor);
-    }else{
-      defaultThreeContext.scene.background = null;
+    if(opts.showGrid){
+      this.__showGrid();
     }
 
+    if(!this.raycaster){
+      this.raycaster = new Raycaster();
+    }
+
+    if(!this.mouse){
+      this.mouse = new Vector2();
+    }
+
+    this.clock = new Clock();
     // controls
     if(opts.canControls){
       this.initObjControl();
     }
 
-    this.onContainerResize();
-
     // gltf loader
-    if(!defaultThreeContext.gltfLoader){
-      defaultThreeContext.gltfLoader = new GLTFLoader();
-      defaultThreeContext.gltfLoader.setRequestHeader({
+    if(!this.gltfLoader){
+      this.gltfLoader = new GLTFLoader();
+      this.gltfLoader.setRequestHeader({
         'Authorization': 'Bearer ' + userStore.getToken
       });
     }
-    defaultThreeContext.thingsThree = this;
 
-    window.addEventListener( 'click', this.__mouseClick, false );
+    // 事件
+    this.progressCallback = progressCallback;
+    this.clickCallback = clickCallback;
   }
 
   // init renderer
   private initRenderer(){
-    defaultThreeContext.renderer = new WebGLRenderer({antialias: true, alpha :true});
+    if(!this.renderer){
+      this.renderer = new WebGLRenderer({antialias: true, alpha :true});
+    }
+    this.renderer.clearColor();
     if(this.options?.sceneBackTransport){
-      defaultThreeContext.renderer.setClearAlpha(0.0);
+      this.renderer.setClearAlpha(0.0);
     }else{
-      defaultThreeContext.renderer.setClearColor( 0xffffff, 1 );
+      this.renderer.setClearColor( 0xffffff, 1 );
     }
 
-    defaultThreeContext.renderer.setSize(this.containerWidth, this.containerHeight);
-    defaultThreeContext.renderer.shadowMap.enabled = true;
-    defaultThreeContext.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setSize(this.containerWidth, this.containerHeight);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.setPixelRatio(window.devicePixelRatio);
     // 渲染器渲染sGRB纹理
-    defaultThreeContext.renderer.gammaOutput = true;
-    defaultThreeContext.renderer.gammaFactor = 2.2;
+    this.renderer.gammaOutput = true;
+    this.renderer.gammaFactor = 2.2;
   }
 
   private initCamera(){
     if(this.options){
-      defaultThreeContext.camera = new PerspectiveCamera(this.options.cameraFov, this.containerWidth / this.containerHeight, this.options.cameraNear, this.options.cameraFar);
-      defaultThreeContext.camera.position.set(this.options.cameraX,this.options.cameraZ, this.options.cameraY);  // x, z, y轴位置
-      defaultThreeContext.camera.lookAt(defaultThreeContext.scene.position);
+      this.camera = new PerspectiveCamera(this.options.cameraFov, this.containerWidth / this.containerHeight, this.options.cameraNear, this.options.cameraFar);
+      this.camera.position.set(this.options.cameraX,this.options.cameraZ, this.options.cameraY);  // x, z, y轴位置
+      this.camera.lookAt(this.scene.position);
     }
   }
 
   private initSpotLight(){
-    defaultThreeContext.spotLight = new SpotLight(0xffffff);
-    defaultThreeContext.spotLight.position.set(0, 1500, 1500);
-    defaultThreeContext.spotLight.castShadow = true;  // 开启光源投影
-    defaultThreeContext.spotLight.shadow.mapSize = new Vector2(1024,1024);
-    defaultThreeContext.spotLight.shadow.camera.far = 1300;
-    defaultThreeContext.spotLight.shadow.camera.near = 400;
-    defaultThreeContext.scene.add(defaultThreeContext.spotLight);
+    if(!this.spotLight){
+      this.spotLight = new SpotLight(0xffffff);
+    }
+    if(this.options){
+      this.spotLight.position.set(0, 1500, 1500);
+      this.spotLight.castShadow = true;  // 开启光源投影
+      this.spotLight.shadow.mapSize = new Vector2(1024,1024);
+      this.spotLight.shadow.camera.far = 1300;
+      this.spotLight.shadow.camera.near = 400;
+      this.scene.add(this.spotLight);
+    }
+
   }
 
   private initObjControl(){
-    defaultThreeContext.controls = new OrbitControls(defaultThreeContext.camera, defaultThreeContext.renderer.domElement);
-    defaultThreeContext.controls.autoRotate = true;
+    if(!this.controls){
+      this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    }
+    this.controls.autoRotate = true;
     // defaultThreeContext.controls.maxPolarAngle = 0;
     // defaultThreeContext.controls.addEventListener('change', renderAnimate);
   }
 
 
-  // 显示坐标轴
-  public showAxes(){
-    let axesHelper = new AxesHelper(10);
-    defaultThreeContext.scene.add(axesHelper);
-  }
-
   // 加载gltf模型
   public loadGLTFModel(path:string){
     // load
-    defaultThreeContext.gltfLoader.load(path,
+    this.gltfLoader.load(path,
       (model) => {
         this.doModelLoadSuccess(model);
-        defaultThreeContext.scene.add(model.scene);
-        renderAnimate();
+        this.scene.add(model.scene);
+        // 加载成功后，启动监听事件
+        this.onContainerResize();
+        // 只能容器绑定对应的点击事件
+        this.containerRef.addEventListener( 'click', this.__mouseClick, false );
+        this.startAnimate(); // 开启动画
       },
       (progress) => {
-        if(defaultThreeContext.progressCallback){
-          defaultThreeContext.progressCallback(progress.loaded / progress.total * 100);
+        if(this.progressCallback){
+          this.progressCallback(progress.loaded / progress.total * 100);
         }
       },
       (err) => {
@@ -230,41 +218,50 @@ export class ThingsScene{
   }
 
   public disposeSceneObjs(){
-    if(defaultThreeContext.objs && defaultThreeContext.objs.length > 0){
-      defaultThreeContext.objs.forEach(item => {
-        defaultThreeContext.scene.remove(item);
+    // 优先停止动画
+    this.stopAnimate();
+
+    if(this.objs && this.objs.length > 0){
+      this.objs.forEach(item => {
+        this.scene.remove(item);
       })
     }
-    defaultThreeContext.objs = [];
-    defaultThreeContext.labelObjects = [];
-    if(defaultThreeContext.animateMixer){
-      defaultThreeContext.animateMixer = null;
+    if(this.scene && this.scene.background){
+      this.scene.background = null;
     }
-    if(defaultThreeContext.raycaster){
-      defaultThreeContext.raycaster = undefined;
+
+    this.objs = [];
+    this.labelObjects = [];
+    this.nebulaParticle = [];
+
+    if(this.animateMixer){
+      this.animateMixer = null;
     }
-    if(defaultThreeContext.mouse){
-      defaultThreeContext.mouse = undefined;
+
+    if(this.progressCallback){
+      this.progressCallback = undefined;
     }
-    if(defaultThreeContext.progressCallback){
-      defaultThreeContext.progressCallback = undefined;
+    if(this.clickCallback){
+      this.clickCallback = undefined;
     }
-    if(defaultThreeContext.clickCallback){
-      defaultThreeContext.clickCallback = undefined;
+    if(this.camera){
+      this.camera = null;
     }
-    defaultThreeContext.scene = null;
+    if(this.renderer){
+      this.renderer.dispose();
+    }
   }
 
   // 浏览器变化更新
   public onContainerResize(){
 
     window.addEventListener('resize', () => {
-        if(this.containerRef.value && this.containerRef.value.clientHeight){
-          this.containerHeight = this.containerRef.value.clientHeight | window.innerHeight;
-          this.containerWidth = this.containerRef.value.clientWidth | window.innerWidth;
-          defaultThreeContext.camera.aspect = this.containerWidth / this.containerHeight;
-          defaultThreeContext.camera.updateProjectionMatrix();
-          defaultThreeContext.renderer.setSize(this.containerWidth, this.containerHeight);
+        if(this.containerRef && this.containerRef.clientHeight){
+          this.containerHeight = this.containerRef.clientHeight | window.innerHeight;
+          this.containerWidth = this.containerRef.clientWidth | window.innerWidth;
+          this.camera.aspect = this.containerWidth / this.containerHeight;
+          this.camera.updateProjectionMatrix();
+          this.renderer.setSize(this.containerWidth, this.containerHeight);
         }
       },
       false);
@@ -273,16 +270,16 @@ export class ThingsScene{
 
   // 模型加成成功后的处理
   private doModelLoadSuccess(gltfModel){
-    gltfModel.scene.traverse( child=>  {
+    gltfModel.scene.traverse(child => {
         if(child.isLight){
           child.castShadow = true;
         }else if(child.isMesh){
           child.material.emissive =  child.material.color;
           child.material.emissiveMap = child.material.map;
         }
+
         // 缓存带标签的模型
         if(child.userData.canclick && child.userData.canclick === 'yes'){
-
           const text = child.name;
           const color = new Date().getTime() % 2 == 1 ? 'rgba(234, 42, 6, 1)' : 'rgba(0, 0, 0, 1.0)'
           let sprite = this.__makeTextLabelSprite(text, {
@@ -290,10 +287,12 @@ export class ThingsScene{
           });
           if(sprite){
             sprite.position.set(child.position.x, child.position.y + 8, child.position.z);
-            defaultThreeContext.scene.add(sprite);
-            defaultThreeContext.labelObjects.push({'labelId':sprite.uuid, 'obj': child});
+            this.scene.add(sprite);
+            this.labelObjects.push({'labelId':sprite.uuid, 'obj': child});
+            this.objs.push(sprite);
           }
         }
+        // 烟感动画
         if(child.userData.smoker){
           let smoker = smokeJson;
           smoker.particleSystemState.emitters[0].position.x = child.position.x;
@@ -301,19 +300,17 @@ export class ThingsScene{
           smoker.particleSystemState.emitters[0].position.z = child.position.z;
           this.__loadNebulaAnimate(smoker);
         }
-        defaultThreeContext.objsIdSet.add(child.uuid);
+        this.objs.push(child);
     });
 
     // 加载模型动画
     if(gltfModel.animations && gltfModel.animations.length > 0){
       // 加载模型动画
-      defaultThreeContext.animateMixer = new AnimationMixer(gltfModel.scene);
-      let animate = defaultThreeContext.animateMixer.clipAction(gltfModel.animations[0]).play();
-      animate.setLoop(LoopOnce, 1);
+      this.animateMixer = new AnimationMixer(gltfModel.scene);
+      let animate = this.animateMixer.clipAction(gltfModel.animations[0]).play();
       animate.clampWhenFinished = true;
       animate.enabled = true;
     }
-
   }
 
 
@@ -372,26 +369,26 @@ export class ThingsScene{
 
   private __showGrid(){
     let gridHelper = new GridHelper( 800, 30, 0x2C2C2C, 0x404466 );
-    defaultThreeContext.scene.add(gridHelper);
+    this.scene.add(gridHelper);
   }
 
   private __mouseClick(ev){
-    if(!defaultThreeContext.mouse || !defaultThreeContext.raycaster){
+    if(!this.mouse || !this.raycaster){
       return ;
     }
-    defaultThreeContext.mouse.x = ( ev.clientX / window.innerWidth ) * 2 - 1;
-    defaultThreeContext.mouse.y = - ( ev.clientY / window.innerHeight ) * 2 + 1;
+    this.mouse.x = ( ev.clientX / window.innerWidth ) * 2 - 1;
+    this.mouse.y = - ( ev.clientY / window.innerHeight ) * 2 + 1;
     // 通过鼠标点的地位和以后相机的矩阵计算出raycaster
-    defaultThreeContext.raycaster.setFromCamera(defaultThreeContext.mouse, defaultThreeContext.camera );
+    this.raycaster.setFromCamera(this.mouse, this.camera );
 
     // 获取raycaster直线和所有模型相交的数组汇合
-    if(defaultThreeContext.scene && defaultThreeContext.scene.children){
-      let intersects = defaultThreeContext.raycaster.intersectObjects( defaultThreeContext.scene.children );
-      if(intersects && intersects.length > 0 && defaultThreeContext.clickCallback){
+    if(this.scene && this.scene.children){
+      let intersects = this.raycaster.intersectObjects( this.scene.children );
+      if(intersects && intersects.length > 0 && this.clickCallback){
         // 查找点击的标签
-        defaultThreeContext.labelObjects.forEach(item => {
+        this.labelObjects.forEach(item => {
           if(intersects[0].object && item.labelId === intersects[0].object.uuid){
-            defaultThreeContext.clickCallback(item.obj);
+            this.clickCallback(item.obj);
           }
         })
       }
@@ -400,15 +397,46 @@ export class ThingsScene{
 
   private __loadNebulaAnimate(nebulaJsons: any){
     Nebula.fromJSONAsync(nebulaJsons.particleSystemState, THREE).then(loaded => {
-      const nebulaRenderer = new SpriteRenderer(defaultThreeContext.scene, THREE);
-      const nebula = loaded.addRenderer(nebulaRenderer);
-      renderAnimate(nebula);
+      const nebulaRenderer = new SpriteRenderer(this.scene, THREE);
+      this.nebulaParticle.push(loaded.addRenderer(nebulaRenderer));
     });
   }
 
   public stopAnimate(){
-    if(defaultThreeContext.animateId){
-      cancelAnimationFrame(defaultThreeContext.animateId);
+    if(this.animateId){
+      cancelAnimationFrame(this.animateId);
+    }
+  }
+
+  public startAnimate(){
+    this.renderSceneAnimation();
+  }
+
+  public renderSceneAnimation(){
+    if(this.scene && this.camera){
+      if(this.animateMixer){
+        this.animateMixer.update(this.clock.getDelta());
+      }
+      if(this.nebulaParticle && this.nebulaParticle.length > 0){
+        this.nebulaParticle.forEach(item => {
+          if(item.update()){
+            item.update()
+          }
+        })
+      }
+      // 场景自转
+      // if(defaultThreeContext.controls){
+      //   defaultThreeContext.controls.update();
+      // }
+
+      if(this.renderer){
+        this.renderer.render(this.scene, this.camera);//执行渲染操作
+      }
+      // console.log(this.animateId);
+      this.animateId = requestAnimationFrame(() => this.renderSceneAnimation()); //请求再次执行渲染函数render
     }
   }
 }
+
+// 全局场景
+export const digitalTwinScene = new ThingsScene();

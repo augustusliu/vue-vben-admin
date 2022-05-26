@@ -42,8 +42,8 @@
 
     <Divider class="enter-x">{{ t('sys.login.otherSignIn') }}</Divider>
     <div class="flex justify-evenly enter-x" :class="`${prefixCls}-sign-in-way`">
-      <WechatFilled />
-      <AlipayCircleFilled />
+      <WechatFilled style="font-size: 20px;cursor: pointer; color: #7c8087"/>
+      <AlipayCircleFilled style="font-size: 20px;cursor: pointer;color: #7c8087"/>
     </div>
   </Form>
 </template>
@@ -61,7 +61,7 @@
   import { useUserStore } from '/@/store/modules/user';
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
-
+  import { digitalTwinScene } from '/@/views/3d/ThingsScene';
   const formData = reactive({
     account: 'augustus',
     password: '123456',
@@ -88,6 +88,9 @@
       const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
 
       async function handleLogin() {
+        if(digitalTwinScene){
+          digitalTwinScene.disposeSceneObjs();
+        }
         const data = await validForm();
         if (!data) return;
         try {

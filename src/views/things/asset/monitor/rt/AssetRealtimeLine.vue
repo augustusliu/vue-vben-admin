@@ -2,12 +2,12 @@
   <!-- 资产实时数据组件，包含资产在一定时间内的实时曲线，相关设备统计信息 -->
   <div class="h-full w-full assetRealTimeLineContainer">
     <div class="realtimeLineContentContainer">
-      <Row style="height:15% ;max-height: 32px;padding-right: 15px">
+      <Row class="assetRealTimeLineHeader">
         <Col span="24">
           <Row>
-            <Col span="8" xl="2" md="4" sm="24"><span class="assetRtTitle"> 实时监控 </span></Col>
-            <Col span="16" xl="12" md="16" sm="24">
-              <RadioGroup size="default" :value="currentTimeTag" :onChange="timeTagOnChange" style="float: right">
+            <Col span="6"><span class="assetRtTitle"> 实时监控 </span></Col>
+            <Col span="18">
+              <RadioGroup size="default" :value="currentTimeTag" :onChange="timeTagOnChange" style="opacity: 0.7;float:right;padding-right: 10px">
                 <RadioButton value="hour">时</RadioButton>
                 <RadioButton value="day">天</RadioButton>
                 <RadioButton value="month">月</RadioButton>
@@ -17,21 +17,22 @@
                       allowClear
                       :options="attributeOptionsRef"
                       placeholder="请选择属性"
-                      :onChange="attributeOnChange" style="min-width: 180px;float: right" />
+                      :onChange="attributeOnChange" style="min-width: 120px;float: right" />
               <Select bordered="false"
                       allowClear
                       :options="deviceListsRef"
                       :value="currentDeviceValue"
                       placeholder="请选择设备"
                       :onChange="deviceOnChange"
-                      style="min-width: 180px;float: right" />
+                      style="min-width: 120px;float: right" />
+
 
             </Col>
           </Row>
         </Col>
       </Row>
       <!-- 实时数据展示 -->
-      <Row style="min-height: 200px; height:85%">
+      <Row style="min-height:160px; height:90%">
         <Col span="24" xl="24" md="24" sm="24">
           <div ref="deviceRtChartRef" style="width: 100%; height: 100%"></div>
         </Col>
@@ -273,18 +274,13 @@
   .assetRealTimeLineContainer{
     width: 100%;
     height: 100%;
-    padding-left: 5px;
-    padding-right: 5px;
     .realtimeLineContentContainer{
-      background-color: #fff;
       width: 100%;
       height: 100%;
-
-      .assetRealTimeHeader{
-        height: 32px;
-        line-height: 32px;
-        background-color: #fff;
-        border-bottom: 1px solid #e8ebf3;
+      .assetRealTimeLineHeader{
+        height: 28px;
+        line-height: 28px;
+        border-left: 3px solid #80ff00;
       }
     }
   }
@@ -295,10 +291,16 @@
   .assetRtTitle{
     float: left;
     font-size: 14px;
-    line-height: 32px;
+    line-height: 28px;
     font-weight: bolder;
     margin-left: 20px;
     color: #989292;
   }
 
+  .asset-select{
+    opacity: 0.7;
+    line-height: 18px;
+    height: 18px;
+    font-size: 12px;
+  }
 </style>

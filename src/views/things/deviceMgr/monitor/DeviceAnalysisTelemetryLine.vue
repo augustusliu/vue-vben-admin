@@ -304,15 +304,14 @@
       height: 100%;
     }
     .analysisHeader{
-      height: 32px;
-      line-height: 32px;
-      background-color: #fff;
-      border-bottom: 1px solid #e8ebf3;
+      height: 28px;
+      line-height: 28px;
+      border-left: 3px solid #80ff00;
 
       .title{
         float: left;
         font-size: 14px;
-        line-height: 32px;
+        line-height: 28px;
         font-weight: bolder;
         margin-left: 20px;
         color: #989292;
