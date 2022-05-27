@@ -51,17 +51,15 @@ export class ThingsScene{
   private scene: any;
   private renderer: any;
   private controls: any;
-  private camera: any;
+  public camera: PerspectiveCamera | null;
   private spotLight: any;
   private gltfLoader: any;
-  private raycaster: any;
-  private mouse: any;
   private progressCallback: any;
-  private clickCallback: any;
+  public clickCallback: any;
   private animateMixer: any;
 
   private objs: any[];
-  private labelObjects: any[];
+  public labelObjects: any[];
 
   private clock: any;
   // 当前动画的关键帧
@@ -78,6 +76,7 @@ export class ThingsScene{
 
   constructor() {
     this.objs = [];
+    this.camera = null;
     this.labelObjects = [];
     this.nebulasSystem = [];
     this.animationActions = [];
@@ -125,15 +124,6 @@ export class ThingsScene{
     if(opts.showGrid){
       this.__showGrid();
     }
-
-    if(!this.raycaster){
-      this.raycaster = new Raycaster();
-    }
-
-    if(!this.mouse){
-      this.mouse = new Vector2();
-    }
-
     this.clock = new Clock();
     // controls
     if(opts.canControls){
@@ -174,9 +164,9 @@ export class ThingsScene{
   }
 
   private initCamera(){
-    if(this.options){
-      this.camera = new PerspectiveCamera(this.options.cameraFov, this.containerWidth / this.containerHeight, this.options.cameraNear, this.options.cameraFar);
-      this.camera.position.set(this.options.cameraX,this.options.cameraZ, this.options.cameraY);  // x, z, y轴位置
+    if(!this.camera){
+      this.camera = new PerspectiveCamera(this.options?.cameraFov, this.containerWidth / this.containerHeight, this.options?.cameraNear, this.options?.cameraFar);
+      this.camera.position.set(this.options?.cameraX as number, this.options?.cameraZ as number,  this.options?.cameraY as number);  // x, z, y轴位置
       this.camera.lookAt(this.scene.position);
     }
   }
@@ -217,7 +207,7 @@ export class ThingsScene{
         this.onContainerResize();
         // 只能容器绑定对应的点击事件
         this.containerRef.addEventListener( 'click', this.__mouseClick, false );
-        // this.startAnimate(); // 开启动画
+        this.startAnimate(); // 开启动画
       },
       (progress) => {
         if(this.progressCallback){
@@ -228,8 +218,46 @@ export class ThingsScene{
       console.log('load model error', err)
       },
     );
+  }
 
-    this.startAnimate();
+  public loadGltfBatch(paths:any[]){
+
+    let successCount: number = 0;
+
+    paths.forEach((path, idx) => {
+      this.gltfLoader.load(path,
+        (model) => {
+          this.doModelLoadSuccess(model);
+          this.scene.add(model.scene);
+        },
+        (progress) => {
+          if(this.progressCallback){
+            this.progressCallback((idx/paths.length) * progress.loaded / progress.total * 100);
+          }
+          let curProgress = progress.loaded / progress.total * 100;
+          if( curProgress === 100){
+            successCount = successCount + 1;
+          }
+          if(successCount === paths.length){
+            if(this.progressCallback){
+              this.progressCallback(100);
+            }
+          }
+        },
+        (err) => {
+          console.log('load model error', err)
+        },
+      );
+    });
+
+    // 加载成功后，启动监听事件
+    this.onContainerResize();
+    // 只能容器绑定对应的点击事件
+    if(this.camera){
+      this.containerRef.addEventListener( 'click', this.__mouseClick, false );
+    }
+
+    this.startAnimate(); // 开启动画
   }
 
   public disposeSceneObjs(){
@@ -245,6 +273,7 @@ export class ThingsScene{
       this.scene.background = null;
     }
 
+    this.scene = null;
     this.objs = [];
     this.labelObjects = [];
     this.nebulasSystem = [];
@@ -265,20 +294,21 @@ export class ThingsScene{
     }
     if(this.renderer){
       this.renderer.dispose();
+      this.renderer = null;
     }
   }
 
   // 浏览器变化更新
   public onContainerResize(){
-
     window.addEventListener('resize', () => {
         if(this.containerRef && this.containerRef.clientHeight){
           this.containerHeight = this.containerRef.clientHeight | window.innerHeight;
           this.containerWidth = this.containerRef.clientWidth | window.innerWidth;
-          console.log('width', this.containerWidth, 'height', this.containerHeight)
 
-          this.camera.aspect = this.containerWidth / this.containerHeight;
-          this.camera.updateProjectionMatrix();
+          if(this.camera){
+            this.camera.aspect = this.containerWidth / this.containerHeight;
+            this.camera.updateProjectionMatrix();
+          }
           this.renderer.setSize(this.containerWidth, this.containerHeight);
         }
       },
@@ -391,23 +421,27 @@ export class ThingsScene{
     this.scene.add(gridHelper);
   }
 
+  // 注意闭包问题，不能用this.camera
   private __mouseClick(ev){
-    if(!this.mouse || !this.raycaster){
+    if(!digitalTwinScene.camera){
       return ;
     }
-    this.mouse.x = ( ev.clientX / window.innerWidth ) * 2 - 1;
-    this.mouse.y = - ( ev.clientY / window.innerHeight ) * 2 + 1;
+    // ev.preventDefault();
+    const mouse = new Vector2();
+    const raycaster = new Raycaster();
+    mouse.x = ( ev.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = - ( ev.clientY / window.innerHeight ) * 2 + 1;
     // 通过鼠标点的地位和以后相机的矩阵计算出raycaster
-    this.raycaster.setFromCamera(this.mouse, this.camera );
-
+    raycaster.setFromCamera(mouse, digitalTwinScene.camera);
     // 获取raycaster直线和所有模型相交的数组汇合
-    if(this.scene && this.scene.children){
-      let intersects = this.raycaster.intersectObjects( this.scene.children );
+    if(digitalTwinScene.scene && digitalTwinScene.scene.children){
+      let intersects = raycaster.intersectObjects(digitalTwinScene.scene.children );
+      console.log(intersects)
       if(intersects && intersects.length > 0 && this.clickCallback){
         // 查找点击的标签
-        this.labelObjects.forEach(item => {
+        digitalTwinScene.labelObjects.forEach(item => {
           if(intersects[0].object && item.labelId === intersects[0].object.uuid){
-            this.clickCallback(item.obj);
+            digitalTwinScene.clickCallback(item.obj);
           }
         })
       }
@@ -442,6 +476,7 @@ export class ThingsScene{
   // 开始动画
   public startAnimate(){
     this.animateRunningEnd = false;
+
     if(this.animationActions && this.animationActions.length > 0){
       this.animationActions.forEach(item => item.play());
     }
@@ -452,7 +487,6 @@ export class ThingsScene{
   }
 
   public renderSceneAnimation(){
-
     if(this.animateRunningEnd === true){
       cancelAnimationFrame(this.animateFrameId);
     }
@@ -470,9 +504,9 @@ export class ThingsScene{
       }
 
       // 场景自转
-      // if(defaultThreeContext.controls){
-      //   defaultThreeContext.controls.update();
-      // }
+      if(this.controls){
+        this.controls.update(this.clock.getDelta());
+      }
 
       if(this.renderer){
         this.renderer.render(this.scene, this.camera);//执行渲染操作

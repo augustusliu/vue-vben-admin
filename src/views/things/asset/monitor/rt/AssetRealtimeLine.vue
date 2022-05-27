@@ -25,8 +25,6 @@
                       placeholder="请选择设备"
                       :onChange="deviceOnChange"
                       style="min-width: 120px;float: right" />
-
-
             </Col>
           </Row>
         </Col>
@@ -73,8 +71,8 @@
 
       // 当前时间
       const currentTime = new Date().getTime();
-      // 开始时间（默认一天）
-      const startTimeRef = ref(currentTime - 1000 * 60 * 60 * 24);
+      // 开始时间（默认一月）
+      const startTimeRef = ref(currentTime - 1000 * 60 * 60 * 24 * 30);
       // 数据缓存
       const deviceHistoryDataRef = ref<any[]>([]);
       const deviceHistoryDataTimeRef = ref<string[]>([]);
@@ -263,7 +261,7 @@
           },
           yAxis: {
             type: 'value',
-            interval: 200,
+            interval: 100,
             splitLine:{
               show: false
             }

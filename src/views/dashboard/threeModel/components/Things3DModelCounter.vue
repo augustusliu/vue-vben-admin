@@ -92,30 +92,30 @@
     border-bottom: 1px solid #1e345d;
   }
   .counterNumber{
-    height: 40px;
+    height: 32px;
     text-align: center;
-    line-height: 40px;
-    font-size: 28px;
+    line-height: 32px;
+    font-size: 22px;
     color: #989292;
     width: 100%;
   }
   .counterNumberTitle{
-    max-height: 20px;
+    max-height: 14px;
     text-align: center;
-    line-height: 20px;
+    line-height: 14px;
     font-size: 10px;
     color: #989292;
     width: 100%;
   }
   .circle-grid{
     position: absolute;
-    top: 45px;
-    left: 45px;
-    height: 90px;
-    width: 90px;
+    top: 50px;
+    left: 40px;
+    height: 80px;
+    width: 80px;
     margin: -40px 0 0 0;
     border-radius: 50%;
-    padding-top: 15px;
+    padding-top: 20px;
     background: -webkit-radial-gradient( circle closest-side, #071b40 96%, #fff 50%);
     opacity: 0.7;
   }

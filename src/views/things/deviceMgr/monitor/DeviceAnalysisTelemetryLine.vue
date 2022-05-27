@@ -71,11 +71,11 @@
       // 下拉框数据
       const fieldSelectOptions = ref();
       // 当前选择的时间显示周期
-      const currentTimeTag = ref('day');
+      const currentTimeTag = ref('month');
       // 当前时间
       const currentTime = new Date().getTime();
       // 开始时间（默认一天）
-      const startTimeRef = ref(currentTime - 1000 * 60 * 60 * 24);
+      const startTimeRef = ref(currentTime - 1000 * 60 * 60 * 24 * 30);
 
       // 设备属性code
       let deviceAttributeCode = ref<string[]>([]);
