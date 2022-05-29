@@ -44,6 +44,14 @@ export interface AlarmLogItem {
   dealStatus: string;
 }
 
+export interface AlarmLatestItem {
+  id: number;
+  entityId: number;
+  entityName: string;
+  alarmName: string;
+  alarmContent: string;
+  createdTime: number;
+}
 export type AlarmListResultModel = BasicFetchResult<AlarmListItem>;
 
 export type AlarmLogsResultModel = BasicFetchResult<AlarmLogItem>;

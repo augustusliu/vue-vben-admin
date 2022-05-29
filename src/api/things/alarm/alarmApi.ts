@@ -4,7 +4,7 @@ import {
   DealAlarmParams,
   AlarmParams,
   AlarmListResultModel,
-  AlarmLogsResultModel, AlarmListItem,
+  AlarmLogsResultModel, AlarmListItem, AlarmLatestItem,
 } from './model/alarmModel';
 
 enum AlarmApi {
@@ -12,6 +12,8 @@ enum AlarmApi {
   AlarmDealApi = '/api/alarm/deal',
   AlarmLogsApi = '/api/alarm/logs',
   AlarmInfoGetApi = '/api/alarm/get',
+
+  AlarmLatestInTenantApi = '/api/alarm/latestAlarm',
 }
 
 // 获取告警列表api
@@ -29,5 +31,9 @@ export const listAlarmLogsApi = (alarmId: number) =>
 // 处理告警api
 export const getAlarmInfoApi = (alarmId: any) =>
   defHttp.get<AlarmListItem>({ url: AlarmApi.AlarmInfoGetApi + "?alarmId=" + alarmId });
+
+
+export const getTenantLatestAlarms = () =>
+  defHttp.get<AlarmLatestItem[]>({ url: AlarmApi.AlarmLatestInTenantApi});
 
 

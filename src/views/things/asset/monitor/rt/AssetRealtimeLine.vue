@@ -7,7 +7,7 @@
           <Row>
             <Col span="6"><span class="assetRtTitle"> 实时监控 </span></Col>
             <Col span="18">
-              <RadioGroup size="default" :value="currentTimeTag" :onChange="timeTagOnChange" style="opacity: 0.7;float:right;padding-right: 10px">
+              <RadioGroup size="default" :value="currentTimeTag" :onChange="timeTagOnChange" class="assetLineBtnGroup">
                 <RadioButton value="hour">时</RadioButton>
                 <RadioButton value="day">天</RadioButton>
                 <RadioButton value="month">月</RadioButton>
@@ -17,14 +17,14 @@
                       allowClear
                       :options="attributeOptionsRef"
                       placeholder="请选择属性"
-                      :onChange="attributeOnChange" style="min-width: 120px;float: right" />
+                      :onChange="attributeOnChange" style="min-width: 120px;float: right;" />
               <Select bordered="false"
                       allowClear
                       :options="deviceListsRef"
                       :value="currentDeviceValue"
                       placeholder="请选择设备"
                       :onChange="deviceOnChange"
-                      style="min-width: 120px;float: right" />
+                      style="min-width: 120px;float: right;" />
             </Col>
           </Row>
         </Col>
@@ -61,7 +61,7 @@
       const attributeOptionsRef = ref([]);
       const currentDeviceValue = ref();
       // 当期的时间tag
-      const currentTimeTag = ref('day');
+      const currentTimeTag = ref('month');
       // 设备实时曲线
       const deviceChartOptionsRef = ref();
       const deviceRtChartRef = ref<HTMLDivElement | null>(null);
@@ -286,6 +286,11 @@
         height: 28px;
         line-height: 28px;
         border-left: 3px solid #80ff00;
+        .ant-select-selector{
+          background-color: transparent;
+          color: #989292;
+          /*border: 1px solid #989292;*/
+        }
       }
     }
   }
@@ -301,11 +306,15 @@
     margin-left: 20px;
     color: #989292;
   }
-
-  .asset-select{
+  .assetLineBtnGroup{
     opacity: 0.7;
-    line-height: 18px;
-    height: 18px;
-    font-size: 12px;
+    float:right;
+    padding-right: 10px;
+    .ant-radio-button-wrapper{
+      /*height: 20px;*/
+      /*line-height: 20px;*/
+      background-color: #3aa3da;
+      border: none;
+    }
   }
 </style>

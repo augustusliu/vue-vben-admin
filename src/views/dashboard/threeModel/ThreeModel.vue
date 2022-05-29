@@ -1,20 +1,5 @@
 <template>
-  <div class="mainFixedHeader">
-    <Row>
-      <Col span="8">
-        <h3>电厂数字孪生平台</h3>
-      </Col>
-      <Col span="8">
-
-      </Col>
-      <Col span="5" >
-        <span> {{ currentTime }} </span>
-      </Col>
-      <Col span="3">
-        <a-button type="dashed" size="small" class="goHomeBtn" @click="goHomePage"> 工作台 </a-button>
-      </Col>
-    </Row>
-  </div>
+  <ThreeModelHeader/>
 
   <div ref="tmContainerRef" class="threeModelContainer"></div>
   <div class="loadProgressContainer" v-show="progressLoadSuccess">
@@ -23,11 +8,19 @@
   </div>
   <div class="leftFixedContentContainer">
     <Things3DModelCounter class="leftCard"/>
-    <AssetAlarmHistogramMetric entityId="1527710747740426241" entityType="ASSET" class="leftCard"/>
+    <AssetAlarmHistogramMetric
+      entityId="1527710747740426241"
+      entityType="ASSET"
+      class="leftCard"/>
     <LabelEntityPieMetric entityId="1527710747740426241" entityType="ASSET" class="leftCard1"/>
   </div>
   <div class="bottomContentContainer">
     <AssetRealtimeLine entityId="1527710747740426241" entityType="ASSET"/>
+  </div>
+
+  <div class="rightContentContainer">
+    <DeviceTelemetryRtList style="height: 50%"/>
+    <DeviceLatestRtAlarmList style="height: 50%; margin-top: 5%"/>
   </div>
 
 </template>
@@ -38,7 +31,6 @@
   import {defineComponent, nextTick, onBeforeUnmount, onMounted, Ref, ref} from 'vue';
   import {useUserStore} from "/@/store/modules/user";
   import {useGo} from "/@/hooks/web/usePage";
-  import {TimeUtil} from "/@/views/dashboard/threeModel/TimeUtil";
   import {digitalTwinScene} from "/@/views/3d/ThingsScene";
   import Things3DModelCounter
     from "/@/views/dashboard/threeModel/components/Things3DModelCounter.vue";
@@ -46,6 +38,12 @@
     from "/@/views/things/asset/monitor/rt/AssetAlarmHistogramMetric.vue";
   import LabelEntityPieMetric from "/@/views/things/asset/monitor/rt/LabelEntityPieMetric.vue";
   import AssetRealtimeLine from "/@/views/things/asset/monitor/rt/AssetRealtimeLine.vue";
+  import DeviceTelemetryRtList
+    from "/@/views/dashboard/threeModel/components/DeviceTelemetryRtList.vue";
+  import DeviceLatestRtAlarmList
+    from "/@/views/dashboard/threeModel/components/DeviceLatestRtAlarmList.vue";
+  import ThreeModelHeader from "/@/views/dashboard/threeModel/ThreeModelHeader.vue";
+  import {listAssetAllThreeModelsAssets} from "/@/api/things/asset/assetApi";
 
   const electricModels = [
     'models/electric/plant.glb',
@@ -64,32 +62,25 @@
 
   export default defineComponent({
     name: '3DModel',
-    components: { Progress, Row, Col,Button, Things3DModelCounter, AssetAlarmHistogramMetric, LabelEntityPieMetric, AssetRealtimeLine},
+    components: { ThreeModelHeader, Progress, Row, Col,Button, Things3DModelCounter, AssetAlarmHistogramMetric,
+      LabelEntityPieMetric, AssetRealtimeLine, DeviceTelemetryRtList, DeviceLatestRtAlarmList},
     setup(){
       const tmContainerRef = ref() as Ref<HTMLElement>; //容器
       const modelProgressPercentRef = ref(0);
       const progressLoadSuccess = ref(true);
-      const currentTime = ref(); // 当前时间
       const go = useGo();
       const userStore = useUserStore();
       const threeMainModelPath = userStore.getUserInfo.threeModelPath as string;
-      if(!threeMainModelPath){
-        goHomePage();
-      }
 
-      function goHomePage(){
+      // 缓存当前模型资产的数据
+      let assetsOfModelMap = new Map();
+
+      if(!threeMainModelPath){
         if(digitalTwinScene){
           digitalTwinScene.stopAnimate();
         }
         go(PageEnum.BASE_HOME);
       }
-
-      // // 实时监听，以方便停止动画
-      // watchEffect(() => {
-      //   if (digitalTwinScene.animateRunningEnd && digitalTwinScene.animateFrameId) {
-      //     cancelAnimationFrame(digitalTwinScene.animateFrameId);
-      //   }
-      // })
 
       // 进度条回告
       const progressCallback = (progress) => {
@@ -99,22 +90,35 @@
         }
       }
 
-      const clickCallback = (modelObj) => {
-        console.log(modelObj)
-        // digitalTwinScene.stopAnimate();
+      const clickCallback = (childModel) => {
+        console.log(childModel);
+        if(childModel){
+          digitalTwinScene.stopAnimate();
+          go('/dt_child/' + childModel.modelPath);
+        }
       }
 
-      const timeUtil = new TimeUtil();
-      const currentTimer = setInterval(() => {
-        currentTime.value = timeUtil.getTime();
-      }, 1000)
+      // 加载3d模型对应的资产
+      async function loadAssetOfModels(){
+        const assets = await listAssetAllThreeModelsAssets();
+        if(!assets || assets.length <= 0){
+          return;
+        }
+
+        assetsOfModelMap = new Map();
+        assets.forEach(asset => {
+          assetsOfModelMap.set(asset.code, asset);
+        });
+      }
+
 
       async function init() {
         await nextTick();
         if (!tmContainerRef.value) {
           return;
         }
-
+        await loadAssetOfModels();
+        // 优先获取对应的3d模型对一个的资产
         digitalTwinScene.init(tmContainerRef.value, {
           cameraX: -120,
           cameraY: 450,
@@ -124,23 +128,22 @@
           cameraFar: 1000,
           canControls: true,
           sceneBackTransport:true,
+          openAutoRotate: true,
+          assetsOfModelMap: assetsOfModelMap,
         }, progressCallback, clickCallback)
 
         digitalTwinScene.loadGltfBatch(electricModels);
       }
 
-      async function destroyComponent(){
-        if(currentTimer){
-          clearInterval(currentTimer);
-        }
-
+      async function destroyModels(){
         if(digitalTwinScene){
           digitalTwinScene.disposeSceneObjs();
         }
       }
+
       onMounted(init);
-      onBeforeUnmount(destroyComponent);
-      return {tmContainerRef, modelProgressPercentRef, progressLoadSuccess, currentTime, goHomePage}
+      onBeforeUnmount(destroyModels);
+      return {tmContainerRef, modelProgressPercentRef, progressLoadSuccess}
     },
   });
 </script>
@@ -167,35 +170,6 @@
     top:0;
     background-image: linear-gradient(#547b95, #eecdaa);
   }
-  .mainFixedHeader{
-    margin: 0 0;
-    padding-left: 15px;
-    padding-right: 15px;
-    z-index: 600;
-    width: 100%;
-    height: 45px;
-    left: 0;
-    top:0;
-    position: fixed;
-    background-color: rgb(1,15,65);
-    opacity: 0.6;
-    line-height: 50px;
-    h3{
-      color: #fff;
-      font-size: 16px;
-    }
-    .goHomeBtn{
-      color: #fff;
-      font-size: 14px;
-      background-color: rgb(1,23,92);
-      border: 1px dashed #fff;
-      cursor: pointer;
-    }
-    span{
-      color: #fff;
-      font-size: 14px;
-    }
-  }
   .leftFixedContentContainer{
     margin: 0 0;
     padding: 0 0;
@@ -221,11 +195,13 @@
   .rightContentContainer{
     margin: 0 0;
     padding: 0 0;
-    z-index: 9;
-    position: absolute;
+    position: fixed;
     right: 10px;
-    top:65px;
-    width: 25%;
+    top:60px;
+    width: 26%;
+    height: 90%;
+    color: #989292;
+    /*background-color: #0a1f49;*/
   }
 
   .leftCard{

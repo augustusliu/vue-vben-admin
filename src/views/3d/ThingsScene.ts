@@ -10,18 +10,44 @@ import {
   Raycaster,
   Clock
 } from 'three';
+import * as THREE from 'three';
 import Nebula, { SpriteRenderer , System} from "three-nebula";
 import { OrbitControls } from "./extends/OrbitControls";
 import { GLTFLoader } from "./extends/GLTFLoader";
 import { ColorRepresentation } from "three/src/utils";
-import * as THREE from 'three';
-
 import { useUserStore } from "/@/store/modules/user";
-
 // 请求的权限
 const userStore = useUserStore();
-// 加载nebula动画
-import smokeJson from '/@/views/3d/animates/smoke.json';
+
+
+// 冷却塔及烟囱动画
+import yancongSmoke from '/@/assets/bebula/yancongSmoke.json';
+
+// 锅炉房动画集合
+// 锅炉点火动画
+import glFireUp from '/@/assets/bebula/fireUp.json';
+import glSmokeRight from '/@/assets/bebula/smokeRight.json';
+import glSmokeDown from '/@/assets/bebula/smokeDown.json';
+// 锅炉烟道向右动画
+import glYdSmokeRight from '/@/assets/bebula/ydSmokeRight.json';
+// 氨气烟道的烟气动画
+import anQiSmokeUp from '/@/assets/bebula/aqSmokeUp.json';
+// 氨气喷水动画
+import anQiWater from '/@/assets/bebula/anqiWater.json';
+// 脱销装置烟气动画
+import tuoxiaoSmoke from '/@/assets/bebula/txSmokeRightDown.json';
+
+// 保存动画的map,方便模型获取
+const nebulaAnimateJsonMap = new Map();
+
+nebulaAnimateJsonMap.set("yancongSmoke", yancongSmoke);
+nebulaAnimateJsonMap.set("glFireUp", glFireUp);
+nebulaAnimateJsonMap.set("glSmokeRight", glSmokeRight);
+nebulaAnimateJsonMap.set("glSmokeDown", glSmokeDown);
+nebulaAnimateJsonMap.set("glYdSmokeRight", glYdSmokeRight);
+nebulaAnimateJsonMap.set("anQiSmokeUp", anQiSmokeUp);
+nebulaAnimateJsonMap.set("anQiWater", anQiWater);
+nebulaAnimateJsonMap.set("tuoxiaoSmoke", tuoxiaoSmoke);
 
 // 变量
 export interface ThingsSceneOptions{
@@ -38,6 +64,10 @@ export interface ThingsSceneOptions{
   showGrid?: boolean;
   canControls: boolean;
   animateInterval?: number;
+  openAutoRotate?: boolean;
+
+  // 模型资产的缓存数据
+  assetsOfModelMap?: Map<string, any>;
 }
 
 
@@ -59,7 +89,7 @@ export class ThingsScene{
   private animateMixer: any;
 
   private objs: any[];
-  public labelObjects: any[];
+  public labelChildModels: Map<string,any>;
 
   private clock: any;
   // 当前动画的关键帧
@@ -73,14 +103,18 @@ export class ThingsScene{
   // 停止动画的flag，停止动画必须采用这种方式
   public animateRunningEnd: boolean;
 
+  public assetsOfModelMap: Map<string, any> | undefined | null;
+  public modeUuidAssetIdMap: Map<string, number> | null;
 
   constructor() {
     this.objs = [];
     this.camera = null;
-    this.labelObjects = [];
+    this.labelChildModels = new Map();
     this.nebulasSystem = [];
     this.animationActions = [];
     this.animateRunningEnd = true;
+    this.modeUuidAssetIdMap = new Map();
+    this.assetsOfModelMap = new Map();
   }
 
   // 初始化
@@ -90,11 +124,13 @@ export class ThingsScene{
     if(!containerRef){
       return;
     }
+    this.assetsOfModelMap = opts.assetsOfModelMap;
+
     this.containerRef = containerRef;
     this.containerHeight = containerRef.clientHeight | window.innerHeight;
     this.containerWidth = containerRef.clientWidth | window.innerWidth;
     this.objs = [];
-    this.labelObjects = [];
+    this.labelChildModels = new Map();
     this.nebulasSystem = [];
     this.animationActions = [];
     this.animateRunningEnd = true;
@@ -190,7 +226,10 @@ export class ThingsScene{
     if(!this.controls){
       this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     }
-    this.controls.autoRotate = true;
+    if(this.options?.openAutoRotate){
+      this.controls.autoRotate = true;
+    }
+
     // defaultThreeContext.controls.maxPolarAngle = 0;
     // defaultThreeContext.controls.addEventListener('change', renderAnimate);
   }
@@ -273,9 +312,11 @@ export class ThingsScene{
       this.scene.background = null;
     }
 
+    this.assetsOfModelMap = null;
+    this.modeUuidAssetIdMap = null;
     this.scene = null;
     this.objs = [];
-    this.labelObjects = [];
+    this.labelChildModels = new Map();
     this.nebulasSystem = [];
     this.animationActions = [];
     if(this.animateMixer){
@@ -326,8 +367,23 @@ export class ThingsScene{
           child.material.emissiveMap = child.material.map;
         }
 
-        // 缓存带标签的模型
-        if(child.userData.canclick && child.userData.canclick === 'yes'){
+        // 1、解析并绑定模型中的资产与平台中的资产, 绑定平台对应的资产信息
+        if(child.userData && child.userData.assetId){
+          if(this.assetsOfModelMap?.has(child.userData.assetId)){
+            const thingsAsset = digitalTwinScene.assetsOfModelMap?.get(child.userData.assetId);
+            if(!thingsAsset){
+              this.modeUuidAssetIdMap?.set(child.uuid, thingsAsset.id);
+            }
+          }
+        }
+
+        // 缓存带标签的模型-- 修改，只有存在子模型才可以点击
+        if(child.userData && child.userData.childModel){
+          // if(child.userData.canclick && child.userData.canclick === 'yes'){
+          const childModelPath = child.userData.childModel;
+          if(!childModelPath){
+            return ;
+          }
           const text = child.name;
           const color = new Date().getTime() % 2 == 1 ? 'rgba(234, 42, 6, 1)' : 'rgba(0, 0, 0, 1.0)'
           let sprite = this.__makeTextLabelSprite(text, {
@@ -336,17 +392,22 @@ export class ThingsScene{
           if(sprite){
             sprite.position.set(child.position.x, child.position.y + 8, child.position.z);
             this.scene.add(sprite);
-            this.labelObjects.push({'labelId':sprite.uuid, 'obj': child});
             this.objs.push(sprite);
+            this.labelChildModels.set(sprite.uuid, {
+              assetId: child.uuid,
+              modelPath: childModelPath
+            });
           }
         }
-        // 烟感动画
-        if(child.userData.smoker){
-          let smoker = smokeJson;
-          smoker.particleSystemState.emitters[0].position.x = child.position.x;
-          smoker.particleSystemState.emitters[0].position.y = child.position.y;
-          smoker.particleSystemState.emitters[0].position.z = child.position.z;
-          this.__loadNebulaAnimate(smoker);
+        // 如果组件存在发射器，则加载发射器动画
+        if(child.userData && child.userData.emmiter){
+          let nebulaAnimate = nebulaAnimateJsonMap.get(child.userData.emmiter);
+          if(nebulaAnimate){
+            nebulaAnimate.particleSystemState.emitters[0].position.x = child.position.x;
+            nebulaAnimate.particleSystemState.emitters[0].position.y = child.position.y;
+            nebulaAnimate.particleSystemState.emitters[0].position.z = child.position.z;
+            this.__loadNebulaAnimate(nebulaAnimate);
+          }
         }
         this.objs.push(child);
     });
@@ -436,14 +497,8 @@ export class ThingsScene{
     // 获取raycaster直线和所有模型相交的数组汇合
     if(digitalTwinScene.scene && digitalTwinScene.scene.children){
       let intersects = raycaster.intersectObjects(digitalTwinScene.scene.children );
-      console.log(intersects)
-      if(intersects && intersects.length > 0 && this.clickCallback){
-        // 查找点击的标签
-        digitalTwinScene.labelObjects.forEach(item => {
-          if(intersects[0].object && item.labelId === intersects[0].object.uuid){
-            digitalTwinScene.clickCallback(item.obj);
-          }
-        })
+      if(intersects && intersects.length > 0 && digitalTwinScene.clickCallback){
+        digitalTwinScene.clickCallback(digitalTwinScene.labelChildModels.get(intersects[0].object.uuid));
       }
     }
   }

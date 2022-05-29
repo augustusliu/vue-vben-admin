@@ -48,11 +48,11 @@
           series: [
             {
               type: 'pie',
-              radius: ['40%', '70%'],
+              radius: ['30%', '70%'],
               itemStyle: {
                 borderRadius: 10,
                 borderColor: '#fff',
-                borderWidth: 2
+                borderWidth: 1
               },
               label: {
                 show: false,

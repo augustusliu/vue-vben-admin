@@ -6,7 +6,7 @@ const globSetting = useGlobSetting();
 import {
   AttributeSearchParam,
   AttributeListResult,
-  AddOrUpdateAttributeParam, AttributeListItem,
+  AddOrUpdateAttributeParam, AttributeListItem, LatestTelemetryItem,
 } from '/@/api/things/attribute/model/attributeModel';
 
 
@@ -22,6 +22,8 @@ enum AttributeApi {
 
   //ws
   AttributeTelemetryWsApi = '/api/ws/telemetry',
+
+  LatestTelemetryInTenantApi = '/api/attribute/latestTelemetry',
 }
 
 // 分页查询对应的资产列表
@@ -46,3 +48,6 @@ export const getAllAttributesByEntity = (entityId: number, entityType: string) =
 export const getAttributeTelemetryWsApi = (entityId: number) => {
   return globSetting.wsUrl + AttributeApi.AttributeTelemetryWsApi +"?subTopic=deviceAttrTelemetry&deviceId=" + entityId +"&token=" + getToken()}
 
+// 获取租户下最新的遥测数据
+export const getLatestTelemetryInTenantApi = () =>
+  defHttp.get<LatestTelemetryItem[]>({ url: AttributeApi.LatestTelemetryInTenantApi });

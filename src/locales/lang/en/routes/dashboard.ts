@@ -5,4 +5,5 @@ export default {
   analysis: 'Analysis',
   metrics: 'Analysis Metric',
   digitalTwin: 'Digital Twin',
+  digitalTwinChild: 'Digital Twin Child',
 };

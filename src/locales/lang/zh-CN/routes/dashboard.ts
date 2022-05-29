@@ -6,4 +6,5 @@ export default {
   tenant: '租户',
   metrics: '统计看板',
   digitalTwin: '数字孪生',
+  digitalTwinChild: '数字孪生组件',
 };

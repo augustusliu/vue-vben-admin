@@ -27,6 +27,9 @@ enum AssetApi {
   AssetListAllNamesApi = '/api/asset/listAllNames',
   AssetListAllNamesByPagerApi = '/api/asset/listNamesByPager',
   AssetDelApi = '/api/asset/del/',
+
+  // 获取当前管理员旗下的3d模型对应的资产
+  AssetsOfThreeModelApi = '/api/asset/list3d',
 }
 
 // 分页查询对应的资产列表
@@ -55,6 +58,10 @@ export const addOrUpdateAsset = (params: AssetAddParam) =>
 // 查询全部资产
 export const listAssetAll = () =>
   defHttp.get<AssetListResultModel>({ url: AssetApi.AssetListAllApi });
+
+// 查询全部资产
+export const listAssetAllThreeModelsAssets = () =>
+  defHttp.get<AssetListItem[]>({ url: AssetApi.AssetsOfThreeModelApi });
 
 // 查询全部名称
 export const listAssetAllNames = () =>

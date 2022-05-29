@@ -35,7 +35,7 @@ export const LoginRoute: AppRouteRecordRaw = {
   },
 };
 
-// // 企业3D看板
+// // 企业数字孪生看板看板
 export const ThreeModelRoute: AppRouteRecordRaw = {
   path: '/digital_twin',
   name: 'ThreeModel',

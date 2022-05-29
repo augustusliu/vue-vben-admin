@@ -35,4 +35,16 @@ export interface AttributeListItem {
   createdTime: string;
 }
 
+
+export interface LatestTelemetryItem {
+  id: number,
+  name: string,
+  lastValue: string,
+  lastValueTs: number
+
+  // 设备信息
+  deviceId: number,
+  deviceName:string,
+}
+
 export type AttributeListResult = BasicFetchResult<AttributeListItem>;

@@ -6,7 +6,7 @@
           <Row>
             <Col span="8"><span class="assetRtTitle"> 告警统计 </span></Col>
             <Col span="16">
-              <RadioGroup size="default" :value="currentTimeTag" :onChange="timeTagOnChange" style="float: right;padding-right: 10px; opacity: 0.7">
+              <RadioGroup size="default" :value="currentTimeTag" :onChange="timeTagOnChange" class="alarmBtnGroup">
                 <RadioButton value="day">天</RadioButton>
                 <RadioButton value="month">月</RadioButton>
               </RadioGroup>
@@ -32,10 +32,23 @@
   export default defineComponent({
     name: 'AssetAlarmHistogramComponent',
     components: {Row, Col, RadioGroup, RadioButton},
-    props: ['entityId', 'entityType'],
+    props: {
+      entityId: {
+        type: Number
+      },
+      entityType: {
+        type: String
+      },
+      // 默认的 按钮样式
+      btnClass: {
+        type: Object as PropType<any>,
+        default: () => ({}),
+      }
+    },
     setup(props){
       const entityId = props.entityId;
       const entityType = props.entityType;
+      const btnClass = props.btnClass;
       const assetAlarmChartRef = ref<HTMLDivElement | null>(null);
       const assetHistogramChart = useECharts(assetAlarmChartRef as Ref<HTMLDivElement>);
 
@@ -61,8 +74,8 @@
 
       async function loadAlarms(){
         const alarmsData = await getAlarmMetricByTypeAndTimeApi({
-          entityId: entityId,
-          entityType: entityType,
+          entityId: entityId as number,
+          entityType: entityType as string,
           periodType: currentTimeTag.value,
           startTime: startTimeRef.value,
           endTime: currentTime,
@@ -85,7 +98,6 @@
           })
         }
 
-
         let chartOptions = {
           tooltip: {
             trigger: 'axis',
@@ -95,7 +107,6 @@
           },
           legend: {
             data: alarmsData.labels,
-            left: '15',
             textStyle: {
               color: '#989292',
             }
@@ -132,7 +143,7 @@
       }
 
       onMounted(init)
-      return {currentTimeTag , timeTagOnChange, assetAlarmChartRef}
+      return {currentTimeTag , timeTagOnChange, assetAlarmChartRef, btnClass}
     }
   });
 </script>
@@ -163,5 +174,17 @@
     font-weight: bolder;
     margin-left: 20px;
     color: #989292;
+  }
+  .alarmBtnGroup{
+    float: right;
+    padding-right: 10px;
+    opacity: 0.7;
+    line-height: 32px;
+    .ant-radio-button-wrapper{
+      height: 20px;
+      line-height: 20px;
+      background-color: #3aa3da;
+      border: none;
+    }
   }
 </style>

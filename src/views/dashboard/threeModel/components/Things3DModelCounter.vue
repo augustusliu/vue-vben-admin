@@ -36,11 +36,10 @@
 
 <script lang="ts">
   import {defineComponent, ref} from "vue";
-  import {PageWrapper} from "/@/components/Page";
   import {Row, Col} from "ant-design-vue";
   export default defineComponent({
     name: 'Things3DModelCounterComponent',
-    components: { PageWrapper, Row, Col },
+    components: {Row, Col },
     setup(){
       const assetCount = ref(32);
       const deviceCount = ref(143);
@@ -95,7 +94,7 @@
     height: 32px;
     text-align: center;
     line-height: 32px;
-    font-size: 22px;
+    font-size: 16px;
     color: #989292;
     width: 100%;
   }
