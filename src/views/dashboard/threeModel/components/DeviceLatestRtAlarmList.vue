@@ -37,6 +37,7 @@
   import {Row, Col, List, ListItem} from "ant-design-vue";
   import moment from "moment";
   import {getTenantLatestAlarms} from "/@/api/things/alarm/alarmApi";
+  import {thingsWebSocket} from "/@/layouts/default/header/ws/ThingsWebSocket";
 
 
   export default defineComponent({
@@ -70,6 +71,27 @@
         return strSub;
       }
 
+      function alarmCallback(responseData){
+        // unshift pop
+        if(responseData){
+          const formateAlarmItem = {
+            deviceName: nameSubstr(responseData.entityName),
+            content: nameSubstr(responseData.data.alarmContent, 10),
+            ts: moment(Number(responseData.data.createdTime)).format('HH:mm:ss')
+          }
+
+          deviceTelemetryListRef.value.pop();
+          deviceTelemetryListRef.value.unshift(formateAlarmItem);
+        }
+      }
+
+      if(!thingsWebSocket.isConnected()){
+        thingsWebSocket.init();
+      }
+      // 注册报警回调事件
+      thingsWebSocket.updateCallback({
+        deviceAlarmCallbackFunc: alarmCallback,
+      })
       onMounted(loadInitData);
       return { deviceTelemetryListRef }
     }

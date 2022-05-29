@@ -52,4 +52,12 @@ export interface AlarmsMetricResultItem {
   items: AlarmListItem[];
 }
 
+
+export interface DigitalTwinMetricCount {
+  assetCount: number,
+  deviceTotalCount: number,
+  waitAlarmCount: number,
+  deviceOnlineCount: number
+}
+
 export type MetricListResultModel = BasicFetchResult<MetricItem>;

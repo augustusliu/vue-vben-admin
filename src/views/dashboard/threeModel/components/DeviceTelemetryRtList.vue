@@ -41,7 +41,7 @@
   import {Row, Col, List, ListItem} from "ant-design-vue";
   import moment from "moment";
   import { getLatestTelemetryInTenantApi } from "/@/api/things/attribute/attrApi";
-
+  import {thingsWebSocket} from "/@/layouts/default/header/ws/ThingsWebSocket";
 
   export default defineComponent({
     name: 'DeviceTelemetryRtListComponent',
@@ -73,6 +73,39 @@
         }
         return strSub;
       }
+
+      const command3DWsCallback = (responseData) => {
+        const formateCommand = {
+          deviceName: nameSubstr(responseData.entityName),
+          attrName: nameSubstr(responseData.data.entry.key),
+          val: responseData.data.entry.valueAsString,
+          ts: moment(Number(responseData.data.ts)).format('HH:mm:ss')
+        }
+        deviceTelemetryListRef.value.pop();
+        deviceTelemetryListRef.value.unshift(formateCommand);
+      }
+
+      const attr3dWsCallback = (responseData) => {
+        const formateAttribute = {
+          deviceName: nameSubstr(responseData.entityName),
+          attrName: nameSubstr(responseData.data.entry.key),
+          val: responseData.data.entry.valueAsString,
+          ts: moment(Number(responseData.data.ts)).format('HH:mm:ss')
+        }
+        deviceTelemetryListRef.value.pop();
+        deviceTelemetryListRef.value.unshift(formateAttribute);
+      }
+
+
+      if(!thingsWebSocket.isConnected()){
+        thingsWebSocket.init();
+      }
+
+      // 注册报警回调事件
+      thingsWebSocket.updateCallback({
+        deviceAttributeCallbackFunc: attr3dWsCallback,
+        deviceCommandCallbackFunc: command3DWsCallback
+      });
 
       onMounted(loadInitData);
       return { deviceTelemetryListRef }

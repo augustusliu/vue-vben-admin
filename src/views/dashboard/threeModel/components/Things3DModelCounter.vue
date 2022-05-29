@@ -35,16 +35,30 @@
 </template>
 
 <script lang="ts">
-  import {defineComponent, ref} from "vue";
+  import {defineComponent, ref, onMounted} from "vue";
   import {Row, Col} from "ant-design-vue";
+  import {getDigitalTwinMetricCount} from "/@/api/things/metrics/metricApi";
   export default defineComponent({
     name: 'Things3DModelCounterComponent',
     components: {Row, Col },
     setup(){
-      const assetCount = ref(32);
-      const deviceCount = ref(143);
-      const onlineDeviceCount = ref(45);
-      const waitingAlarmCounter = ref(4);
+      const assetCount = ref(0);
+      const deviceCount = ref(0);
+      const onlineDeviceCount = ref(0);
+      const waitingAlarmCounter = ref(0);
+
+      async function loadMetricCount(){
+        const metricCount = await getDigitalTwinMetricCount();
+        if(!metricCount){
+          return ;
+        }
+        assetCount.value = metricCount.assetCount;
+        deviceCount.value = metricCount.deviceTotalCount;
+        onlineDeviceCount.value = metricCount.deviceOnlineCount;
+        waitingAlarmCounter.value = metricCount.waitAlarmCount;
+      }
+
+      onMounted(loadMetricCount);
       return { assetCount, deviceCount, waitingAlarmCounter, onlineDeviceCount };
     }
   });

@@ -4,7 +4,7 @@ import { useWebSocket } from '@vueuse/core';
 import {ref, unref, watchEffect} from "vue";
 const WS_BASE_API = '/api/ws/telemetry';
 // websocket 监听的topic(不能携带空格)
-const topics: string ='ruleDebugInfo,ruleDebugNodeInfo,deviceAttrTelemetry,deviceCommandTelemetry,assetAttrTelemetry,assetCommandTelemetry';
+const topics: string ='ruleDebugInfo,ruleDebugNodeInfo,deviceAttrTelemetry,deviceCommandTelemetry,deviceAlarm,assetAttrTelemetry,assetCommandTelemetry';
 
 const WS_API_PATH = useGlobSetting().wsUrl + WS_BASE_API + '?token=' + getToken() +'&subTopic='+topics;
 
@@ -23,6 +23,7 @@ export interface WebSocketCallbackOptions{
   debugChainCallbackFunc?: any,
   deviceAttributeCallbackFunc?:any,
   deviceCommandCallbackFunc?:any,
+  deviceAlarmCallbackFunc?: any,
 }
 
 
@@ -36,6 +37,7 @@ class ThingsWebSocket{
   private debugChainCallbackFunc: any;
   private deviceAttributeCallbackFunc: any;
   private deviceCommandCallbackFunc: any;
+  private deviceAlarmCallbackFunc: any;
 
   constructor(opts?:WebSocketCallbackOptions) {
     this.connected = false;
@@ -43,6 +45,7 @@ class ThingsWebSocket{
     this.debugChainCallbackFunc = opts?.debugChainCallbackFunc;
     this.deviceAttributeCallbackFunc = opts?.deviceAttributeCallbackFunc;
     this.deviceCommandCallbackFunc = opts?.deviceCommandCallbackFunc;
+    this.deviceAlarmCallbackFunc = opts?.deviceAlarmCallbackFunc;
 
     this.wsStateRef = ref({
       server: WS_API_PATH,
@@ -80,6 +83,8 @@ class ThingsWebSocket{
             this.deviceAttributeCallbackFunc(responseData);
           }else if('deviceCommandTelemetry' === responseData.topic && this.deviceCommandCallbackFunc){
             this.deviceCommandCallbackFunc(responseData);
+          }else if('deviceAlarm' === responseData.topic && this.deviceAlarmCallbackFunc){
+            this.deviceAlarmCallbackFunc(responseData);
           }
           data.value = null;
         } catch (error) {
@@ -111,10 +116,25 @@ class ThingsWebSocket{
 
   // 更新不同界面的回调函数
   public updateCallback(opts?:WebSocketCallbackOptions){
-    this.debugNodeCallbackFunc = opts?.debugNodeCallbackFunc;
-    this.debugChainCallbackFunc = opts?.debugChainCallbackFunc;
-    this.deviceAttributeCallbackFunc = opts?.deviceAttributeCallbackFunc;
-    this.deviceCommandCallbackFunc = opts?.deviceCommandCallbackFunc;
+    if(opts?.debugNodeCallbackFunc){
+      this.debugNodeCallbackFunc = opts?.debugNodeCallbackFunc;
+    }
+
+    if(opts?.debugChainCallbackFunc){
+      this.debugChainCallbackFunc = opts?.debugChainCallbackFunc;
+    }
+
+    if(opts?.deviceAttributeCallbackFunc){
+      this.deviceAttributeCallbackFunc = opts?.deviceAttributeCallbackFunc;
+    }
+
+    if(opts?.deviceCommandCallbackFunc){
+      this.deviceCommandCallbackFunc = opts?.deviceCommandCallbackFunc;
+    }
+
+    if(opts?.deviceAlarmCallbackFunc){
+      this.deviceAlarmCallbackFunc = opts?.deviceAlarmCallbackFunc;
+    }
   }
 
 }

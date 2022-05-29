@@ -3,7 +3,7 @@ import {
   MetricItem,
   MetricPieItem,
   DeviceHistoryTemplateSearch,
-  HistoryTemplateResult, AlarmMetricSearchParams, AlarmsMetricResultItem
+  HistoryTemplateResult, AlarmMetricSearchParams, AlarmsMetricResultItem, DigitalTwinMetricCount
 } from "/@/api/things/metrics/model/metricModel";
 import {AlarmListItem} from "/@/api/things/alarm/model/alarmModel";
 
@@ -25,6 +25,8 @@ enum MetricApiEnum {
   AlarmGroupByTimeAndTypeApi = '/api/alarm/alarmsMetricV1',
 
   EntityLabelMetricApi = '/api/entity/labelMetric',
+  // 3d看板统计数据
+  DigitalTwinMetricCountApi = '/api/metric/digitalTwinCount',
 }
 
 // 获取统计页面卡片头部数据
@@ -71,3 +73,8 @@ export const getAlarmMetricByTypeAndTimeApi = (params: AlarmMetricSearchParams) 
 // 获取设备资产告警的按类型分组数据
 export const getEntityLabelPieApi = (entityId: number, entityType: string) =>
   defHttp.get<MetricPieItem[]>({ url: MetricApiEnum.EntityLabelMetricApi + "?entityId=" + entityId + "&entityType=" + entityType});
+
+
+// 获取3d看板统计界面数据
+export const getDigitalTwinMetricCount = () =>
+  defHttp.get<DigitalTwinMetricCount>({ url: MetricApiEnum.DigitalTwinMetricCountApi});

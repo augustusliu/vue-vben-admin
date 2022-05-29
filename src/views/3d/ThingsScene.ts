@@ -104,7 +104,6 @@ export class ThingsScene{
   public animateRunningEnd: boolean;
 
   public assetsOfModelMap: Map<string, any> | undefined | null;
-  public modeUuidAssetIdMap: Map<string, number> | null;
 
   constructor() {
     this.objs = [];
@@ -113,7 +112,6 @@ export class ThingsScene{
     this.nebulasSystem = [];
     this.animationActions = [];
     this.animateRunningEnd = true;
-    this.modeUuidAssetIdMap = new Map();
     this.assetsOfModelMap = new Map();
   }
 
@@ -313,7 +311,6 @@ export class ThingsScene{
     }
 
     this.assetsOfModelMap = null;
-    this.modeUuidAssetIdMap = null;
     this.scene = null;
     this.objs = [];
     this.labelChildModels = new Map();
@@ -367,13 +364,13 @@ export class ThingsScene{
           child.material.emissiveMap = child.material.map;
         }
 
+        let thingsAssetId : any = null;
         // 1、解析并绑定模型中的资产与平台中的资产, 绑定平台对应的资产信息
         if(child.userData && child.userData.assetId){
-          if(this.assetsOfModelMap?.has(child.userData.assetId)){
-            const thingsAsset = digitalTwinScene.assetsOfModelMap?.get(child.userData.assetId);
-            if(!thingsAsset){
-              this.modeUuidAssetIdMap?.set(child.uuid, thingsAsset.id);
-            }
+          const modelAssetCode = child.userData.assetId;
+          const thingsAsset = this.assetsOfModelMap?.get(modelAssetCode);
+          if(thingsAsset){
+            thingsAssetId = thingsAsset.id;
           }
         }
 
@@ -394,8 +391,9 @@ export class ThingsScene{
             this.scene.add(sprite);
             this.objs.push(sprite);
             this.labelChildModels.set(sprite.uuid, {
-              assetId: child.uuid,
-              modelPath: childModelPath
+              assetModelUuid: child.uuid,
+              thingsAssetId: thingsAssetId,
+              childModelPath: childModelPath
             });
           }
         }

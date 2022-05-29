@@ -1,6 +1,5 @@
 <template>
   <ThreeModelHeader/>
-
   <div ref="tmContainerRef" class="threeModelContainer"></div>
   <div class="loadProgressContainer" v-show="progressLoadSuccess">
       <Progress :showInfo="true" :step ="10" :percent="modelProgressPercentRef" v-show="progressLoadSuccess"
@@ -94,7 +93,7 @@
         console.log(childModel);
         if(childModel){
           digitalTwinScene.stopAnimate();
-          go('/dt_child/' + childModel.modelPath);
+          go('/dt_child/' + childModel.childModelPath);
         }
       }
 
