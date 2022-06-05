@@ -21,7 +21,6 @@ export interface ImportAssetItem {
   name: string;
   icon: string;
   disabled: boolean;
-  label: any;
   description?: string;
 }
 

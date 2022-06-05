@@ -117,6 +117,8 @@
   .telemetryContainer{
     width: 100%;
     height: 100%;
+    padding-top:8px;
+    padding-bottom: 8px;
     .rtListHeader{
       color: #989292;
       width: 100%;

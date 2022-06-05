@@ -1,6 +1,6 @@
 <template>
   <ThreeModelHeader/>
-  <div ref="tmContainerRef" class="threeModelContainer"></div>
+  <canvas ref="tmContainerRef" class="threeModelContainer"></canvas>
   <div class="loadProgressContainer" v-show="progressLoadSuccess">
       <Progress :showInfo="true" :step ="10" :percent="modelProgressPercentRef" v-show="progressLoadSuccess"
                 style="margin-top: 20%; width:50%; margin-left:20%"/>
@@ -30,7 +30,6 @@
   import {defineComponent, nextTick, onBeforeUnmount, onMounted, Ref, ref} from 'vue';
   import {useUserStore} from "/@/store/modules/user";
   import {useGo} from "/@/hooks/web/usePage";
-  import {digitalTwinScene} from "/@/views/3d/ThingsScene";
   import Things3DModelCounter
     from "/@/views/dashboard/threeModel/components/Things3DModelCounter.vue";
   import AssetAlarmHistogramMetric
@@ -43,41 +42,28 @@
     from "/@/views/dashboard/threeModel/components/DeviceLatestRtAlarmList.vue";
   import ThreeModelHeader from "/@/views/dashboard/threeModel/ThreeModelHeader.vue";
   import {listAssetAllThreeModelsAssets} from "/@/api/things/asset/assetApi";
-
-  const electricModels = [
-    'models/electric/plant.glb',
-    'models/electric/byq.glb',
-    'models/electric/house.glb',
-    'models/electric/smoker.glb',
-    'models/electric/momei.glb',
-    'models/electric/gl.glb',
-    'models/electric/coolpower.glb',
-    'models/electric/gl.glb',
-    'models/electric/house.glb',
-    'models/electric/meichang.glb',
-    'models/electric/momei.glb',
-    'models/electric/smoker.glb',
-  ]
+  import {ThingsDashboardScene} from "/@/badylon/ThingsDashboardScene";
+  import {AssetListItem} from "/@/api/things/asset/model/assetModel";
 
   export default defineComponent({
     name: '3DModel',
     components: { ThreeModelHeader, Progress, Row, Col,Button, Things3DModelCounter, AssetAlarmHistogramMetric,
       LabelEntityPieMetric, AssetRealtimeLine, DeviceTelemetryRtList, DeviceLatestRtAlarmList},
     setup(){
-      const tmContainerRef = ref() as Ref<HTMLElement>; //容器
+      const tmContainerRef = ref() as Ref<HTMLCanvasElement>; //容器
       const modelProgressPercentRef = ref(0);
       const progressLoadSuccess = ref(true);
       const go = useGo();
       const userStore = useUserStore();
       const threeMainModelPath = userStore.getUserInfo.threeModelPath as string;
-
+      const thingsDashboardSceneRef = ref() as Ref<ThingsDashboardScene>;
       // 缓存当前模型资产的数据
-      let assetsOfModelMap = new Map();
+      let assetsOfModelMap = new Map<string, AssetListItem>();
 
       if(!threeMainModelPath){
-        if(digitalTwinScene){
-          digitalTwinScene.stopAnimate();
-        }
+        // if(digitalTwinScene){
+        //   digitalTwinScene.stopAnimate();
+        // }
         go(PageEnum.BASE_HOME);
       }
 
@@ -90,53 +76,32 @@
       }
 
       const clickCallback = (childModel) => {
-        console.log(childModel);
         if(childModel){
-          digitalTwinScene.stopAnimate();
-          go('/dt_child/' + childModel.childModelPath);
+          // digitalTwinScene.stopAnimate();
+          go('/dt_child/' + childModel.childModelPath +"/" + childModel.thingsAssetId);
         }
       }
-
-      // 加载3d模型对应的资产
-      async function loadAssetOfModels(){
-        const assets = await listAssetAllThreeModelsAssets();
-        if(!assets || assets.length <= 0){
-          return;
-        }
-
-        assetsOfModelMap = new Map();
-        assets.forEach(asset => {
-          assetsOfModelMap.set(asset.code, asset);
-        });
-      }
-
 
       async function init() {
         await nextTick();
         if (!tmContainerRef.value) {
           return;
         }
-        await loadAssetOfModels();
-        // 优先获取对应的3d模型对一个的资产
-        digitalTwinScene.init(tmContainerRef.value, {
-          cameraX: -120,
-          cameraY: 450,
-          cameraZ: 150,
-          cameraFov: 65,
-          cameraNear: 0.1,
-          cameraFar: 1000,
-          canControls: true,
-          sceneBackTransport:true,
-          openAutoRotate: true,
-          assetsOfModelMap: assetsOfModelMap,
-        }, progressCallback, clickCallback)
 
-        digitalTwinScene.loadGltfBatch(electricModels);
+        thingsDashboardSceneRef.value = new ThingsDashboardScene({
+          assetsOfModelMap: assetsOfModelMap,
+          canvas: tmContainerRef.value,
+          cameraX: 30,
+          cameraY: 60,
+          cameraZ: 440,
+          progressCallback: progressCallback,
+          loadSuccessCallback: undefined,
+        });
       }
 
       async function destroyModels(){
-        if(digitalTwinScene){
-          digitalTwinScene.disposeSceneObjs();
+        if(thingsDashboardSceneRef.value){
+          thingsDashboardSceneRef.value.Destory();
         }
       }
 
@@ -153,9 +118,6 @@
     width: 100%;
     height: 100%;
     background-image: linear-gradient(rgb(0 0 0), rgb(1,23,92));
-    canvas{
-      background-image: linear-gradient(rgb(0 0 0), rgb(1,23,92));
-    }
   }
 
   .loadProgressContainer{

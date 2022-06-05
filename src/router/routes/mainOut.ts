@@ -19,9 +19,17 @@ export const mainOutRoutes: AppRouteModule[] = [
     },
   },
   {
-    path: '/dt_child/:id',
+    path: '/dt_child/:id/:aId',
     name: 'ThreeModelDetail',
     component: () => import('/@/views/dashboard/threeModel/ThreeChildModel.vue'),
+    meta: {
+      title: t('routes.dashboard.digitalTwinChild'),
+    },
+  },
+  {
+    path: '/test',
+    name: 'ThreeFlowPath',
+    component: () => import('/@/views/3d/example/FlowPathView.vue'),
     meta: {
       title: t('routes.dashboard.digitalTwinChild'),
     },

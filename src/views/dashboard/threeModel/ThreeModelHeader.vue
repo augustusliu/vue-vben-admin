@@ -70,6 +70,7 @@
     background-color: rgb(1,15,65);
     opacity: 0.6;
     line-height: 50px;
+    border-bottom: 1px solid #aaaaaa;
     h3{
       color: #fff;
       font-size: 16px;
@@ -80,6 +81,8 @@
       background-color: rgb(1,23,92);
       border: 1px dashed #fff;
       cursor: pointer;
+      float: right;
+      margin-top: 12px;
     }
     span{
       color: #fff;

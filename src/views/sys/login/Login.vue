@@ -1,5 +1,6 @@
 <template>
-  <PageWrapper class="h-full w-full things-login-page-container">
+  <canvas ref="containerRef" class="w-full three-container"></canvas>
+  <div class="things-login-page-container">
     <!--  头部  -->
     <div class="lg:flex md:flex" style="height: 50px; height:10%;">
       <div class="lg:w-5/10 w-full enter-y ">
@@ -15,9 +16,9 @@
 
     <div class="lg:flex md:flex w-full h-full things-content-container">
       <div class="lg:w-5/10 md:w-5/10 enter-y">
-        <div ref="containerRef" class="w-full three-container"></div>
         <div class="w-full login-desc">
-          <span>物联网+数字孪生平台</span>
+          <span class="platformNameCn">物联孪生平台</span><br>
+          <span class="platformNameEn">Thingsay IOT Twinning Platform</span>
         </div>
       </div>
 
@@ -27,7 +28,7 @@
         </div>
       </div>
     </div>
-  </PageWrapper>
+  </div>
 </template>
 <script lang="ts">
   import { defineComponent, ref, nextTick, computed, Ref, onMounted, onBeforeUnmount } from "vue";
@@ -38,8 +39,8 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useLocaleStore } from '/@/store/modules/locale';
-  import { digitalTwinScene } from '/@/views/3d/ThingsScene';
   import {PageWrapper} from "/@/components/Page";
+  import {thingsLogoBabylon, ThingsLogoBasicScene} from "/@/badylon/ThingsLogoBasicScene";
   export default defineComponent({
     name: "LoginComponent",
     props: {
@@ -49,38 +50,30 @@
     },
     components: {LoginForm, AppDarkModeToggle, AppLocalePicker, AppLogo, PageWrapper},
     setup(){
-      const containerRef = ref() as Ref<HTMLElement>; //容器
+      const containerRef = ref() as Ref<HTMLCanvasElement>; //容器
       const globSetting = useGlobSetting();
       const { prefixCls } = useDesign('login');
       const { t } = useI18n();
       const localeStore = useLocaleStore();
       const showLocale = localeStore.getShowPicker;
       const title = computed(() => globSetting?.title ?? '');
-      const logoModel = 'models/logo.glb';
+
+      const thingsBasicScene = ref() as Ref<ThingsLogoBasicScene>;
 
       async function init() {
         await nextTick();
         if (!containerRef.value) {
           return;
         }
-        // 透明背景
-        digitalTwinScene.init(containerRef.value, {
-          cameraX: -1,
-          cameraY: 3,
-          cameraZ: 1,
-          cameraFov: 65,
-          cameraNear: 0.1,
-          cameraFar: 1000,
-          canControls: false,
-          sceneBackTransport:true,
-          animateInterval:30,
-        }, null, null);
-        digitalTwinScene.loadGLTFModel(logoModel);
+
+        thingsLogoBabylon.init(containerRef.value);
+        thingsLogoBabylon.loadLogoModel('logo.glb');
+        thingsBasicScene.value = thingsLogoBabylon;
       }
 
       async function disposeModel(){
-        if(digitalTwinScene){
-          await digitalTwinScene.disposeSceneObjs();
+        if(thingsBasicScene.value){
+          thingsBasicScene.value.dispose();
         }
       }
       onMounted(init);
@@ -91,9 +84,13 @@
 </script>
 <style lang="less">
   .things-login-page-container{
-    background-color: #2941b3;
     margin: 0 0;
     padding: 0 0;
+    opacity: 0.9;
+    z-index: 99;
+    position: fixed;
+    width: 100%;
+    height: 100%;
     .vben-page-wrapper-content{
       margin: 0 0;
       padding: 0 0;
@@ -103,7 +100,7 @@
     float: left;
     vertical-align: center;
     margin-left: 15px;
-    color: #ffffff;
+    color: #878183;
     font-family: tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
   }
   .things-local{
@@ -113,27 +110,35 @@
   }
   .things-content-container{
     height: 90%;
-  }
-  .three-container{
-    background-color: #2941b3;
-    canvas {
-      background-color: #2941b3;
-      width: 100% !important;
-      height: 100% !important;
+    .login-desc {
+      min-height: 42px;
+      max-height: 42px;
+      line-height: 42px;
+      text-align: center;
+      font-family: cuisive, tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
+    }
+    .platformNameCn{
+      font-size: 32px;
+      color: #878183;
+    }
+    .platformNameEn{
+      font-size: 12px;
+      color: #bec0c7;
+      font-weight: bolder;
     }
   }
-  .login-desc {
-    min-height: 100px;
-    max-height: 100px;
-    line-height: 100px;
-    text-align: center;
-    color: #fff;
-    font-size: 30px;
-    font-family: fantasy, cuisive, tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
+  .three-container{
+    background-image: linear-gradient(rgb(0,1,4), rgb(1,11,47));
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
   }
 
+
   .login-form-container{
-    background-color: #fff;
     width: 400px;
     height: 380px;
     padding: 20px 20px;

@@ -502,11 +502,12 @@ export class ThingsScene{
   }
 
   private __loadNebulaAnimate(nebulaJsons: any){
+    // loaded 是一个System
     Nebula.fromJSONAsync(nebulaJsons.particleSystemState, THREE).then(loaded => {
       let nebulaRenderer = new SpriteRenderer(this.scene, THREE);
       loaded.addRenderer(nebulaRenderer);
-      const nebula = loaded.addRenderer(nebulaRenderer);
-      this.nebulasSystem.push(nebula);
+      const nebulaSys = loaded.addRenderer(nebulaRenderer);
+      this.nebulasSystem.push(nebulaSys);
     });
   }
 

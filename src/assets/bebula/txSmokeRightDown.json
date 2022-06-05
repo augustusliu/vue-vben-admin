@@ -48,8 +48,8 @@
                         "id":"1411e1b1-df1b-11ec-bfdf-d746352995cc",
                         "type":"Mass",
                         "properties":{
-                            "min":60,
-                            "max":100,
+                            "min":100,
+                            "max":300,
                             "isEnabled":true
                         }
                     },
@@ -75,7 +75,7 @@
                         "type":"Radius",
                         "properties":{
                             "width":2,
-                            "height":6,
+                            "height":4,
                             "isEnabled":true
                         }
                     },
@@ -84,7 +84,7 @@
                         "type":"RadialVelocity",
                         "properties":{
                             "radius":40,
-                            "x":2,
+                            "x":1.5,
                             "y":0,
                             "z":0,
                             "theta":30,
@@ -117,7 +117,7 @@
                         "id":"1411e1b8-df1b-11ec-bfdf-d746352995cc",
                         "type":"Scale",
                         "properties":{
-                            "scaleA":0.4,
+                            "scaleA":0.8,
                             "scaleB":0.8,
                             "life":null,
                             "easing":"easeLinear"
@@ -127,8 +127,8 @@
                         "id":"141208c0-df1b-11ec-bfdf-d746352995cc",
                         "type":"Force",
                         "properties":{
-                            "fx":1,
-                            "fy":-100,
+                            "fx":0.5,
+                            "fy":-120,
                             "fz":0,
                             "life":null,
                             "easing":"easeLinear"
@@ -149,7 +149,7 @@
                         "id":"141208c2-df1b-11ec-bfdf-d746352995cc",
                         "type":"RandomDrift",
                         "properties":{
-                            "driftX":0,
+                            "driftX":-23,
                             "driftY":23,
                             "driftZ":0,
                             "delay":1,
@@ -161,7 +161,7 @@
                         "id":"141208c3-df1b-11ec-bfdf-d746352995cc",
                         "type":"Spring",
                         "properties":{
-                            "x":30,
+                            "x":10,
                             "y":0,
                             "z":0,
                             "spring":0.01,

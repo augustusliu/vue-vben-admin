@@ -10,6 +10,12 @@ export type AssetParams = BasicPageParams & {
   disabled?: boolean;
 };
 
+
+export interface ModelAssetSearch {
+  isMain?: boolean,
+  modelIds?: number[]
+}
+
 // 资产列表查询返回模型
 export interface AssetListItem {
   id: number;
@@ -27,6 +33,9 @@ export interface AssetListItem {
   modifiedTime: string;
   createdTime: string;
   assetLabels: any[];
+  modelPath: string;
+  isModel:string;
+  modelId:number;
 }
 
 export interface AssetAddParam {

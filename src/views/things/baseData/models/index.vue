@@ -1,13 +1,13 @@
 <template>
   <PageWrapper class="h-full w-full">
     <div>
-      <BasicTable @register="registerTable" @edit-end="handleEditEnd">
+      <BasicTable @register="registerTable">
         <template #toolbar>
           <BasicUpload
             :maxSize="512"
             :maxNumber="5"
             :accept="acceptArray"
-            @change="handleChange"
+            @change="handleUploadChange"
             :api="uploadModelApi"
             :emptyHidePreview="false"
             class="my-5"
@@ -20,6 +20,10 @@
                 icon: 'ant-design:rotate-right-outlined',
                 tooltip: '资产同步',
                 onClick: handleConvertAsset.bind(null, record),
+              },
+              {
+                icon: 'clarity:note-edit-line',
+                onClick: handleEdit.bind(null, record),
               },
               {
                 icon: 'ant-design:delete-outlined',
@@ -35,6 +39,7 @@
       </BasicTable>
     </div>
     <Loading :loading="loading" :absolute="false" tip="同步中..." />
+    <ModelDrawer @register="registerDrawer" @success="handleEditSuccess"/>
   </PageWrapper>
 </template>
 
@@ -46,24 +51,26 @@
   import { Loading } from '/@/components/Loading';
   import {ModelSyncAssetRequest} from "/@/views/things/baseData/models/ModelSyncAssetRequest";
   import { useMessage } from '/@/hooks/web/useMessage';
+  import ModelDrawer from './ModelDrawer.vue';
 
   import {
     deleteModelApi,
     searchModelByPager,
-    addModelInfo, changeModeMainOrEnableApi,
+    addModelInfo,
   } from "/@/api/things/baseData/modelApi";
   import {
     uploadModelApi
   } from "/@/api/things/common/commonApi";
   import {PageWrapper} from "/@/components/Page";
+  import {useDrawer} from "/@/components/Drawer";
 
   export default defineComponent({
     name: 'ModelComponent',
-    components: {TableAction, BasicTable, BasicUpload, Loading, PageWrapper},
+    components: {TableAction, BasicTable, BasicUpload, Loading, PageWrapper, ModelDrawer},
     setup(){
+      const [registerDrawer, { openDrawer }] = useDrawer();
       const acceptArray = ['glb', 'gltf'];
       const loading = ref(false);
-      const modelSyncAssetRequest: ModelSyncAssetRequest = new ModelSyncAssetRequest();
       const [registerTable, { reload }] = useTable({
         title: '模型列表',
         api: searchModelByPager,
@@ -83,7 +90,7 @@
         bordered: true,
         showIndexColumn: true,
         actionColumn: {
-          width: 90,
+          width: 120,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -96,7 +103,7 @@
         await reload();
       }
 
-      async function handleChange(list: any[]){
+      async function handleUploadChange(list: any[]){
         if(!list || list.length <=0 ){
           return;
         }
@@ -112,23 +119,21 @@
         await reload();
       }
 
-      async function handleEditEnd(ev){
-        const param: any = {};
-        if(ev.key === 'isMain'){
-          param.isMain = ev.value
-        }else if(ev.key === 'isEnabled'){
-          param.isEnabled = ev.value
-        }else{
-          return ;
-        }
-        param.id = ev.record.id;
-        await changeModeMainOrEnableApi(param);
+      function handleEdit(record: Recordable){
+        openDrawer(true, {
+          record,
+          isUpdate: true,
+        });
+      }
+
+      async function handleEditSuccess(){
+        await reload();
       }
 
       async function handleConvertAsset(record: Recordable){
         loading.value = true;
          if(!record.syncAsset){
-           await modelSyncAssetRequest.loadModel(record.id, closeLoading);
+           new ModelSyncAssetRequest().loadModel(record.id, closeLoading);
            await reload();
          }else{
            useMessage().createMessage.error('该模型资产已同步');
@@ -139,8 +144,8 @@
         loading.value = false;
       }
 
-      return {registerTable, uploadModelApi, handleChange, acceptArray,
-        handleDelete, handleEditEnd, handleConvertAsset, loading};
+      return {registerTable, registerDrawer, uploadModelApi, handleUploadChange, acceptArray, handleEdit,
+        handleDelete, handleConvertAsset, loading, handleEditSuccess};
     },
   });
 </script>

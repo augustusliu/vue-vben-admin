@@ -119,6 +119,8 @@
       width: 100%;
       height: 90%;
       overflow-y: scroll;
+      padding-top:8px;
+      padding-bottom: 8px;
       .listDataTitle{
         width: 100%;
         height: 40px;

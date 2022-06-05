@@ -16,10 +16,10 @@ enum CommonApi {
   IndustryListByParent = '/api/industry/listByParent/',
 
   FileModelUploadApi ='/api/file/model/upload',
-  GetModelApi = '/api/file/model/get/',
+  GetModelApiWithAuth = '/api/file/model/get/',
+  GetModelApiWithoutAuth = '/api/fs/model/get/',
   FileImageUploadApi = '/api/file/img/upload',
   GetImageApi = '/api/file/img/get/',
-
   ImportAssetsByModelApi='/api/model/importAssets',
 }
 
@@ -50,7 +50,10 @@ export const uploadImageApi = (params: any) =>
   defHttp.post<String>({ url: globSetting.apiUrl + CommonApi.FileImageUploadApi , params });
 
 export const getModelApi = (fileId: any) =>
-  defHttp.get<any>({ url: CommonApi.GetModelApi  + fileId });
+  defHttp.get<ArrayBuffer>({ url: CommonApi.GetModelApiWithAuth  + fileId });
+
+export const getModelWithoutAuthApi = (fileId: any) =>
+  defHttp.get<ArrayBuffer>({ url: CommonApi.GetModelApiWithoutAuth  + fileId });
 
 export const importAssetsByModel = (params: ImportAssetByModel) =>
   defHttp.post<number>({ url: CommonApi.ImportAssetsByModelApi  ,params });

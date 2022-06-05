@@ -3,8 +3,8 @@ import { useUserStore } from "/@/store/modules/user";
 import { getModelInfoApi } from  '/@/api/things/baseData/modelApi';
 import { useGlobSetting } from '/@/hooks/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
-import {importAssetsByModel} from "/@/api/things/common/commonApi";
 import {ImportAssetItem} from "/@/api/things/common/model/commonModel";
+import {importAssetsByModel} from "/@/api/things/common/commonApi";
 
 export class ModelSyncAssetRequest{
 
@@ -34,11 +34,10 @@ export class ModelSyncAssetRequest{
        (model) => {
           if(model){
             model.scene.traverse( child=> {
-              if(child.userData.assetId){
+              if(child.userData.assetCode){
                 assets.push({
                   name: child.name,
-                  code: child.userData.assetId,
-                  label: ['model'],
+                  code: child.userData.assetCode,
                   icon: 'device_2',
                   disabled: false
                 });

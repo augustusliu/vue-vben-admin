@@ -4,7 +4,7 @@ import {
   AssetParams,
   AssetAddParam,
   AssetListItem,
-  AssetListResultModel,
+  AssetListResultModel, ModelAssetSearch,
 } from '/@/api/things/asset/model/assetModel';
 
 import {
@@ -59,9 +59,10 @@ export const addOrUpdateAsset = (params: AssetAddParam) =>
 export const listAssetAll = () =>
   defHttp.get<AssetListResultModel>({ url: AssetApi.AssetListAllApi });
 
-// 查询全部资产
-export const listAssetAllThreeModelsAssets = () =>
-  defHttp.get<AssetListItem[]>({ url: AssetApi.AssetsOfThreeModelApi });
+// 查询当前用户全部资产
+export const listAssetAllThreeModelsAssets = (params: ModelAssetSearch) =>
+  defHttp.post<AssetListItem[]>({ url: AssetApi.AssetsOfThreeModelApi, params})
+
 
 // 查询全部名称
 export const listAssetAllNames = () =>
