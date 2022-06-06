@@ -15,7 +15,7 @@ export class ThingsCommonParticles{
   }
 
   // 喷火焰发射器
-  public buildFire(opts: CommonParticlesOptions){
+  public buildParticle(opts: CommonParticlesOptions){
     let particleSystem = new ParticleSystem(this.name, this.capacity, this.scene);
     //Texture of each particle
     particleSystem.particleTexture = new Texture("textures/flare.png", this.scene);
@@ -24,7 +24,7 @@ export class ThingsCommonParticles{
     // BLENDMODE_ONEONE, or BLENDMODE_STANDARD
     particleSystem.blendMode = ParticleSystem.BLENDMODE_ONEONE;
     // Angular speed, in radians
-    particleSystem.minAngularSpeed = 0;
+    particleSystem.minAngularSpeed = 0.1;
     particleSystem.maxAngularSpeed = Math.PI;
 
     if(opts.particleMode === CommonParticlesType.FIRE_MODE){

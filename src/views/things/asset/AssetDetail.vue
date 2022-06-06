@@ -5,7 +5,7 @@
                  class="mt-4" />
     <div :class="`${prefixCls}-bottom`">
       <Tabs>
-        <template v-for="item in tabListScheme" :key="item.key">
+        <template v-for="item in tabAssetListScheme" :key="item.key">
           <TabPane :tab="item.name">
             <!-- 动态组件切换-->
             <component :is="item.component" :entityId="assetId" :entityType="entityType" />
@@ -24,11 +24,9 @@
   import { Tag, Tabs } from 'ant-design-vue';
   import { Description, useDescription } from '/@/components/Description/index';
   import { ScrollContainer } from '/@/components/Container';
-
   import { getAssetApi } from '/@/api/things/asset/assetApi';
   import { assetInfoScheme } from './asset.data';
-
-  import { tabListScheme } from '../common/entityTabs/tab.data';
+  import { tabAssetListScheme } from '../common/entityTabs/tab.data';
   import EntityAttributes from '../common/entityTabs/EntityAttributes.vue';
   import TelemetryAttributes from '../common/entityTabs/TelemetryAttributes.vue';
   import TelemetryCommand from '../common/entityTabs/TelemetryCommand.vue';
@@ -37,6 +35,8 @@
   import EntityCommand from "../common/entityTabs/EntityCommand.vue";
   import EntityAttributeAdjust from '../common/entityTabs/EntityAttributeAdjust.vue';
   import EntityCommandDistribute from '../common/entityTabs/EntityCommandDistribute.vue';
+  import DeviceSelectTab from '../common/entityTabs/DeviceSelectTab.vue';
+
   import {useMultipleTabStore} from "/@/store/modules/multipleTab";
 
   // tab信息参考/page/account/setting配置
@@ -56,7 +56,8 @@
       EntityRelation,
       EntityCommand,
       EntityAttributeAdjust,
-      EntityCommandDistribute
+      EntityCommandDistribute,
+      DeviceSelectTab,
     },
     setup() {
       const route = useRoute();
@@ -103,10 +104,9 @@
         assetId,
         entityType,
         currentKey,
-        goBack,
         registerAssetInfo,
         isLoaded,
-        tabListScheme,
+        tabAssetListScheme,
         tabBarStyle: {
           width: '220px',
         },

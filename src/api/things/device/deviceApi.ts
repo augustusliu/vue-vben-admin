@@ -9,7 +9,7 @@ import {
   DeviceListAllResultModel,
   DeviceIssueSearchParams,
   DeviceListIssueResultModel,
-  DeviceIssueCreateParam,
+  DeviceIssueCreateParam, DeviceWithEntityRelationSearchParams,
 } from '/@/api/things/device/model/deviceModel';
 
 enum DeviceApi {
@@ -21,7 +21,7 @@ enum DeviceApi {
   DeviceCredentialsGetApi = '/api/device/credentials/get/',
   DeviceDeletedApi = '/api/device/del/',
   DeviceLabelsApi = '/api/device/labels',
-
+  DevicesWithEntityRelationApi = '/api/device/listWithEntityRelation',
   // 设备下发数据
   DeviceIssueListWithPagerApi = '/api/device/issue/list',
   DeviceIssueCreateApi = '/api/device/issue/create',
@@ -34,6 +34,10 @@ export const listDeviceWithPageApi = (params: DeviceParams) =>
 // 全量查询
 export const listAllDevices = (params: DeviceParams) =>
   defHttp.post<DeviceListAllResultModel>({ url: DeviceApi.DeviceListAllApi, params });
+
+// 查询某实体下资产列表
+export const listDevicesWithEntityRelation = (params: DeviceWithEntityRelationSearchParams) =>
+  defHttp.post<DeviceItem[]>({ url: DeviceApi.DevicesWithEntityRelationApi, params });
 
 export const getDeviceApi = (deviceId: string) =>
   defHttp.get<DeviceItem>({ url: DeviceApi.DeviceOneGetApi + deviceId });
@@ -50,7 +54,6 @@ export const delDeviceApi = (deviceId: string) =>
 
 export const listDeviceLabels = () =>
   defHttp.get<string>({ url: DeviceApi.DeviceLabelsApi });
-
 
 // 分页查询设备
 export const listIssuePagerApi = (params: DeviceIssueSearchParams) =>

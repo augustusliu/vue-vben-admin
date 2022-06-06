@@ -134,7 +134,6 @@
         loading.value = true;
          if(!record.syncAsset){
            new ModelSyncAssetRequest().loadModel(record.id, closeLoading);
-           await reload();
          }else{
            useMessage().createMessage.error('该模型资产已同步');
          }
@@ -142,6 +141,7 @@
 
       const closeLoading = () => {
         loading.value = false;
+        reload();
       }
 
       return {registerTable, registerDrawer, uploadModelApi, handleUploadChange, acceptArray, handleEdit,

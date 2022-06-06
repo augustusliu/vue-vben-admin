@@ -21,6 +21,12 @@ export type DeviceIssueSearchParams = BasicPageParams & {
   entityType?: string;
 };
 
+export type DeviceWithEntityRelationSearchParams = BasicPageParams &{
+  entityId: number;
+  entityType: string;
+  deviceName?: string;
+  bounded?: boolean;
+}
 
 export interface DeviceItem {
   id: number;

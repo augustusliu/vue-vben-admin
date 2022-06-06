@@ -6,6 +6,8 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import {ImportAssetItem} from "/@/api/things/common/model/commonModel";
 import {importAssetsByModel} from "/@/api/things/common/commonApi";
 
+const MODEL_LOCAL_PATH = '/models/electric/';
+const IS_LOCAL = true;
 export class ModelSyncAssetRequest{
 
    private modelLoader: GLTFLoader;
@@ -20,7 +22,8 @@ export class ModelSyncAssetRequest{
    public loadModel(modelId:number, closeLoadCallback){
      getModelInfoApi(modelId).then((modelInfo) => {
        if(modelInfo){
-         this.__remoteLoadModel(modelId, modelInfo.modelPath, closeLoadCallback);
+         let modelPath = IS_LOCAL? MODEL_LOCAL_PATH + modelInfo.modelPath: this.pathPrefix + modelInfo.modelPath
+         this.__remoteLoadModel(modelId, modelPath, closeLoadCallback);
        }else{
          useMessage().createMessage.error('模型不存在');
        }
@@ -28,9 +31,10 @@ export class ModelSyncAssetRequest{
    }
 
    // 远程加载模型
-   private __remoteLoadModel(modelId:number, modelFileId: string, closeLoadCallback: any){
+   private __remoteLoadModel(modelId:number, modelPath: string, closeLoadCallback: any){
      const assets: ImportAssetItem[] = [];
-     this.modelLoader.load(this.pathPrefix + modelFileId,
+
+     this.modelLoader.load(modelPath,
        (model) => {
           if(model){
             model.scene.traverse( child=> {

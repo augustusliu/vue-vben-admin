@@ -1,8 +1,7 @@
 <template>
   <ThreeModelHeader/>
   <div class="h-full w-full childModelContainer">
-  <div ref="thingsChildModelContainerRef" class="threeModelContainer"></div>
-
+  <canvas ref="thingsChildModelContainerRef" class="threeModelContainer"></canvas>
     <Row style="height: 100%; margin-top: 50px;">
       <Col span="8">
         <div class="modelInfoContainer">
@@ -38,7 +37,8 @@
   import {defineComponent, nextTick, onBeforeUnmount, onMounted, Ref, ref} from "vue";
   import {Progress, Row, Col} from 'ant-design-vue';
   import ThreeModelHeader from "./ThreeModelHeader.vue";
-  import {digitalTwinScene} from "/@/views/3d/ThingsScene";
+  // import {digitalTwinScene} from "/@/views/3d/ThingsScene";
+  import { ThingsGuoluScene } from '/@/badylon/ThingsGuoluScene';
   import {useRoute} from "vue-router";
   import {getAssetApi} from "/@/api/things/asset/assetApi";
   import {Description, useDescription} from "/@/components/Description";
@@ -62,8 +62,8 @@
       // 进度条变量
       const progressLoadSuccess = ref(true);
       const modelProgressPercentRef = ref(0);
-      const thingsChildModelContainerRef = ref() as Ref<HTMLElement>; //容器
-
+      const thingsChildModelContainerRef = ref() as Ref<HTMLCanvasElement>; //容器
+      const thingsGuoluScene = ref() as Ref<ThingsGuoluScene>;
       const progressCallback = (progress) => {
         modelProgressPercentRef.value = progress;
         if (modelProgressPercentRef.value === 100) {
@@ -78,7 +78,6 @@
        }
        assetInfoRef.value = asset;
        assetIsLoaded.value = true;
-       console.log(assetInfoRef.value);
       }
 
       const [registerAssetInfo] = useDescription({
@@ -93,26 +92,28 @@
         if (!thingsChildModelContainerRef.value) {
           return;
         }
-        await loadAssetInfo();
-        digitalTwinScene.init(thingsChildModelContainerRef.value, {
-          cameraX: 18,
-          cameraY: 42,
-          cameraZ: 0,
-          cameraFov: 65,
-          cameraNear: 0.1,
-          cameraFar: 1000,
-          canControls: true,
-          sceneBackTransport: true,
-        }, progressCallback, null);
 
-        digitalTwinScene.loadGLTFModel(childModelMap.get(childModel));
+        thingsGuoluScene.value = new ThingsGuoluScene(thingsChildModelContainerRef.value, progressCallback);
+        // await loadAssetInfo();
+        // digitalTwinScene.init(thingsChildModelContainerRef.value, {
+        //   cameraX: 18,
+        //   cameraY: 42,
+        //   cameraZ: 0,
+        //   cameraFov: 65,
+        //   cameraNear: 0.1,
+        //   cameraFar: 1000,
+        //   canControls: true,
+        //   sceneBackTransport: true,
+        // }, progressCallback, null);
+        //
+        // digitalTwinScene.loadGLTFModel(childModelMap.get(childModel));
       }
 
 
       async function destroyModel() {
-        if (digitalTwinScene) {
-          digitalTwinScene.disposeSceneObjs();
-        }
+        // if (digitalTwinScene) {
+        //   digitalTwinScene.disposeSceneObjs();
+        // }
       }
 
       onMounted(initChildContainer);
@@ -166,11 +167,6 @@
     left: 0;
     top:0;
     position: fixed;
-    canvas{
-      width: 100% !important;
-      height: 100% !important;
-      /*background-image: linear-gradient(rgb(0 0 0), rgb(1,23,92));*/
-    }
   }
 
 </style>

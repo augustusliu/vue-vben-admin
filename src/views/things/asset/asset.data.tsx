@@ -36,6 +36,13 @@ export const assetColumn: BasicColumn[] = [
     customRender: ({ record }) => formatLabels(record.assetLabels),
   },
   {
+    title: '来源',
+    dataIndex: 'isModel',
+    customRender: ({ record }) => {
+      return record.isModel ? <Tag color="lime">模型同步</Tag> : <Tag color="cyan">用户创建</Tag>;
+    },
+  },
+  {
     title: '描述',
     dataIndex: 'description',
   },
@@ -119,19 +126,19 @@ export const searchFormSchema: FormSchema[] = [
     field: 'name',
     label: '资产名称',
     component: 'Input',
-    colProps: { span: 8 },
+    colProps: { span: 6 },
   },
   {
     field: 'code',
     label: '资产编号',
     component: 'Input',
-    colProps: { span: 8 },
+    colProps: { span: 6 },
   },
   {
     field: 'label',
     label: '资产标签',
     component: 'Input',
-    colProps: { span: 8 },
+    colProps: { span: 6 },
   },
 ];
 
@@ -139,6 +146,13 @@ export const createOrUpdateFormSchema: FormSchema[] = [
   {
     field: 'id',
     label: '资产id',
+    component: 'Input',
+    colProps: { span: 20 },
+    show: false,
+  },
+  {
+    field: 'isModel',
+    label: '模型类型',
     component: 'Input',
     colProps: { span: 20 },
     show: false,

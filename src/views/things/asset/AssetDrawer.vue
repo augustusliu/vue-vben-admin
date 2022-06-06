@@ -26,7 +26,7 @@
     setup(_, { emit }) {
       const isUpdate = ref(true);
 
-      const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
+      const [registerForm, { resetFields, updateSchema, setFieldsValue, validate }] = useForm({
         labelWidth: 90,
         schemas: createOrUpdateFormSchema,
         showActionButtonGroup: false,
@@ -40,9 +40,25 @@
           await setFieldsValue({
             ...data.record,
           });
+          // 获取该资产类型，如果为模型同步类型，则不可编辑其名称，编号
+          if(data.record.isModel) {
+            await updateSchema({
+              field: 'name',
+              componentProps: {
+               disabled: true
+              },
+            });
+            await updateSchema({
+              field: 'code',
+              componentProps: {
+                disabled: true
+              },
+            });
+          }
         }
         setDrawerProps({ loading: false, confirmLoading: false });
       });
+
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增资产' : '编辑资产'));
 
@@ -64,7 +80,6 @@
           setDrawerProps({ confirmLoading: false });
         }
       }
-
       return {
         registerDrawer,
         registerForm,

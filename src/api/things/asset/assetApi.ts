@@ -13,22 +13,25 @@ import {
 } from '/@/api/things/asset/model/attributeModel';
 
 enum AssetApi {
-  // 资产列表信息
+  // 资产列表分页查询
   AssetListByPager = '/api/asset/listByPager',
-  // 资产详情信息
+  // 资产详情信息查询
   AssetGet = '/api/asset/get/',
-  // 资产下分页属性列表
+  // 资产下所有属性信息分页查询
   AssetAttributeListByPager = '/api/asset/attr/listWithPager',
+  // 查询全部资产
+  AssetListAllApi = '/api/asset/listAll',
+  // 查询资产全部名称
+  AssetListAllNamesApi = '/api/asset/listAllNames',
+  // 资产所有名称分页查询
+  AssetListAllNamesByPagerApi = '/api/asset/listNamesByPager',
   // 为资产添加一个属性信息
   AssetAddOneAttribute = '/api/asset/attr/one/',
   // 添加编辑资产
   AssetAddOrUpdateApi = '/api/asset/addOrUpdate',
-  AssetListAllApi = '/api/asset/listAll',
-  AssetListAllNamesApi = '/api/asset/listAllNames',
-  AssetListAllNamesByPagerApi = '/api/asset/listNamesByPager',
+  // 删除资产
   AssetDelApi = '/api/asset/del/',
-
-  // 获取当前管理员旗下的3d模型对应的资产
+  // 获取资产对应的模型
   AssetsOfThreeModelApi = '/api/asset/list3d',
 }
 
@@ -62,7 +65,6 @@ export const listAssetAll = () =>
 // 查询当前用户全部资产
 export const listAssetAllThreeModelsAssets = (params: ModelAssetSearch) =>
   defHttp.post<AssetListItem[]>({ url: AssetApi.AssetsOfThreeModelApi, params})
-
 
 // 查询全部名称
 export const listAssetAllNames = () =>

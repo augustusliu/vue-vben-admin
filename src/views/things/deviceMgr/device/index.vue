@@ -45,7 +45,6 @@
         <DeviceCardContentSlot :dataInfo="record"/>
       </template>
 
-
       <!--   4、为CardList定义事件插槽  ， # 是v-slot的简写, 子组件传递的参数都会放入到data中 -->
       <template #cardAction="{ record }">
         <Row style="height: 30px; border-top: 1px solid #f0f0f0">
@@ -67,7 +66,6 @@
           </Col>
         </Row>
       </template>
-
 
     </CardsTable>
     <DeviceDrawer @register="registerDrawer" @success="handleSuccess" />

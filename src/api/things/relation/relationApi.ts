@@ -12,6 +12,7 @@ enum RelationApi {
   RelationDelApi = '/api/relation/del/',
   RelationEntitiesListApi = '/api/entity/list',
   RelationEntityInfoApi = '/api/relation/get',
+  RelationUnboundApi = '/api/relation/unbound',
 }
 
 // 查询关系图谱
@@ -21,6 +22,10 @@ export const relationAtlas = (params: any) =>
 // 编辑或者更新关系
 export const relationAddOrUpdate = (params: any) =>
   defHttp.post<number>({ url: RelationApi.RelationAddOrUpdateApi, params });
+
+// 编辑或者更新关系
+export const relationUnbound = (params: any) =>
+  defHttp.post<number>({ url: RelationApi.RelationUnboundApi, params });
 
 // 删除关系
 export const relationDel = (relationId: number) =>
