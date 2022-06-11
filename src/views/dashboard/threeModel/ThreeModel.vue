@@ -14,7 +14,7 @@
     <LabelEntityPieMetric entityId="1527710747740426241" entityType="ASSET" class="leftCard1"/>
   </div>
   <div class="bottomContentContainer">
-    <AssetRealtimeLine entityId="1527710747740426241" entityType="ASSET"/>
+    <AssetRealtimeLine entityId="1533547983044182018" entityType="ASSET"/>
   </div>
 
   <div class="rightContentContainer">
@@ -41,7 +41,6 @@
   import DeviceLatestRtAlarmList
     from "/@/views/dashboard/threeModel/components/DeviceLatestRtAlarmList.vue";
   import ThreeModelHeader from "/@/views/dashboard/threeModel/ThreeModelHeader.vue";
-  import {listAssetAllThreeModelsAssets} from "/@/api/things/asset/assetApi";
   import {ThingsDashboardScene} from "/@/badylon/ThingsDashboardScene";
   import {AssetListItem} from "/@/api/things/asset/model/assetModel";
 
@@ -49,7 +48,7 @@
     name: '3DModel',
     components: { ThreeModelHeader, Progress, Row, Col,Button, Things3DModelCounter, AssetAlarmHistogramMetric,
       LabelEntityPieMetric, AssetRealtimeLine, DeviceTelemetryRtList, DeviceLatestRtAlarmList},
-    setup(){
+    setup: function () {
       const tmContainerRef = ref() as Ref<HTMLCanvasElement>; //容器
       const modelProgressPercentRef = ref(0);
       const progressLoadSuccess = ref(true);
@@ -57,28 +56,26 @@
       const userStore = useUserStore();
       const threeMainModelPath = userStore.getUserInfo.threeModelPath as string;
       const thingsDashboardSceneRef = ref() as Ref<ThingsDashboardScene>;
+
       // 缓存当前模型资产的数据
       let assetsOfModelMap = new Map<string, AssetListItem>();
 
-      if(!threeMainModelPath){
-        // if(digitalTwinScene){
-        //   digitalTwinScene.stopAnimate();
-        // }
+      if (!threeMainModelPath) {
         go(PageEnum.BASE_HOME);
       }
 
       // 进度条回告
       const progressCallback = (progress) => {
         modelProgressPercentRef.value = progress;
-        if(modelProgressPercentRef.value === 100){
+        if (modelProgressPercentRef.value === 100) {
           progressLoadSuccess.value = false;
         }
       }
 
       const clickCallback = (childModel) => {
-        if(childModel){
+        if (childModel) {
           // digitalTwinScene.stopAnimate();
-          go('/dt_child/' + childModel.childModelPath +"/" + childModel.thingsAssetId);
+          go('/dt_child/' + childModel.childModelPath + "/" + childModel.thingsAssetId);
         }
       }
 
@@ -97,11 +94,17 @@
           progressCallback: progressCallback,
           loadSuccessCallback: undefined,
         });
+
+        window.addEventListener("resize", function () {
+          if (thingsDashboardSceneRef.value.engine) {
+            thingsDashboardSceneRef.value.engine.resize();
+          }
+        });
       }
 
-      async function destroyModels(){
-        if(thingsDashboardSceneRef.value){
-          thingsDashboardSceneRef.value.Destory();
+      async function destroyModels() {
+        if (thingsDashboardSceneRef.value) {
+          thingsDashboardSceneRef.value.disposeScene();
         }
       }
 

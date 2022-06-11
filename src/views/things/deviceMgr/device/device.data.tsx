@@ -8,7 +8,6 @@ import {SvgIcon} from "/@/components/Icon";
 import {indexColor} from "/@/views/things/common/constant/ColorRandom";
 import {listTemplateWithPager} from "/@/api/things/asset/templateApi";
 import {listEntityGroupByPager} from "/@/api/things/entityGroup/entityGroupApi";
-import {listAssetNamesByPager} from "/@/api/things/asset/assetApi";
 import {listDictionaryDeviceLabels} from "/@/api/things/dictionary/dictionaryApi";
 
 export const deviceTableColumn: BasicColumn[] = [
@@ -31,6 +30,13 @@ export const deviceTableColumn: BasicColumn[] = [
     width: 50,
     customRender: ({ record }) => {
       return h(SvgIcon, { name: record.icon});
+    },
+  },
+  {
+    title: '发布状态',
+    dataIndex: 'published',
+    customRender: ({ record }) => {
+      return record.published ? <Tag color="lime">已发布</Tag> : <Tag color="cyan">未发布</Tag>;
     },
   },
   {
@@ -61,11 +67,6 @@ export const deviceTableColumn: BasicColumn[] = [
     dataIndex: 'description',
   },
   {
-    title: '所属资产id',
-    dataIndex: 'belongToAsset',
-    defaultHidden: true,
-  },
-  {
     title: '创建时间',
     dataIndex: 'createdTime',
     width:180,
@@ -88,19 +89,31 @@ export const deviceSearchScheme: FormSchema[] = [
     field: 'name',
     label: '设备名称',
     component: 'Input',
-    colProps: { span: 8 },
+    colProps: { span: 6 },
   },
   {
     field: 'code',
     label: '设备编号',
     component: 'Input',
-    colProps: { span: 8 },
+    colProps: { span: 6 },
   },
   {
     field: 'label',
     label: '标签',
     component: 'Input',
-    colProps: { span: 8 },
+    colProps: { span: 6 },
+  },
+  {
+    field: 'published',
+    label: '发布状态',
+    component: 'Select',
+    componentProps: {
+      options: [
+        { label: '已发布', value: true },
+        { label: '未发布', value: false },
+      ],
+    },
+    colProps: { span: 6 },
   },
   {
     field: 'isGateway',
@@ -112,7 +125,7 @@ export const deviceSearchScheme: FormSchema[] = [
         { label: '普通设备', value: false },
       ],
     },
-    colProps: { span: 8 },
+    colProps: { span: 6 },
   },
   {
     label: '传输协议',
@@ -125,7 +138,7 @@ export const deviceSearchScheme: FormSchema[] = [
         { label: 'CoAP', value: 'CoAP' },
       ],
     },
-    colProps: { span: 8 },
+    colProps: { span: 6 },
   },
 ];
 
@@ -198,28 +211,6 @@ export const createOrUpdateFormSchema: FormSchema[] = [
       ],
     },
     colProps: { span: 12 },
-  },
-  {
-    field: 'belongToAsset',
-    label: '隶属资产',
-    component: 'SingleSearchSelect',
-    colProps: { span: 12 },
-    componentProps: {
-      placeholder: '搜索相关资产',
-      api: listAssetNamesByPager,
-      params: {
-        name: '',
-        disabled: false,
-      },
-      resultField: 'items',
-      // use name as label
-      labelField: 'name',
-      // use id as value
-      valueField: 'id',
-      immediate: false,
-      showSearch: true,
-    },
-
   },
   {
     field: 'isGateway',

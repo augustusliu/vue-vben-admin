@@ -17,7 +17,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { createOrUpdateFormSchema } from './device.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { addOrUpdateDeviceApi, listDeviceLabels } from '/@/api/things/device/deviceApi';
+  import { addOrUpdateDeviceApi } from '/@/api/things/device/deviceApi';
 
   export default defineComponent({
     name: 'DeviceAddOrUpdateDrawer',
@@ -43,7 +43,6 @@
           });
         }
         setDrawerProps({ confirmLoading: false, loading: false });
-
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增设备' : '编辑设备'));
@@ -92,16 +91,16 @@
           },
         });
 
-        await updateSchema({
-          field: 'belongToAsset',
-          componentProps: {
-            immediate: true,
-            params: {
-              id: record.belongToAsset,
-              disabled: false,
-            },
-          },
-        });
+        // await updateSchema({
+        //   field: 'belongToAsset',
+        //   componentProps: {
+        //     immediate: true,
+        //     params: {
+        //       id: record.belongToAsset,
+        //       disabled: false,
+        //     },
+        //   },
+        // });
 
         await updateSchema({
           field: 'deviceTemplateId',

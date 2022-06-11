@@ -39,7 +39,6 @@ import tuoxiaoSmoke from '/@/assets/bebula/txSmokeRightDown.json';
 
 // 保存动画的map,方便模型获取
 const nebulaAnimateJsonMap = new Map();
-
 nebulaAnimateJsonMap.set("yancongSmoke", yancongSmoke);
 nebulaAnimateJsonMap.set("glFireUp", glFireUp);
 nebulaAnimateJsonMap.set("glSmokeRight", glSmokeRight);
@@ -217,7 +216,6 @@ export class ThingsScene{
       this.spotLight.shadow.camera.near = 400;
       this.scene.add(this.spotLight);
     }
-
   }
 
   private initObjControl(){
@@ -227,9 +225,6 @@ export class ThingsScene{
     if(this.options?.openAutoRotate){
       this.controls.autoRotate = true;
     }
-
-    // defaultThreeContext.controls.maxPolarAngle = 0;
-    // defaultThreeContext.controls.addEventListener('change', renderAnimate);
   }
 
 
@@ -260,7 +255,6 @@ export class ThingsScene{
   public loadGltfBatch(paths:any[]){
 
     let successCount: number = 0;
-
     paths.forEach((path, idx) => {
       this.gltfLoader.load(path,
         (model) => {
@@ -376,7 +370,6 @@ export class ThingsScene{
 
         // 缓存带标签的模型-- 修改，只有存在子模型才可以点击
         if(child.userData && child.userData.childModel){
-          // if(child.userData.canclick && child.userData.canclick === 'yes'){
           const childModelPath = child.userData.childModel;
           if(!childModelPath){
             return ;
@@ -569,7 +562,6 @@ export class ThingsScene{
     }
   }
 }
-
 
 // 全局场景
 export const digitalTwinScene = new ThingsScene();

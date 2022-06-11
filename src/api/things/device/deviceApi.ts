@@ -26,6 +26,8 @@ enum DeviceApi {
   DeviceIssueListWithPagerApi = '/api/device/issue/list',
   DeviceIssueCreateApi = '/api/device/issue/create',
   DeviceIssueBatchCreateApi = '/api/device/batchIssue/create',
+  DevicePublishApi = "/api/device/publish/",
+  DeviceUnPublishApi = "/api/device/unpublish/",
 }
 
 // 分页查询
@@ -68,3 +70,8 @@ export const batchAddIssueApi = (params: DeviceIssueCreateParam[]) =>
   defHttp.post<number>({ url: DeviceApi.DeviceIssueBatchCreateApi, params });
 
 
+// 发布和停止发布设备
+export const publishedDeviceApi = (deviceId: string) =>
+  defHttp.get<number>({ url: DeviceApi.DevicePublishApi + deviceId});
+export const unPublishedDeviceApi = (deviceId: string) =>
+  defHttp.get<number>({ url: DeviceApi.DeviceUnPublishApi + deviceId});

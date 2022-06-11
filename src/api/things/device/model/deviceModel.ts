@@ -42,6 +42,7 @@ export interface DeviceItem {
   userId: number;
   modifiedTime: string;
   createdTime: string;
+  published: boolean;
 }
 
 export interface DeviceAddParam {
@@ -56,6 +57,7 @@ export interface DeviceAddParam {
   description: string;
   deviceTemplateId: number;
   deviceGroupId:number;
+  published: boolean;
 }
 
 // 设备下发信息的创建
@@ -86,6 +88,7 @@ export interface DeviceIssueListItem {
   creatorName: string;
   keyName: string;
   entityName: string;
+  published: boolean;
 }
 
 

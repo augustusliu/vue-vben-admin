@@ -71,9 +71,11 @@
     "xlsx": "^0.17.0"
   },
   "devDependencies": {
-    "@babylonjs/core": "^5.8.2",
-    "@babylonjs/loaders": "^5.8.2",
-    "@babylonjs/materials": "^5.8.2",
+    "@babylonjs/core": "^5.10.0",
+    "@babylonjs/gui": "^5.10.0",
+    "@babylonjs/inspector": "^5.10.0",
+    "@babylonjs/loaders": "^5.10.0",
+    "@babylonjs/materials": "^5.10.0",
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
     "@iconify/json": "^1.1.382",

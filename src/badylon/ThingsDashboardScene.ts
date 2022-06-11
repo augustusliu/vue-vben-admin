@@ -6,15 +6,17 @@ import {
   ArcRotateCamera,
   Vector3,
   HemisphericLight,
-  Color4
+  Color4, AbstractMesh, Color3
 } from '@babylonjs/core';
-import {Light} from "@babylonjs/core/Lights/light";
-import {AssetListItem} from "/@/api/things/asset/model/assetModel";
-import {searchModelList} from "/@/api/things/baseData/modelApi";
+import '@babylonjs/inspector';
+import * as GUI from '@babylonjs/gui/2D';
+import { Light } from "@babylonjs/core/Lights/light";
+import { AssetListItem } from "/@/api/things/asset/model/assetModel";
+import { searchModelList } from "/@/api/things/baseData/modelApi";
 import { ModelItem } from "/@/api/things/baseData/model/threeModel";
-import {listAssetAllThreeModelsAssets} from "/@/api/things/asset/assetApi";
-import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
-import {CommonParticlesType, ThingsCommonParticles} from "/@/badylon/tools/ThingsCommonParticles";
+import { listAssetAllThreeModelsAssets } from "/@/api/things/asset/assetApi";
+import { CommonParticlesType, ThingsCommonParticles } from "/@/badylon/tools/ThingsCommonParticles";
+import {applyLeaveTransition} from "echarts/types/src/animation/customGraphicTransition";
 
 // options
 export interface ThingsDashboardSceneOpts{
@@ -31,7 +33,7 @@ export interface ThingsDashboardSceneOpts{
 export class ThingsDashboardScene extends ThingsModelAbstractScene{
 
   private assetsOfModelMap: Map<string, AssetListItem> | null; // 资产列表
-  private engine: Engine | null | undefined;
+  public engine: Engine | null | undefined;
   private readonly canvas: HTMLCanvasElement | null;
   private camera: Camera | null | undefined;
   private light: Light | null | undefined;
@@ -49,6 +51,7 @@ export class ThingsDashboardScene extends ThingsModelAbstractScene{
   __initScene(){
       this.engine = new Engine(this.canvas, true);
       this.scene = new Scene(this.engine);
+      this.scene.ambientColor = new Color3(1, 1, 1);
       //如果背景颜色透明，则粒子不显示
       this.scene.clearColor = new Color4(0.1, 0.1, 0.2, 0.3);
 
@@ -62,7 +65,7 @@ export class ThingsDashboardScene extends ThingsModelAbstractScene{
       this.light = new HemisphericLight('plight', new Vector3(0, 0, 200), this.scene);
       // 光源强度
       this.light.intensity = 1.6;
-      // this.light.diffuse = new Color3(1,1,1);
+      this.light.diffuse = new Color3(1,1,1);
       // this.light.specular = new Color3(1,1,1);
       this.light.setEnabled(true);
     }
@@ -128,7 +131,7 @@ export class ThingsDashboardScene extends ThingsModelAbstractScene{
 
     }
 
-    public loadSuccessCallback(meshes: AbstractMesh[]){
+     public async loadSuccessCallback(meshes: AbstractMesh[]){
       if(this.opts.loadSuccessCallback){
         this.opts.loadSuccessCallback(meshes);
       }
@@ -140,18 +143,69 @@ export class ThingsDashboardScene extends ThingsModelAbstractScene{
         return;
       }
 
+      // 烟冲
       const yancongEmitterMesh = this.scene?.getLastMeshByID("ycSmokeEmitter");
       if(yancongEmitterMesh){
-        this.__buildMeshSmoke(yancongEmitterMesh);
+
+        await this.__buildMeshSmoke(yancongEmitterMesh);
       }
 
+      // 冷却塔
       const cpEmitterMesh = this.scene?.getLastMeshByID("coolpowerEmitter");
       if(cpEmitterMesh){
-        this.__buildMeshSmoke(cpEmitterMesh);
+        await this.__buildMeshSmoke(cpEmitterMesh);
       }
+
+       meshes.forEach(item => {
+         if(item.metadata && item.metadata.gltf && item.metadata.gltf.extras && item.metadata.gltf.extras.childModel){
+           this.__addLabelForMesh(item, item.name)
+         }
+       })
     }
 
+    // 为mesh添加文字标注
+    __addLabelForMesh(mesh: AbstractMesh, labelText: string){
+      if(this.scene){
 
+        let adt = GUI.AdvancedDynamicTexture.CreateFullscreenUI(labelText);
+        let rect = new GUI.Rectangle();
+        rect.width = "50px";
+        rect.height = "18px";
+        rect.cornerRadius = 5;
+        rect.color = "Orange";
+        rect.thickness = 2;
+        rect.background = "green";
+        rect.alpha = 0.5;
+        rect.color ="white";
+        rect.fontSize = 10;
+        adt.addControl(rect);
+        rect.linkWithMesh(mesh);
+        rect.linkOffsetY = -30;
+
+        let textLabel = new GUI.TextBlock();
+        textLabel.text = labelText;
+        rect.addControl(textLabel);
+
+
+        let target = new GUI.Ellipse();
+        target.width = "1px";
+        target.height = "1px";
+        target.color = "Orange";
+        target.thickness = 1;
+        target.background = "green";
+        adt.addControl(target);
+        target.linkWithMesh(mesh);
+
+        let line = new GUI.Line();
+        line.lineWidth = 1.4;
+        line.color = "Orange";
+        line.y2 = 30;
+        line.linkOffsetY = -30;
+        adt.addControl(line);
+        line.linkWithMesh(mesh);
+        line.connectedControl = rect;
+      }
+    }
 
 
     public Destory(){

@@ -23,6 +23,18 @@
               onClick: showCredentials.bind(null, record),
             },
             {
+              icon: 'ant-design:arrow-up-outlined',
+              tooltip: '发布',
+              onClick: handlePublished.bind(null, record),
+              ifShow: !record.published,
+            },
+            {
+              icon: 'ant-design:arrow-down-outlined',
+              tooltip: '取消发布',
+              onClick: handleUnPublished.bind(null, record),
+              ifShow: record.published,
+            },
+            {
               icon: 'clarity:note-edit-line',
               tooltip: '编辑设备信息',
               onClick: handleEdit.bind(null, record),
@@ -57,7 +69,6 @@
           <Col :span="5" style="text-align: center; line-height: 30px; border-right: 1px solid #f0f0f0;">
             <LockOutlined style="color:#3076c6" :onClick="showCredentials.bind(null, record)"/>
           </Col>
-
           <Col :span="5" style="text-align: center;line-height: 30px; border-right: 1px solid #f0f0f0;">
             <EditOutlined style="color:#3076c6" :onClick="handleEdit.bind(null, record)"/>
           </Col>
@@ -81,7 +92,11 @@
   import { useDrawer } from '/@/components/Drawer';
   import DeviceCardContentSlot from './DeviceCardContentSlot.vue';
   import { deviceTableColumn, deviceSearchScheme } from "./device.data";
-  import { listDeviceWithPageApi, delDeviceApi } from '/@/api/things/device/deviceApi';
+  import {
+    listDeviceWithPageApi,
+    delDeviceApi,
+    publishedDeviceApi, unPublishedDeviceApi
+  } from '/@/api/things/device/deviceApi';
   import DeviceDrawer from "./DeviceDrawer.vue";
   import CredentialsModel from "./CredentialsModel.vue";
   import { useModal } from "/@/components/Modal";
@@ -119,7 +134,7 @@
         showIndexColumn: true,
         canResize: true,
         actionColumn: {
-          width: 200,
+          width: 260,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
@@ -140,9 +155,9 @@
         });
       }
       // 删除操作
-      function handleDelete(record: Recordable) {
-        delDeviceApi(record.id);
-        reload();
+      async function handleDelete(record: Recordable) {
+        await delDeviceApi(record.id);
+        await reload();
       }
 
       function showCredentials(record: Recordable){
@@ -157,8 +172,17 @@
       function handleMonitor(record: Recordable){
         go('/device_monitor/' + record.id );
       }
-      function handleSuccess() {
-        reload()
+
+      async function handlePublished(record: Recordable){
+        await publishedDeviceApi(record.id);
+        await reload();
+      }
+      async function handleUnPublished(record: Recordable){
+        await unPublishedDeviceApi(record.id);
+        await reload();
+      }
+      async function handleSuccess() {
+        await reload()
       }
 
       return {
@@ -173,6 +197,8 @@
         showCredentials,
         handleSuccess,
         handleMonitor,
+        handlePublished,
+        handleUnPublished,
       };
     },
   });

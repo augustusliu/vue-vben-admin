@@ -8,8 +8,7 @@
             style="width: 140px"
             :options = "optionsRef"
             :onChange="deviceBoundStateChanged"/>
-            <a-input style="width: 200px"
-                    size="small"
+            <a-input style="width: 200px" size="small"
                    placeholder="设备查询"
                    enterButton="查询"
                    :onChange="searchTextChange"
@@ -22,13 +21,11 @@
                 icon: 'ant-design:link-outlined',
                 onClick: handleBound.bind(null, record),
                 tooltip:'绑定',
-                disabled: !currentSelectBounded.value
               },
               {
                 icon: 'ant-design:disconnect-outlined',
                 onClick: handleUnBound.bind(null, record),
                 tooltip:'解绑',
-                disabled: currentSelectBounded.value
               },
             ]"
           />
@@ -85,11 +82,6 @@
         bordered: true,
         showIndexColumn: true,
         canResize: false,
-        // rowSelection: currentSelectBounded.value ? undefined : {
-        //   type: 'checkbox',
-        //   onSelect: onTableSelectChange,
-        //   onSelectAll: onTableSelectAllChange,
-        // },
         rowKey: 'id',
         actionColumn: {
           width: 80,
