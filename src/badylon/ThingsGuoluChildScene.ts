@@ -1,6 +1,3 @@
-
-// 锅炉场景
-import {ThingsModelAbstractScene} from "/@/badylon/ThingsModelAbstractScene";
 import {
   ArcRotateCamera,
   Camera,
@@ -14,16 +11,24 @@ import {Light} from "@babylonjs/core/Lights/light";
 import "./cannon.js";
 import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
 import {ThingsCommonPipeFlowTexture} from "/@/badylon/tools/ThingsCommonPipeFlowTexture";
+import {ThingsChildModelScene} from "/@/badylon/ThingsChildModelScene";
 
-export class ThingsGuoluScene  extends ThingsModelAbstractScene{
+export class ThingsGuoluChildScene extends ThingsChildModelScene{
 
   private engine: Engine | null | undefined;
   private readonly canvas: HTMLCanvasElement | null;
   private camera: Camera | null | undefined;
   private light: Light | null | undefined;
-  constructor(canvas: HTMLCanvasElement, progressCallback: Function) {
+  private readonly parentAssetCode: string;
+  private readonly modelName: string;
+  constructor(canvas: HTMLCanvasElement,
+              progressCallback: Function,
+              parentAssetCode: string,
+              modelName: string) {
     super(progressCallback);
     this.canvas = canvas;
+    this.parentAssetCode = parentAssetCode;
+    this.modelName = modelName;
     this.__initScene();
   }
 
@@ -42,12 +47,23 @@ export class ThingsGuoluScene  extends ThingsModelAbstractScene{
     light.intensity = 0.3; // 强度
     this.light?.setEnabled(true);
 
-    const detailNames = new Set<string>();
-    detailNames.add('glDetail.glb');
-    this.modelNames = detailNames;
-    this.LoadModel();
+    this.LoadChildModel(this.parentAssetCode, this.modelName);
   }
 
+
+  public disposeScene(){
+    this.engine?.dispose();
+    this.scene?.dispose();
+    this.camera?.dispose();
+    this.light?.dispose();
+    this.modelInfo = null;
+    this.modelNames = null;
+    this.progressCallback = null;
+    this.engine = null;
+    this.scene = null;
+    this.camera = null;
+    this.light = null;
+  }
 
   public loadSuccessCallback(meshes: AbstractMesh[]){
     if(!meshes || meshes.length <= 0){
@@ -86,5 +102,14 @@ export class ThingsGuoluScene  extends ThingsModelAbstractScene{
     }
   }
 
+  public clickMeshCallback(_mesh: AbstractMesh) {
 
+  }
+  public getAssetName(_assetCode: string) {
+  }
+
+  // 加载的模型对应的资产
+  assetsLoadSuccess(assets) {
+    console.log(assets);
+  }
 }

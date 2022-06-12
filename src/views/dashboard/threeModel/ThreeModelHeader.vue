@@ -22,7 +22,6 @@
   import {Row, Col, Button} from 'ant-design-vue';
   import {TimeUtil} from "/@/views/dashboard/threeModel/TimeUtil";
   import {useGo} from "/@/hooks/web/usePage";
-  import {digitalTwinScene} from "/@/views/3d/ThingsScene";
   import {PageEnum} from "/@/enums/pageEnum";
 
   export default defineComponent({
@@ -37,9 +36,6 @@
       }, 1000)
 
       function goHomePage(){
-        if(digitalTwinScene){
-          digitalTwinScene.stopAnimate();
-        }
         go(PageEnum.BASE_HOME);
       }
 

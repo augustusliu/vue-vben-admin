@@ -7,7 +7,7 @@ import {ImportAssetItem} from "/@/api/things/common/model/commonModel";
 import {importAssetsByModel} from "/@/api/things/common/commonApi";
 
 const MODEL_LOCAL_PATH = '/models/electric/';
-const IS_LOCAL = true;
+const IS_LOCAL = false;
 export class ModelSyncAssetRequest{
 
    private modelLoader: GLTFLoader;

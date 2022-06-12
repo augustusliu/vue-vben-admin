@@ -13,11 +13,11 @@
               tooltip: '查看资产详情',
               onClick: handleView.bind(null, record),
             },
-            // {
-            //   icon: 'ant-design:node-index-outlined',
-            //   tooltip: '资产关系图',
-            //   onClick: handleRelation.bind(null, record),
-            // },
+            {
+              icon: 'ant-design:box-plot-outlined',
+              tooltip: '绑定设备',
+              onClick: handleRelation.bind(null, record),
+            },
             {
               icon: 'ant-design:dot-chart-outlined',
               tooltip: '实时监控',
@@ -88,7 +88,7 @@
         showIndexColumn: false,
         canResize: false,
         actionColumn: {
-          width: 150,
+          width: 190,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },

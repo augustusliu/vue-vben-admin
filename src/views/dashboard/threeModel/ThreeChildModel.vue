@@ -3,7 +3,7 @@
   <div class="h-full w-full childModelContainer">
   <canvas ref="thingsChildModelContainerRef" class="threeModelContainer"></canvas>
     <Row style="height: 100%; margin-top: 50px;">
-      <Col span="8">
+      <Col span="7">
         <div class="modelInfoContainer">
           <div class="modelInfoHeader">基本信息</div>
           <Description @register="registerAssetInfo"
@@ -15,7 +15,7 @@
         </div>
       </Col>
 
-      <Col span="8" offset="8">
+      <Col span="7" offset="10">
         <div class="modelInfoContainer">
           <div class="modelInfoHeader">运行状态</div>
         </div>
@@ -37,15 +37,10 @@
   import {defineComponent, nextTick, onBeforeUnmount, onMounted, Ref, ref} from "vue";
   import {Progress, Row, Col} from 'ant-design-vue';
   import ThreeModelHeader from "./ThreeModelHeader.vue";
-  // import {digitalTwinScene} from "/@/views/3d/ThingsScene";
-  import { ThingsGuoluScene } from '/@/badylon/ThingsGuoluScene';
-  import {useRoute} from "vue-router";
-  import {getAssetApi} from "/@/api/things/asset/assetApi";
-  import {Description, useDescription} from "/@/components/Description";
-  import {modelAssetInfoScheme} from "/@/views/dashboard/threeModel/components/ChildModelAsset";
-  const childModelMap = new Map();
-  childModelMap.set('glDetail', 'models/electric/glDetail.glb');
-
+  import { ThingsGuoluChildScene } from '/@/badylon/ThingsGuoluChildScene';
+  import { useRoute } from "vue-router";
+  import { Description, useDescription} from "/@/components/Description";
+  import { modelAssetInfoScheme } from "/@/views/dashboard/threeModel/components/ChildModelAsset";
 
   export default defineComponent({
     name: 'ThreeChildModel',
@@ -54,7 +49,7 @@
 
       const route = useRoute();
       const childModel = ref(route.params?.id).value as string;
-      const thingsAssetId = ref(route.params?.aId).value as number;
+      const parentAssetCode = ref(route.params?.aId).value as string;
 
       const assetIsLoaded = ref(false);
       const assetInfoRef = ref();
@@ -63,21 +58,12 @@
       const progressLoadSuccess = ref(true);
       const modelProgressPercentRef = ref(0);
       const thingsChildModelContainerRef = ref() as Ref<HTMLCanvasElement>; //容器
-      const thingsGuoluScene = ref() as Ref<ThingsGuoluScene>;
+      const thingsGuoluChildSceneRef = ref() as Ref<ThingsGuoluChildScene>;
       const progressCallback = (progress) => {
         modelProgressPercentRef.value = progress;
         if (modelProgressPercentRef.value === 100) {
           progressLoadSuccess.value = false;
         }
-      }
-
-     async function loadAssetInfo(){
-       const asset = await getAssetApi(thingsAssetId);
-       if(!asset){
-         return;
-       }
-       assetInfoRef.value = asset;
-       assetIsLoaded.value = true;
       }
 
       const [registerAssetInfo] = useDescription({
@@ -93,27 +79,14 @@
           return;
         }
 
-        thingsGuoluScene.value = new ThingsGuoluScene(thingsChildModelContainerRef.value, progressCallback);
-        // await loadAssetInfo();
-        // digitalTwinScene.init(thingsChildModelContainerRef.value, {
-        //   cameraX: 18,
-        //   cameraY: 42,
-        //   cameraZ: 0,
-        //   cameraFov: 65,
-        //   cameraNear: 0.1,
-        //   cameraFar: 1000,
-        //   canControls: true,
-        //   sceneBackTransport: true,
-        // }, progressCallback, null);
-        //
-        // digitalTwinScene.loadGLTFModel(childModelMap.get(childModel));
+        thingsGuoluChildSceneRef.value = new ThingsGuoluChildScene(thingsChildModelContainerRef.value,
+          progressCallback, parentAssetCode, childModel);
       }
 
-
       async function destroyModel() {
-        // if (digitalTwinScene) {
-        //   digitalTwinScene.disposeSceneObjs();
-        // }
+        if (thingsGuoluChildSceneRef.value) {
+          thingsGuoluChildSceneRef.value.disposeScene();
+        }
       }
 
       onMounted(initChildContainer);

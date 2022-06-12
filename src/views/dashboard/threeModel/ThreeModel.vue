@@ -42,7 +42,6 @@
     from "/@/views/dashboard/threeModel/components/DeviceLatestRtAlarmList.vue";
   import ThreeModelHeader from "/@/views/dashboard/threeModel/ThreeModelHeader.vue";
   import {ThingsDashboardScene} from "/@/badylon/ThingsDashboardScene";
-  import {AssetListItem} from "/@/api/things/asset/model/assetModel";
 
   export default defineComponent({
     name: '3DModel',
@@ -57,12 +56,7 @@
       const threeMainModelPath = userStore.getUserInfo.threeModelPath as string;
       const thingsDashboardSceneRef = ref() as Ref<ThingsDashboardScene>;
 
-      // 缓存当前模型资产的数据
-      let assetsOfModelMap = new Map<string, AssetListItem>();
 
-      if (!threeMainModelPath) {
-        go(PageEnum.BASE_HOME);
-      }
 
       // 进度条回告
       const progressCallback = (progress) => {
@@ -72,29 +66,30 @@
         }
       }
 
-      const clickCallback = (childModel) => {
+      const clickCallback = (childModel:string, curAssetCode: string) => {
         if (childModel) {
-          // digitalTwinScene.stopAnimate();
-          go('/dt_child/' + childModel.childModelPath + "/" + childModel.thingsAssetId);
+          thingsDashboardSceneRef.value?.StopAnimate();
+          go('/dt_child/' + childModel + "/" + curAssetCode);
         }
       }
 
       async function init() {
+        if (!threeMainModelPath) {
+          go(PageEnum.BASE_HOME);
+        }
         await nextTick();
         if (!tmContainerRef.value) {
           return;
         }
-
         thingsDashboardSceneRef.value = new ThingsDashboardScene({
-          assetsOfModelMap: assetsOfModelMap,
           canvas: tmContainerRef.value,
           cameraX: 30,
           cameraY: 60,
           cameraZ: 440,
           progressCallback: progressCallback,
           loadSuccessCallback: undefined,
+          clickCallback: clickCallback,
         });
-
         window.addEventListener("resize", function () {
           if (thingsDashboardSceneRef.value.engine) {
             thingsDashboardSceneRef.value.engine.resize();

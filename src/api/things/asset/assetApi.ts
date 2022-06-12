@@ -63,7 +63,7 @@ export const listAssetAll = () =>
   defHttp.get<AssetListResultModel>({ url: AssetApi.AssetListAllApi });
 
 // 查询当前用户全部资产
-export const listAssetAllThreeModelsAssets = (params: ModelAssetSearch) =>
+export const listAssetsOfThreeModels = (params: ModelAssetSearch) =>
   defHttp.post<AssetListItem[]>({ url: AssetApi.AssetsOfThreeModelApi, params})
 
 // 查询全部名称

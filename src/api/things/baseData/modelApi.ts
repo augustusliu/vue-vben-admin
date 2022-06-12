@@ -13,11 +13,14 @@ enum ModelApi {
   ModelUploadAddApi = '/api/model/add',
   ModelGetApi = '/api/model/get',
   ModelUpdateInfoApi = '/api/model/update',
-
+  ModelGetChildApi = '/api/model/getChild',
 }
 
 export const getModelInfoApi = (modelId: number) =>
   defHttp.get<ModelItem>({ url: ModelApi.ModelGetApi + '?modelId=' + modelId });
+
+export const getChildModelApi = (parentAssetCode: string, modelName: string) =>
+  defHttp.get<ModelItem>({ url: ModelApi.ModelGetChildApi + '?parentAssetCode=' + parentAssetCode + '&modelName=' + modelName });
 
 export const addModelInfo = (params: any[]) =>
   defHttp.post<void>({ url: ModelApi.ModelUploadAddApi, params });

@@ -6,6 +6,7 @@ export class ThingsCommonParticles{
   private readonly capacity: number;
   private readonly scene:Scene;
   private readonly emitter: any;
+  private particleSystem: ParticleSystem | undefined;
 
   constructor(name:string, capacity: number, emitter:any, scene:Scene){
     this.name = name;
@@ -61,9 +62,16 @@ export class ThingsCommonParticles{
     particleSystem.maxEmitPower = opts.maxEmitPower;
     particleSystem.updateSpeed = opts.updateSpeed;
 
+    this.particleSystem = particleSystem;
     // Start the particle system
     // particleSystem.start();
     return particleSystem;
+  }
+
+  public disposeParticles(){
+    if(this.particleSystem){
+      this.particleSystem.dispose();
+    }
   }
 }
 

@@ -6,48 +6,50 @@ import {
   ArcRotateCamera,
   Vector3,
   HemisphericLight,
-  Color4, AbstractMesh, Color3
+  Color4, AbstractMesh, Color3, ParticleSystem
 } from '@babylonjs/core';
-import '@babylonjs/inspector';
-import * as GUI from '@babylonjs/gui/2D';
 import { Light } from "@babylonjs/core/Lights/light";
 import { AssetListItem } from "/@/api/things/asset/model/assetModel";
 import { searchModelList } from "/@/api/things/baseData/modelApi";
 import { ModelItem } from "/@/api/things/baseData/model/threeModel";
-import { listAssetAllThreeModelsAssets } from "/@/api/things/asset/assetApi";
 import { CommonParticlesType, ThingsCommonParticles } from "/@/badylon/tools/ThingsCommonParticles";
-import {applyLeaveTransition} from "echarts/types/src/animation/customGraphicTransition";
 
 // options
 export interface ThingsDashboardSceneOpts{
-  assetsOfModelMap: Map<string, AssetListItem> | null;
   canvas:HTMLCanvasElement;
   cameraX: number,
   cameraY: number,
   cameraZ: number,
   progressCallback: Function | null | undefined;
   loadSuccessCallback: Function | null | undefined;
+  clickCallback: Function | null | undefined;
 }
 
 // 孪生看板的全景图
 export class ThingsDashboardScene extends ThingsModelAbstractScene{
-
-  private assetsOfModelMap: Map<string, AssetListItem> | null; // 资产列表
+  private assetsOfMainModelMap: Map<string, AssetListItem> | null; // 资产列表
+  private assetCodeNameMap: Map<string, string> | null;
   public engine: Engine | null | undefined;
   private readonly canvas: HTMLCanvasElement | null;
   private camera: Camera | null | undefined;
   private light: Light | null | undefined;
   private opts: ThingsDashboardSceneOpts;
+  private readonly particleSystem: ParticleSystem[] | null;
+  private readonly clickCallbackFn : Function | null | undefined;
 
   constructor(options: ThingsDashboardSceneOpts) {
     super(options.progressCallback);
     this.canvas = options.canvas;
-    this.assetsOfModelMap = options.assetsOfModelMap;
+    this.clickCallbackFn = options.clickCallback;
+    this.particleSystem = [];
+    this.assetsOfMainModelMap = new Map<string, AssetListItem>();
+    this.assetCodeNameMap = new Map<string, string>();
     this.opts = options;
     this.__initScene();
     this.__initModels();
   }
 
+  // 初始化场景
   __initScene(){
       this.engine = new Engine(this.canvas, true);
       this.scene = new Scene(this.engine);
@@ -70,48 +72,43 @@ export class ThingsDashboardScene extends ThingsModelAbstractScene{
       this.light.setEnabled(true);
     }
 
-    // 当资产为空时，也可以加载模型,所以只需要加载对应的3d模型即可
-    __initModels() {
-      let loadedModelNames: Set<string> = new Set<string>();
-      let loadedModelIds: Set<number> = new Set<number>();
+  // 当资产为空时，也可以加载模型,所以只需要加载对应的3d模型即可
+  __initModels() {
+      let loadedMainModelNames: Set<string> = new Set<string>();
+      let loadedMainModelIds: Set<number> = new Set<number>();
       searchModelList({isMain: true}).then((models: ModelItem[]) => {
         if (!models ||  models.length <= 0) {
           return;
         }
+        // 处理模型及子模型
         models.forEach(model => {
-          loadedModelNames.add(model.modelPath);
-          loadedModelIds.add(model.id);
+          loadedMainModelNames.add(model.modelPath);
+          loadedMainModelIds.add(model.id);
         })
-        this.modelNames = loadedModelNames;
-        this.LoadModel();
-        this.__loadAssetOfModels(loadedModelIds);
+        this.modelNames = loadedMainModelNames;
+        // 加载资产及模型
+        this.__loadAssetOfModels(loadedMainModelIds).then(() => this.LoadModel());
         this.StartAnimate();
       });
     }
 
-    // assets of models
-    __loadAssetOfModels(modelIdSet: Set<number>){
+  // assets of models
+  async __loadAssetOfModels(modelIdSet: Set<number>){
       let modelIds:number[] = [];
       modelIdSet.forEach(item => modelIds.push(item));
-
-      listAssetAllThreeModelsAssets({
+      this.loadAssetByModelIds({
         isMain: true,
         modelIds: modelIds
-      }).then(assets => {
-        if(!assets || assets.length > 0){
-          assets.forEach(asset => {
-            this.assetsOfModelMap?.set(String(asset.modelId), asset);
-          })
-        }
-      })
+      });
     }
 
-    async __buildMeshSmoke(mesh: AbstractMesh){
+  // 资产中的烟雾动画
+  async __buildMeshSmoke(mesh: AbstractMesh){
       if(!this.scene){
         return;
       }
       const smokeParticleSystem = new ThingsCommonParticles("ycSmokeParticle", 200, mesh, this.scene);
-      smokeParticleSystem.buildParticle({
+      const sps = smokeParticleSystem.buildParticle({
         particleMode: CommonParticlesType.SMOKE_MODE,
         minEmitterBox: new Vector3(-0.5, 1, 0.5),
         maxEmitterBox: new Vector3(1, 2, 1),
@@ -127,11 +124,18 @@ export class ThingsDashboardScene extends ThingsModelAbstractScene{
         minEmitPower: 10,
         maxEmitPower: 40,
         updateSpeed:0.005
-      }).start();
-
+      });
+      sps.start();
+      this.particleSystem?.push(sps);
     }
 
-     public async loadSuccessCallback(meshes: AbstractMesh[]){
+  // 资产编号与资产名称映射关系
+  public getAssetName(assetCode: string) {
+    return this.assetCodeNameMap?.get(assetCode);
+  }
+
+  // 加载成功后的回调函数
+  public async loadSuccessCallback(meshes: AbstractMesh[]){
       if(this.opts.loadSuccessCallback){
         this.opts.loadSuccessCallback(meshes);
       }
@@ -142,11 +146,9 @@ export class ThingsDashboardScene extends ThingsModelAbstractScene{
       if(!this.scene){
         return;
       }
-
       // 烟冲
       const yancongEmitterMesh = this.scene?.getLastMeshByID("ycSmokeEmitter");
       if(yancongEmitterMesh){
-
         await this.__buildMeshSmoke(yancongEmitterMesh);
       }
 
@@ -158,62 +160,41 @@ export class ThingsDashboardScene extends ThingsModelAbstractScene{
 
        meshes.forEach(item => {
          if(item.metadata && item.metadata.gltf && item.metadata.gltf.extras && item.metadata.gltf.extras.childModel){
-           this.__addLabelForMesh(item, item.name)
+           const assetName = this.getAssetName(item.metadata.gltf.extras?.currentAssetCode);
+           this.addLabelForMesh(item, assetName);
          }
        })
     }
 
-    // 为mesh添加文字标注
-    __addLabelForMesh(mesh: AbstractMesh, labelText: string){
-      if(this.scene){
-
-        let adt = GUI.AdvancedDynamicTexture.CreateFullscreenUI(labelText);
-        let rect = new GUI.Rectangle();
-        rect.width = "50px";
-        rect.height = "18px";
-        rect.cornerRadius = 5;
-        rect.color = "Orange";
-        rect.thickness = 2;
-        rect.background = "green";
-        rect.alpha = 0.5;
-        rect.color ="white";
-        rect.fontSize = 10;
-        adt.addControl(rect);
-        rect.linkWithMesh(mesh);
-        rect.linkOffsetY = -30;
-
-        let textLabel = new GUI.TextBlock();
-        textLabel.text = labelText;
-        rect.addControl(textLabel);
-
-
-        let target = new GUI.Ellipse();
-        target.width = "1px";
-        target.height = "1px";
-        target.color = "Orange";
-        target.thickness = 1;
-        target.background = "green";
-        adt.addControl(target);
-        target.linkWithMesh(mesh);
-
-        let line = new GUI.Line();
-        line.lineWidth = 1.4;
-        line.color = "Orange";
-        line.y2 = 30;
-        line.linkOffsetY = -30;
-        adt.addControl(line);
-        line.linkWithMesh(mesh);
-        line.connectedControl = rect;
-      }
-    }
-
-
-    public Destory(){
+  // 废弃场景
+  public disposeScene(){
       this.StopAnimate();
-      this.assetsOfModelMap = null;
+      if(this.particleSystem){
+        this.particleSystem.forEach(ps => ps.dispose())
+      }
+      this.assetsOfMainModelMap = null;
+      this.assetCodeNameMap = null;
       this.engine = null;
       this.camera = null;
       this.light = null;
       this.scene = null;
     }
+  // 资产点击回调函数
+  clickMeshCallback(mesh: AbstractMesh) {
+    // 获取其子模型
+    if(mesh.metadata && mesh.metadata.gltf && mesh.metadata.gltf.extras){
+      const childName = mesh.metadata.gltf.extras.childModel;
+      const currentAssetCode = mesh.metadata.gltf.extras?.currentAssetCode;
+      if(this.clickCallbackFn){
+        this.clickCallbackFn(childName, currentAssetCode);
+      }
+    }
+  }
+
+  assetsLoadSuccess(assets) {
+    assets.forEach(asset => {
+      this.assetsOfMainModelMap?.set(String(asset.modelId), asset);
+      this.assetCodeNameMap?.set(String(asset.code), String(asset.name));
+    })
+  }
 }
